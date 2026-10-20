@@ -1,0 +1,2112 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
+    <title>Maison Yass - Parfumerie & Élégance</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        /* ===== HEADER BLANC ===== */
+        .navbar-desktop {
+            background: var(--white) !important;
+            padding: 0.6rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 1000;
+            box-shadow: 0 2px 20px rgba(0,0,0,0.1);
+            border-bottom: 2px solid var(--primary);
+        }
+        .navbar-desktop .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-family: 'Playfair Display', serif;
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: var(--primary);
+            letter-spacing: 2px;
+        }
+        .navbar-desktop .logo img {
+            height: 40px;
+            width: auto;
+        }
+        .nav-links-desktop a {
+            color: var(--primary) !important;
+            font-weight: 600;
+        }
+        .nav-links-desktop a::after {
+            background: var(--primary) !important;
+        }
+        .nav-links-desktop a:hover { color: var(--primary-dark) !important; }
+        .cart-count {
+            background: var(--primary);
+            color: white;
+        }
+
+        .navbar-right {
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+        }
+
+        .btn-theme, .btn-lang {
+            background: var(--primary);
+            color: var(--white);
+            border: none;
+            padding: 8px 14px;
+            border-radius: 30px;
+            cursor: pointer;
+            transition: var(--transition);
+            font-size: 1rem;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .btn-theme:hover, .btn-lang:hover { background: var(--primary-dark); transform: scale(1.05); }
+        .btn-lang { font-size: 0.85rem; font-weight: 600; padding: 8px 12px; }
+
+        /* ===== MOBILE HEADER ===== */
+        .top-header-mobile {
+            background: var(--white) !important;
+            border-bottom: 2px solid var(--primary);
+            padding: 0.6rem 1rem;
+            display: none;
+            justify-content: space-between;
+            align-items: center;
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 1000;
+        }
+        .top-header-mobile .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-family: 'Playfair Display', serif;
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--primary);
+        }
+        .top-header-mobile .logo img {
+            height: 32px;
+            width: auto;
+        }
+        .top-header-mobile .mobile-actions {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .top-header-mobile .mobile-actions .btn-theme-mobile,
+        .top-header-mobile .mobile-actions .btn-lang-mobile {
+            background: var(--primary);
+            color: var(--white);
+            border: none;
+            padding: 6px 10px;
+            border-radius: 30px;
+            cursor: pointer;
+            transition: var(--transition);
+            font-size: 0.9rem;
+        }
+        .top-header-mobile .mobile-actions .btn-theme-mobile:hover,
+        .top-header-mobile .mobile-actions .btn-lang-mobile:hover {
+            background: var(--primary-dark);
+        }
+        .btn-lang-mobile { font-size: 0.75rem; font-weight: 600; padding: 6px 8px; }
+
+        /* ===== HERO ===== */
+        .hero {
+            position: relative;
+            min-height: calc(100vh - 76px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--secondary);
+            overflow: hidden;
+        }
+        .hero-bg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            opacity: 0.6;
+        }
+        .hero-content {
+            position: relative;
+            z-index: 2;
+            text-align: center;
+            max-width: 900px;
+            padding: 2rem;
+        }
+        .hero-buttons {
+            display: flex;
+            gap: 1.5rem;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-top: 1.5rem;
+        }
+        .btn-hero-primary {
+            background: var(--white);
+            color: var(--primary);
+            border: 2px solid var(--primary);
+            padding: 16px 40px;
+            font-size: 1.1rem;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: var(--transition);
+            font-weight: 700;
+            font-family: 'Poppins', sans-serif;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        }
+        .btn-hero-primary:hover {
+            background: var(--primary);
+            color: var(--white);
+            transform: scale(1.05);
+            box-shadow: 0 5px 25px rgba(204,0,0,0.4);
+        }
+        .btn-hero-secondary {
+            background: var(--white);
+            color: var(--primary);
+            border: 2px solid var(--primary);
+            padding: 16px 40px;
+            font-size: 1.1rem;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: var(--transition);
+            font-weight: 700;
+            font-family: 'Poppins', sans-serif;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        }
+        .btn-hero-secondary:hover {
+            background: var(--primary);
+            color: var(--white);
+            transform: scale(1.05);
+            box-shadow: 0 5px 25px rgba(204,0,0,0.4);
+        }
+
+        /* ===== HISTOIRE AVEC VIDÉO ===== */
+        .histoire-section {
+            padding: 4rem 0;
+            background: var(--white);
+        }
+        .histoire-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4rem;
+            align-items: center;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        .histoire-tag {
+            display: inline-block;
+            background: var(--primary);
+            color: var(--white);
+            padding: 4px 16px;
+            border-radius: 30px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            margin-bottom: 1rem;
+        }
+        .histoire-text h2 {
+            font-size: 3rem;
+            color: var(--secondary);
+            margin-bottom: 0.3rem;
+        }
+        .histoire-text h2 span { color: var(--primary); }
+        .histoire-text h3 {
+            font-size: 1.3rem;
+            color: var(--primary);
+            font-weight: 400;
+            margin-bottom: 1.5rem;
+        }
+        .histoire-text p {
+            color: var(--text-light);
+            margin-bottom: 1rem;
+            line-height: 1.8;
+        }
+        .histoire-valeurs {
+            display: flex;
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+        .valeur-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-weight: 500;
+        }
+        .valeur-item i { color: var(--primary); font-size: 1.2rem; }
+        .histoire-video {
+            border-radius: var(--radius);
+            overflow: hidden;
+            box-shadow: var(--shadow-hover);
+            width: 100%;
+            height: 400px;
+            background: var(--secondary);
+        }
+        .histoire-video video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        /* ===== BOUTON BEAUTY STORE ===== */
+        .btn-cosmetique-container {
+            text-align: center;
+            margin-top: 3rem;
+            padding-top: 2rem;
+            border-top: 1px dashed #ddd;
+        }
+        .btn-cosmetique {
+            background: linear-gradient(135deg, #fff, #fef8f9);
+            color: var(--primary);
+            border: 2px solid var(--primary);
+            padding: 16px 40px;
+            font-size: 1.1rem;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: var(--transition);
+            font-weight: 700;
+            font-family: 'Poppins', sans-serif;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+            animation: pulse-cosmetique 2s infinite;
+        }
+        .btn-cosmetique:hover {
+            background: var(--primary);
+            color: var(--white);
+            transform: scale(1.05);
+            box-shadow: 0 5px 25px rgba(204,0,0,0.3);
+        }
+        @keyframes pulse-cosmetique {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.03); }
+            100% { transform: scale(1); }
+        }
+
+        /* ===== COLLECTIONS ===== */
+        .collections-section {
+            padding: 4rem 0;
+            background: var(--background);
+        }
+        .section-title {
+            font-size: 2.5rem;
+            text-align: center;
+            color: var(--secondary);
+            margin-bottom: 0.5rem;
+        }
+        .section-title span { color: var(--primary); }
+        .section-subtitle {
+            text-align: center;
+            color: var(--text-light);
+            font-size: 1.1rem;
+            margin-bottom: 3rem;
+        }
+        .collections-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+        .collection-card {
+            text-align: center;
+            padding: 2rem;
+            background: var(--white);
+            border-radius: var(--radius);
+            transition: var(--transition);
+            border: 2px solid transparent;
+            box-shadow: var(--shadow);
+        }
+        .collection-card:hover {
+            transform: translateY(-10px);
+            box-shadow: var(--shadow-hover);
+            border-color: var(--primary);
+        }
+        .collection-icon {
+            font-size: 2.5rem;
+            color: var(--primary);
+            margin-bottom: 1rem;
+        }
+        .collection-card h3 {
+            font-size: 1.3rem;
+            color: var(--secondary);
+            margin-bottom: 0.5rem;
+        }
+        .collection-card p {
+            color: var(--text-light);
+            font-size: 0.9rem;
+        }
+
+        /* ===== CONTACT AVEC MAP ===== */
+        .contact-section {
+            padding: 4rem 0;
+            background: var(--white);
+        }
+        .contact-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+        .contact-card {
+            background: var(--white);
+            padding: 2rem;
+            border-radius: var(--radius);
+            text-align: center;
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+            border: 2px solid transparent;
+        }
+        .contact-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-hover);
+            border-color: var(--primary);
+        }
+        .contact-card h3 {
+            font-size: 1.1rem;
+            color: var(--secondary);
+            margin-bottom: 1rem;
+        }
+        .contact-card h3 i { color: var(--primary); margin-right: 8px; }
+        .contact-link {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            color: var(--text-dark);
+            font-weight: 500;
+            transition: var(--transition);
+        }
+        .contact-link:hover { color: var(--primary); }
+        .contact-link i { color: var(--primary); font-size: 1.2rem; }
+
+        .map-container {
+            max-width: 1000px;
+            margin: 2rem auto 0;
+            border-radius: var(--radius);
+            overflow: hidden;
+            box-shadow: var(--shadow-hover);
+            border: 2px solid var(--primary);
+        }
+        .map-container iframe {
+            width: 100%;
+            height: 300px;
+            border: none;
+            display: block;
+        }
+        .map-container .map-label {
+            background: var(--secondary);
+            color: var(--white);
+            padding: 0.8rem 1.5rem;
+            text-align: center;
+            font-weight: 500;
+            font-size: 0.9rem;
+        }
+        .map-container .map-label i {
+            color: var(--primary);
+            margin-right: 8px;
+        }
+
+        /* ===== SOCIAL LINKS ===== */
+        .social-section {
+            text-align: center;
+            padding: 2rem 0;
+            background: var(--white);
+        }
+        .social-links {
+            display: flex;
+            gap: 1.5rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        .social-link {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            transition: var(--transition);
+            text-decoration: none;
+            color: var(--white);
+        }
+        .social-link:hover {
+            transform: translateY(-5px) scale(1.1);
+            box-shadow: 0 5px 20px rgba(0,0,0,0.3);
+        }
+
+        /* ===== FAQ ENRICHIE AVEC ICÔNES ===== */
+        .faq-section {
+            padding: 4rem 0;
+            background: var(--background);
+        }
+        .faq-grid {
+            max-width: 850px;
+            margin: 0 auto;
+        }
+        .faq-item {
+            border-bottom: 1px solid #eee;
+            padding: 1rem 0;
+        }
+        .faq-item:last-child {
+            border-bottom: none;
+        }
+        .faq-question {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: pointer;
+            font-weight: 600;
+            color: var(--secondary);
+            padding: 0.8rem 0;
+            transition: var(--transition);
+            font-size: 1.05rem;
+            gap: 1rem;
+        }
+        .faq-question:hover { color: var(--primary); }
+        .faq-question i { 
+            transition: var(--transition);
+            font-size: 1.2rem;
+            flex-shrink: 0;
+        }
+        .faq-answer {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.4s ease;
+            color: var(--text-light);
+            padding: 0 1rem;
+            line-height: 1.7;
+        }
+        .faq-answer.open {
+            max-height: 500px;
+            padding: 0.5rem 1rem 1.2rem;
+        }
+        .faq-item.active .faq-question i { 
+            transform: rotate(180deg); 
+        }
+        .faq-answer ul {
+            list-style: none;
+            padding: 0;
+            margin: 0.5rem 0;
+        }
+        .faq-answer ul li {
+            padding: 0.3rem 0;
+            padding-left: 1.5rem;
+            position: relative;
+        }
+        .faq-answer ul li::before {
+            content: '✓';
+            position: absolute;
+            left: 0;
+            color: var(--primary);
+            font-weight: 700;
+        }
+        .faq-answer .step-number {
+            display: inline-block;
+            background: var(--primary);
+            color: var(--white);
+            border-radius: 50%;
+            width: 24px;
+            height: 24px;
+            text-align: center;
+            line-height: 24px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            margin-right: 8px;
+        }
+
+        /* ===== AVIS CLIENTS ===== */
+        .avis-section {
+            padding: 4rem 0;
+            background: var(--white);
+        }
+        .avis-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+        .avis-card {
+            background: var(--background);
+            padding: 1.5rem;
+            border-radius: var(--radius);
+            border-left: 4px solid var(--primary);
+        }
+        .avis-card .avis-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 0.8rem;
+        }
+        .avis-card .avis-avatar {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: var(--primary);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 1.2rem;
+        }
+        .avis-card .avis-info .avis-nom {
+            font-weight: 600;
+            color: var(--secondary);
+        }
+        .avis-card .avis-info .avis-date {
+            font-size: 0.75rem;
+            color: var(--text-light);
+        }
+        .avis-card .avis-stars {
+            color: var(--warning);
+            font-size: 0.9rem;
+            margin-bottom: 0.5rem;
+        }
+        .avis-card .avis-text {
+            color: var(--text-dark);
+            font-size: 0.9rem;
+            line-height: 1.6;
+        }
+        .avis-card .avis-produit {
+            font-size: 0.75rem;
+            color: var(--text-light);
+            margin-top: 0.5rem;
+        }
+        .avis-card .avis-produit strong {
+            color: var(--secondary);
+        }
+
+        /* ===== FORMULAIRE AVIS ET MESSAGE ===== */
+        .form-section {
+            padding: 4rem 0;
+            background: var(--background);
+        }
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 3rem;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+        .form-card {
+            background: var(--white);
+            padding: 2rem;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+        }
+        .form-card h3 {
+            font-family: 'Playfair Display', serif;
+            color: var(--secondary);
+            margin-bottom: 1.5rem;
+        }
+        .form-card h3 i { color: var(--primary); margin-right: 10px; }
+        .form-card .form-group {
+            margin-bottom: 1rem;
+        }
+        .form-card .form-group label {
+            display: block;
+            font-weight: 500;
+            font-size: 0.9rem;
+            color: var(--secondary);
+            margin-bottom: 0.3rem;
+        }
+        .form-card .form-group input,
+        .form-card .form-group select,
+        .form-card .form-group textarea {
+            width: 100%;
+            padding: 10px 14px;
+            border: 2px solid #eee;
+            border-radius: var(--radius);
+            font-family: 'Poppins', sans-serif;
+            transition: var(--transition);
+            background: var(--white);
+            color: var(--text-dark);
+        }
+        .form-card .form-group input:focus,
+        .form-card .form-group select:focus,
+        .form-card .form-group textarea:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(204,0,0,0.1);
+        }
+        .form-card .form-group textarea {
+            resize: vertical;
+            min-height: 80px;
+        }
+        .form-card .btn-submit {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 30px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: var(--transition);
+            font-family: 'Poppins', sans-serif;
+            width: 100%;
+        }
+        .form-card .btn-submit:hover {
+            background: var(--primary-dark);
+            transform: scale(1.02);
+        }
+        .form-card .btn-submit:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+        .form-card .form-message {
+            margin-top: 0.8rem;
+            padding: 10px;
+            border-radius: var(--radius);
+            display: none;
+        }
+        .form-card .form-message.success {
+            display: block;
+            background: #e8f5e9;
+            color: #2e7d32;
+        }
+        .form-card .form-message.error {
+            display: block;
+            background: #ffebee;
+            color: #c62828;
+        }
+        .form-card .form-message .spinner {
+            display: inline-block;
+            animation: spin 0.8s linear infinite;
+        }
+        @keyframes spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        /* ===== BOUTONS UNIFORMISÉS ===== */
+        .btn-filter {
+            background: var(--secondary);
+            color: var(--white);
+            border: none;
+            padding: 10px 24px;
+            border-radius: 30px;
+            cursor: pointer;
+            transition: var(--transition);
+            font-size: 0.85rem;
+            font-weight: 500;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            font-family: 'Poppins', sans-serif;
+            height: 44px;
+        }
+        .btn-filter:hover {
+            background: var(--primary);
+            transform: scale(1.02);
+        }
+        .btn-filter i { font-size: 0.9rem; }
+
+        .btn-filter-reset {
+            background: transparent;
+            color: var(--secondary);
+            border: 2px solid var(--secondary);
+            padding: 10px 24px;
+            border-radius: 30px;
+            cursor: pointer;
+            transition: var(--transition);
+            font-size: 0.85rem;
+            font-weight: 500;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            font-family: 'Poppins', sans-serif;
+            height: 44px;
+        }
+        .btn-filter-reset:hover {
+            background: var(--secondary);
+            color: var(--white);
+            transform: scale(1.02);
+        }
+
+        .filters-section {
+            background: var(--white);
+            padding: 1.5rem 0;
+            border-bottom: 2px solid var(--primary);
+        }
+        .filters-wrapper {
+            display: flex;
+            gap: 1.5rem;
+            align-items: flex-end;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        .filter-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.3rem;
+        }
+        .filter-group label {
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: var(--text-light);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        .filter-select {
+            padding: 10px 20px;
+            border: 2px solid #ddd;
+            border-radius: 30px;
+            background: var(--white);
+            font-family: 'Poppins', sans-serif;
+            font-size: 0.9rem;
+            min-width: 150px;
+            cursor: pointer;
+            transition: var(--transition);
+            height: 44px;
+        }
+        .filter-select:focus { outline: none; border-color: var(--primary); }
+
+        .products-header {
+            padding: 2rem 0;
+            background: var(--secondary);
+            color: var(--white);
+            background-image: url('../img/banniere-accueil.jpeg');
+            background-size: cover;
+            background-position: center;
+            position: relative;
+        }
+        .products-header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.6);
+        }
+        .products-header .container {
+            position: relative;
+            z-index: 1;
+        }
+        .products-header h2 { font-size: 2.2rem; }
+        .products-header h2 i { color: var(--primary); margin-right: 10px; }
+        .products-header p { opacity: 0.9; }
+
+        .products-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 2rem;
+            padding: 2rem 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        .product-card {
+            background: var(--white);
+            border-radius: var(--radius);
+            overflow: hidden;
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+            border: 1px solid #eee;
+            position: relative;
+        }
+        .product-card:hover {
+            transform: translateY(-8px);
+            box-shadow: var(--shadow-hover);
+            border-color: var(--primary);
+        }
+        .promo-badge {
+            position: absolute;
+            top: 12px;
+            left: 12px;
+            background: var(--primary);
+            color: var(--white);
+            padding: 4px 14px;
+            border-radius: 30px;
+            font-size: 0.7rem;
+            font-weight: 600;
+            z-index: 10;
+        }
+        .rupture-badge {
+            position: absolute;
+            top: 12px;
+            right: 12px;
+            background: #333;
+            color: var(--white);
+            padding: 4px 14px;
+            border-radius: 30px;
+            font-size: 0.7rem;
+            font-weight: 600;
+            z-index: 10;
+        }
+        .carousel-container {
+            position: relative;
+            width: 100%;
+            height: 280px;
+            overflow: hidden;
+            background: var(--background);
+        }
+        .carousel-slides { display: flex; transition: transform 0.4s ease; height: 100%; }
+        .carousel-slide { min-width: 100%; height: 100%; }
+        .carousel-slide img, .carousel-slide video { width: 100%; height: 100%; object-fit: cover; }
+        .carousel-btn {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(0,0,0,0.6);
+            color: white;
+            border: none;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            cursor: pointer;
+            z-index: 20;
+            transition: var(--transition);
+        }
+        .carousel-btn:hover { background: var(--primary); }
+        .carousel-btn-prev { left: 8px; }
+        .carousel-btn-next { right: 8px; }
+        .carousel-dots {
+            position: absolute;
+            bottom: 12px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 6px;
+            z-index: 20;
+        }
+        .carousel-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.5);
+            cursor: pointer;
+            transition: var(--transition);
+        }
+        .carousel-dot.active { background: var(--primary); width: 20px; border-radius: 10px; }
+
+        .product-info { padding: 1.2rem; }
+        .product-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--secondary);
+            font-family: 'Playfair Display', serif;
+            margin-bottom: 0.3rem;
+        }
+        .product-categorie {
+            font-size: 0.7rem;
+            color: var(--primary);
+            text-transform: uppercase;
+            background: rgba(204,0,0,0.1);
+            padding: 2px 10px;
+            border-radius: 20px;
+            display: inline-block;
+        }
+        .product-price { margin: 0.5rem 0; }
+        .old-price { text-decoration: line-through; color: #bbb; font-size: 0.85rem; margin-right: 8px; }
+        .promo-price { color: var(--primary); font-weight: 700; font-size: 1.3rem; }
+        .normal-price { color: var(--secondary); font-size: 1.3rem; font-weight: 600; }
+        .product-desc { color: var(--text-light); font-size: 0.85rem; margin-bottom: 1rem; }
+        .product-notes { font-size: 0.8rem; color: var(--text-light); margin-bottom: 0.5rem; }
+        .product-notes strong { color: var(--secondary); }
+        .product-stock { font-size: 0.8rem; color: var(--text-light); margin-bottom: 0.8rem; }
+        .product-stock strong { color: var(--secondary); }
+
+        .quantity-control {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 1rem;
+        }
+        .quantity-btn {
+            background: var(--background);
+            border: none;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: var(--transition);
+            color: var(--secondary);
+        }
+        .quantity-btn:hover:not(:disabled) { background: var(--primary); color: var(--white); }
+        .quantity-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+        .quantity-input {
+            width: 50px;
+            text-align: center;
+            border: 2px solid #eee;
+            border-radius: 20px;
+            padding: 6px;
+            font-family: 'Poppins', sans-serif;
+        }
+        .add-to-cart {
+            background: var(--secondary);
+            color: var(--white);
+            border: none;
+            padding: 10px;
+            width: 100%;
+            border-radius: 30px;
+            cursor: pointer;
+            transition: var(--transition);
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+        .add-to-cart:hover:not(:disabled) { background: var(--primary); }
+        .add-to-cart:disabled { background: #ccc; cursor: not-allowed; }
+
+        .products-grid .category-header {
+            grid-column: 1 / -1;
+            margin: 1rem 0 0.5rem;
+            padding: 0.8rem 1.5rem;
+            background: var(--white);
+            border: 2px solid var(--primary);
+            border-radius: var(--radius);
+            color: var(--primary);
+            font-weight: 700;
+            font-size: 1.3rem;
+            font-family: 'Playfair Display', serif;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+        }
+        .products-grid .category-header:hover {
+            transform: translateX(5px);
+            box-shadow: var(--shadow-hover);
+        }
+        .products-grid .category-header i {
+            color: var(--primary);
+            font-size: 1.5rem;
+        }
+
+        .footer {
+            background: var(--white);
+            color: var(--secondary);
+            padding: 3rem 0 1.5rem;
+            border-top: 2px solid var(--primary);
+        }
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+        }
+        .footer h3 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.2rem;
+            margin-bottom: 1rem;
+            color: var(--primary);
+        }
+        .footer p, .footer a {
+            color: var(--text-dark);
+            font-size: 0.9rem;
+            line-height: 1.8;
+        }
+        .footer a:hover { color: var(--primary); }
+        .footer .social-links-footer {
+            display: flex;
+            gap: 1rem;
+            margin-top: 0.5rem;
+        }
+        .footer .social-links-footer a {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: var(--primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: var(--transition);
+            color: var(--white);
+        }
+        .footer .social-links-footer a:hover {
+            transform: translateY(-3px);
+            opacity: 0.8;
+        }
+        .footer .app-badges {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+            margin-top: 0.5rem;
+        }
+        .footer .app-badges a {
+            display: inline-block;
+            padding: 8px 20px;
+            background: var(--background);
+            border-radius: 8px;
+            transition: var(--transition);
+            font-weight: 500;
+            font-size: 0.85rem;
+            border: 1px solid var(--primary);
+            color: var(--primary);
+        }
+        .footer .app-badges a:hover {
+            background: var(--primary);
+            color: white;
+        }
+        .footer .app-badges i { margin-right: 8px; }
+        .footer-bottom {
+            text-align: center;
+            padding-top: 2rem;
+            margin-top: 2rem;
+            border-top: 1px solid #eee;
+            font-size: 0.8rem;
+            color: #888;
+        }
+        .footer-bottom i { color: var(--primary); }
+
+        @media (max-width: 992px) {
+            .histoire-content { grid-template-columns: 1fr; gap: 2rem; }
+            .histoire-video { height: 300px; }
+            .form-grid { grid-template-columns: 1fr; gap: 2rem; }
+        }
+
+        @media (max-width: 768px) {
+            body { padding-bottom: 70px; }
+            .navbar-desktop { display: none; }
+            .top-header-mobile { display: flex; }
+            .bottom-nav-mobile { display: flex; }
+            .slides-container { margin-top: 65px; min-height: calc(100vh - 135px); }
+            .hero { min-height: 60vh; padding: 0; }
+            .hero-bg { opacity: 0.7; object-fit: cover; height: 100%; }
+            .hero-content { padding: 1rem; position: absolute; bottom: 15%; left: 50%; transform: translateX(-50%); width: 100%; max-width: 400px; }
+            .hero-buttons { flex-direction: column; gap: 0.8rem; margin-top: 0.5rem; align-items: center; }
+            .btn-hero-primary, .btn-hero-secondary { width: 100%; max-width: 280px; padding: 14px 25px; font-size: 0.9rem; text-align: center; }
+            .collections-grid { grid-template-columns: 1fr; max-width: 400px; margin: 0 auto; }
+            .contact-grid { grid-template-columns: 1fr; }
+            .footer-content { grid-template-columns: 1fr; text-align: center; }
+            .footer .social-links-footer { justify-content: center; }
+            .footer .app-badges { justify-content: center; }
+            .social-links { gap: 1rem; }
+            .social-link { width: 50px; height: 50px; font-size: 1.2rem; }
+            .histoire-video { height: 220px; }
+            .map-container iframe { height: 200px; }
+            .filters-wrapper { flex-direction: column; align-items: stretch; }
+            .filter-select { width: 100%; }
+            .btn-filter, .btn-filter-reset { justify-content: center; width: 100%; }
+            .products-grid { grid-template-columns: 1fr; padding: 1rem; gap: 1.5rem; }
+            .carousel-container { height: 220px; }
+            .products-header { min-height: 200px; display: flex; align-items: center; }
+            .faq-question { font-size: 0.95rem; }
+            .avis-grid { grid-template-columns: 1fr; }
+            .form-grid { grid-template-columns: 1fr; gap: 1.5rem; }
+        }
+
+        @media (max-width: 480px) {
+            .hero { min-height: 55vh; }
+            .hero-content { bottom: 12%; padding: 0.5rem; }
+            .btn-hero-primary, .btn-hero-secondary { max-width: 240px; padding: 12px 18px; font-size: 0.8rem; }
+            .map-container iframe { height: 180px; }
+            .section-title { font-size: 1.8rem; }
+            .histoire-text h2 { font-size: 2rem; }
+            .products-header h2 { font-size: 1.6rem; }
+            .faq-question { font-size: 0.85rem; }
+        }
+
+        @media (max-width: 380px) {
+            .hero { min-height: 50vh; }
+            .hero-content { bottom: 10%; }
+            .btn-hero-primary, .btn-hero-secondary { max-width: 200px; padding: 10px 14px; font-size: 0.75rem; letter-spacing: 0px; }
+            .hero-buttons { gap: 0.5rem; }
+        }
+    </style>
+</head>
+<body>
+    <!-- NAVIGATION DESKTOP -->
+    <nav class="navbar-desktop">
+        <div class="logo">
+            <img src="./img/logo-maison-yass.png" alt="Maison Yass" onerror="this.src='https://placehold.co/40x40/cc0000/ffffff?text=MY'">
+            <span>Maison Yass</span>
+        </div>
+        <ul class="nav-links-desktop">
+            <li><a href="/" class="slide-link active" data-slide="0" data-fr="Accueil" data-en="Home">Accueil</a></li>
+            <li><a href="#" class="slide-link" data-slide="1" data-fr="Nos Parfums" data-en="Our Perfumes">Nos Parfums</a></li>
+            <li><a href="#" class="slide-link" data-slide="2" data-fr="Beauty Store" data-en="Beauty Store">Beauty Store</a></li>
+            <li><a href="panier.html"><i class="fas fa-shopping-bag"></i> <span data-fr="Panier" data-en="Cart">Panier</span> <span class="cart-count" id="cart-count-desktop">0</span></a></li>
+            <li><a href="commandes.html"><i class="fas fa-clipboard-list"></i> <span data-fr="Commandes" data-en="Orders">Commandes</span></a></li>
+        </ul>
+        <div class="navbar-right">
+            <button id="lang-toggle" class="btn-lang">EN</button>
+            <button id="theme-toggle" class="btn-theme"><i class="fas fa-moon"></i></button>
+        </div>
+    </nav>
+
+    <!-- HEADER MOBILE -->
+    <div class="top-header-mobile">
+        <div class="logo">
+            <img src="./img/logo-maison-yass.png" alt="Maison Yass" onerror="this.src='https://placehold.co/32x32/cc0000/ffffff?text=MY'">
+            <span>Maison Yass</span>
+        </div>
+        <div class="mobile-actions">
+            <button id="lang-toggle-mobile" class="btn-lang-mobile">EN</button>
+            <button id="theme-toggle-mobile" class="btn-theme-mobile"><i class="fas fa-moon"></i></button>
+        </div>
+    </div>
+
+    <!-- SLIDES CONTAINER -->
+    <div class="slides-container" id="slidesContainer">
+        
+        <!-- SLIDE 0 - ACCUEIL -->
+        <div class="slide active" id="slide-accueil">
+            <!-- HERO -->
+            <div class="hero">
+                <img src="./img/banniere-accueil.jpeg" alt="Maison Yass - Un parfum une histoire" class="hero-bg" onerror="this.src='./img/banniere-accueil.png'">
+                <div class="hero-content">
+                    <div class="hero-buttons">
+                        <button class="btn-hero-primary slide-link" data-slide="1" data-fr="Découvrir nos parfums" data-en="Discover our perfumes">Découvrir nos parfums</button>
+                        <button class="btn-hero-secondary" onclick="document.getElementById('histoire-section').scrollIntoView({behavior:'smooth'})" data-fr="Notre histoire" data-en="Our story">Notre histoire</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- HISTOIRE -->
+            <div id="histoire-section" class="histoire-section">
+                <div class="container">
+                    <div class="histoire-content">
+                        <div class="histoire-text">
+                            <span class="histoire-tag" data-fr="Notre histoire" data-en="Our story">Notre histoire</span>
+                            <h2>Maison <span>Yass</span></h2>
+                            <h3 data-fr="L'élégance à l'état pur" data-en="Pure elegance">L'élégance à l'état pur</h3>
+                            <p data-fr="Née d'une passion pour les matières nobles et les senteurs rares, Maison Yass incarne l'art de la parfumerie sénégalaise. Chaque création est une invitation au voyage, une exploration des émotions à travers les notes les plus précieuses." data-en="Born from a passion for noble materials and rare scents, Maison Yass embodies the art of Senegalese perfumery. Each creation is an invitation to travel, an exploration of emotions through the most precious notes.">Née d'une passion pour les matières nobles et les senteurs rares, Maison Yass incarne l'art de la parfumerie sénégalaise. Chaque création est une invitation au voyage, une exploration des émotions à travers les notes les plus précieuses.</p>
+                            <p data-fr="Notre maître parfumeur puise son inspiration dans les contrées lointaines, mêlant avec virtuosité les traditions ancestrales et l'innovation olfactive." data-en="Our master perfumer draws inspiration from distant lands, skillfully blending ancestral traditions and olfactory innovation.">Notre maître parfumeur puise son inspiration dans les contrées lointaines, mêlant avec virtuosité les traditions ancestrales et l'innovation olfactive.</p>
+                            <div class="histoire-valeurs">
+                                <div class="valeur-item"><i class="fas fa-star"></i><span data-fr="Excellence" data-en="Excellence">Excellence</span></div>
+                                <div class="valeur-item"><i class="fas fa-feather"></i><span data-fr="Authenticité" data-en="Authenticity">Authenticité</span></div>
+                                <div class="valeur-item"><i class="fas fa-heart"></i><span data-fr="Passion" data-en="Passion">Passion</span></div>
+                            </div>
+                        </div>
+                        <div class="histoire-video">
+                            <video src="./img/banniere-accueil2.MOV" autoplay loop muted playsinline></video>
+                        </div>
+                    </div>
+                    
+                    <!-- BOUTON VERS BEAUTY STORE -->
+                    <div class="btn-cosmetique-container">
+                        <button class="btn-cosmetique slide-link" data-slide="2">
+                            <i class="fas fa-spa"></i> Beauty Store
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- COLLECTIONS -->
+            <div class="collections-section">
+                <div class="container">
+                    <h2 class="section-title" data-fr="Nos <span>Collections</span>" data-en="Our <span>Collections</span>">Nos <span>Collections</span></h2>
+                    <p class="section-subtitle" data-fr="Des fragrances uniques pour chaque personnalité" data-en="Unique fragrances for every personality">Des fragrances uniques pour chaque personnalité</p>
+                    <div class="collections-grid">
+                        <div class="collection-card">
+                            <div class="collection-icon"><i class="fas fa-crown"></i></div>
+                            <h3 data-fr="Collection Signature" data-en="Signature Collection">Collection Signature</h3>
+                            <p data-fr="Nos créations emblématiques" data-en="Our iconic creations">Nos créations emblématiques</p>
+                        </div>
+                        <div class="collection-card">
+                            <div class="collection-icon"><i class="fas fa-gem"></i></div>
+                            <h3 data-fr="Collection Privée" data-en="Private Collection">Collection Privée</h3>
+                            <p data-fr="Des parfums d'exception" data-en="Exceptional perfumes">Des parfums d'exception</p>
+                        </div>
+                        <div class="collection-card">
+                            <div class="collection-icon"><i class="fas fa-feather"></i></div>
+                            <h3 data-fr="Collection Voyage" data-en="Travel Collection">Collection Voyage</h3>
+                            <p data-fr="Des formats nomades" data-en="Nomadic formats">Des formats nomades</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- CONTACT -->
+            <div class="contact-section">
+                <div class="container">
+                    <h2 class="section-title" data-fr="Nous <span>contacter</span>" data-en="Contact <span>Us</span>">Nous <span>contacter</span></h2>
+                    <p class="section-subtitle" data-fr="Une question ? Un conseil ? N'hésitez pas à nous joindre" data-en="A question? Advice? Do not hesitate to contact us">Une question ? Un conseil ? N'hésitez pas à nous joindre</p>
+                    <div class="contact-grid">
+                        <div class="contact-card">
+                            <h3><i class="fas fa-phone"></i> <span data-fr="Téléphone" data-en="Phone">Téléphone</span></h3>
+                            <a href="tel:+221784405105" class="contact-link">
+                                <i class="fas fa-phone"></i>
+                                <span>+221 78 440 51 05</span>
+                            </a>
+                        </div>
+                        <div class="contact-card">
+                            <h3><i class="fab fa-whatsapp"></i> WhatsApp</h3>
+                            <a href="https://wa.me/221784405105?text=Bonjour%20Maison%20Yass" target="_blank" class="contact-link">
+                                <i class="fab fa-whatsapp"></i>
+                                <span data-fr="Discuter sur WhatsApp" data-en="Chat on WhatsApp">Discuter sur WhatsApp</span>
+                            </a>
+                        </div>
+                        <div class="contact-card">
+                            <h3><i class="fas fa-envelope"></i> Email</h3>
+                            <a href="mailto:contact@maisonyass.com" class="contact-link">
+                                <i class="fas fa-envelope"></i>
+                                <span>contact@maisonyass.com</span>
+                            </a>
+                        </div>
+                        <div class="contact-card">
+                            <h3><i class="fas fa-map-marker-alt"></i> <span data-fr="Adresse" data-en="Address">Adresse</span></h3>
+                            <p>Thiaroye Azur, Sénégal</p>
+                            <a href="https://www.google.com/maps/search/?api=1&query=Thiaroye+Azur+Sénégal" target="_blank" style="color:var(--primary);font-size:0.8rem;text-decoration:underline;display:inline-block;margin-top:0.3rem;">
+                                <i class="fas fa-external-link-alt"></i> <span data-fr="Voir sur Google Maps" data-en="View on Google Maps">Voir sur Google Maps</span>
+                            </a>
+                        </div>
+                    </div>
+
+                    <div class="map-container">
+                        <div class="map-label">
+                            <i class="fas fa-map-pin"></i> Thiaroye Azur, Sénégal
+                        </div>
+                        <iframe 
+                            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d30884.27324893337!2d-17.3801096!3d14.745344!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0xec176f3c2ffc5b3%3A0x2e7b5a5e5e5e5e5e!2sThiaroye%20Azur%2C%20S%C3%A9n%C3%A9gal!5e0!3m2!1sfr!2sfr!4v1690000000000" 
+                            allowfullscreen="" 
+                            loading="lazy" 
+                            referrerpolicy="no-referrer-when-downgrade">
+                        </iframe>
+                    </div>
+                </div>
+            </div>
+
+            <!-- SOCIAL LINKS -->
+            <div class="social-section">
+                <div class="container">
+                    <h3 style="font-family:'Playfair Display',serif;font-size:1.8rem;color:var(--secondary);margin-bottom:1.5rem;" data-fr="Suivez-nous" data-en="Follow us">Suivez-nous</h3>
+                    <div class="social-links">
+                        <a href="https://www.instagram.com/maison_yass?igsh=MXBvNThwZWttNmxrMQ==" target="_blank" class="social-link" style="background:linear-gradient(135deg,#833ab4,#fd1d1d,#f56040);"><i class="fab fa-instagram"></i></a>
+                        <a href="https://snapchat.com/t/HX3bOe9s" target="_blank" class="social-link" style="background:#fffc00;color:#000;"><i class="fab fa-snapchat-ghost"></i></a>
+                        <a href="https://wa.me/221784405105" target="_blank" class="social-link" style="background:#25d366;"><i class="fab fa-whatsapp"></i></a>
+                        <a href="https://www.tiktok.com/@maisonyass" target="_blank" class="social-link" style="background:#000;"><i class="fab fa-tiktok"></i></a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ===== AVIS CLIENTS ===== -->
+            <div class="avis-section">
+                <div class="container">
+                    <h2 class="section-title" data-fr="Ce que disent nos <span>clients</span>" data-en="What our <span>clients</span> say">Ce que disent nos <span>clients</span></h2>
+                    <p class="section-subtitle" data-fr="Découvrez leurs expériences avec nos parfums" data-en="Discover their experiences with our perfumes">Découvrez leurs expériences avec nos parfums</p>
+                    <div id="avis-clients" class="avis-grid">
+                        <div class="loading"><i class="fas fa-spinner fa-spin"></i> Chargement des avis...</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ===== FORMULAIRES AVIS ET MESSAGE ===== -->
+            <div class="form-section">
+                <div class="container">
+                    <h2 class="section-title" data-fr="Partagez votre <span>expérience</span>" data-en="Share your <span>experience</span>">Partagez votre <span>expérience</span></h2>
+                    <p class="section-subtitle" data-fr="Donnez votre avis ou envoyez-nous un message" data-en="Give your opinion or send us a message">Donnez votre avis ou envoyez-nous un message</p>
+                    <div class="form-grid">
+                        <!-- Formulaire Avis -->
+                        <div class="form-card">
+                            <h3><i class="fas fa-star"></i> <span data-fr="Donner mon avis" data-en="Give my opinion">Donner mon avis</span></h3>
+                            <form id="avis-form">
+                                <div class="form-group">
+                                    <label data-fr="Votre nom <span style='color:var(--primary);'>*</span>" data-en="Your name <span style='color:var(--primary);'>*</span>">Votre nom <span style="color:var(--primary);">*</span></label>
+                                    <input type="text" id="avis-nom" placeholder="Votre nom complet" required>
+                                </div>
+                                <div class="form-group">
+                                    <label data-fr="Note <span style='color:var(--primary);'>*</span>" data-en="Rating <span style='color:var(--primary);'>*</span>">Note <span style="color:var(--primary);">*</span></label>
+                                    <select id="avis-note" required>
+                                        <option value="5">⭐⭐⭐⭐⭐ - Excellent</option>
+                                        <option value="4">⭐⭐⭐⭐ - Très bien</option>
+                                        <option value="3">⭐⭐⭐ - Bien</option>
+                                        <option value="2">⭐⭐ - Moyen</option>
+                                        <option value="1">⭐ - Décevant</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label data-fr="Votre avis <span style='color:var(--primary);'>*</span>" data-en="Your review <span style='color:var(--primary);'>*</span>">Votre avis <span style="color:var(--primary);">*</span></label>
+                                    <textarea id="avis-commentaire" placeholder="Partagez votre expérience..." required></textarea>
+                                </div>
+                                <button type="submit" class="btn-submit"><i class="fas fa-paper-plane"></i> <span data-fr="Envoyer mon avis" data-en="Send my review">Envoyer mon avis</span></button>
+                                <div id="avis-message" class="form-message"></div>
+                            </form>
+                        </div>
+
+                        <!-- Formulaire Message -->
+                        <div class="form-card">
+                            <h3><i class="fas fa-envelope"></i> <span data-fr="Envoyer un message" data-en="Send a message">Envoyer un message</span></h3>
+                            <form id="message-form">
+                                <div class="form-group">
+                                    <label data-fr="Votre nom <span style='color:var(--primary);'>*</span>" data-en="Your name <span style='color:var(--primary);'>*</span>">Votre nom <span style="color:var(--primary);">*</span></label>
+                                    <input type="text" id="msg-nom" placeholder="Votre nom complet" required>
+                                </div>
+                                <div class="form-group">
+                                    <label data-fr="Email" data-en="Email">Email</label>
+                                    <input type="email" id="msg-email" placeholder="votre@email.com">
+                                </div>
+                                <div class="form-group">
+                                    <label data-fr="Sujet <span style='color:var(--primary);'>*</span>" data-en="Subject <span style='color:var(--primary);'>*</span>">Sujet <span style="color:var(--primary);">*</span></label>
+                                    <input type="text" id="msg-sujet" placeholder="Sujet de votre message" required>
+                                </div>
+                                <div class="form-group">
+                                    <label data-fr="Message <span style='color:var(--primary);'>*</span>" data-en="Message <span style='color:var(--primary);'>*</span>">Message <span style="color:var(--primary);">*</span></label>
+                                    <textarea id="msg-message" placeholder="Votre message..." required></textarea>
+                                </div>
+                                <button type="submit" class="btn-submit"><i class="fas fa-paper-plane"></i> <span data-fr="Envoyer le message" data-en="Send message">Envoyer le message</span></button>
+                                <div id="msg-message-status" class="form-message"></div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ===== FAQ ===== -->
+            <div class="faq-section">
+                <div class="container">
+                    <h2 class="section-title" data-fr="Foire aux <span>questions</span>" data-en="Frequently Asked <span>Questions</span>">Foire aux <span>questions</span></h2>
+                    <p class="section-subtitle" data-fr="Tout ce que vous devez savoir pour passer votre commande" data-en="Everything you need to know to place your order">Tout ce que vous devez savoir pour passer votre commande</p>
+                    <div class="faq-grid">
+
+                        <div class="faq-item">
+                            <div class="faq-question" onclick="toggleFAQ(this)">
+                                <span><i class="fas fa-shopping-bag" style="color:var(--primary);margin-right:12px;width:24px;"></i> <span data-fr="Comment passer une commande sur Maison Yass ?" data-en="How to place an order on Maison Yass?">Comment passer une commande sur Maison Yass ?</span></span>
+                                <i class="fas fa-chevron-down"></i>
+                            </div>
+                            <div class="faq-answer">
+                                <p data-fr="Passer une commande est simple et rapide. Suivez ces étapes :" data-en="Placing an order is simple and fast. Follow these steps:">Passer une commande est simple et rapide. Suivez ces étapes :</p>
+                                <ul>
+                                    <li data-fr="Parcourez notre catalogue et ajoutez les produits souhaités au panier." data-en="Browse our catalog and add the desired products to the cart.">Parcourez notre catalogue et ajoutez les produits souhaités au panier.</li>
+                                    <li data-fr="Rendez-vous dans le panier pour vérifier votre sélection et ajuster les quantités." data-en="Go to the cart to check your selection and adjust quantities.">Rendez-vous dans le panier pour vérifier votre sélection et ajuster les quantités.</li>
+                                    <li data-fr="Cliquez sur 'Passer la commande' et remplissez vos informations de livraison." data-en="Click on 'Place order' and fill in your delivery information.">Cliquez sur "Passer la commande" et remplissez vos informations de livraison.</li>
+                                    <li data-fr="Choisissez votre moyen de paiement (Espèces ou Wave)." data-en="Choose your payment method (Cash or Wave).">Choisissez votre moyen de paiement (Espèces ou Wave).</li>
+                                    <li data-fr="Confirmez votre commande et recevez une confirmation par SMS." data-en="Confirm your order and receive an SMS confirmation.">Confirmez votre commande et recevez une confirmation par SMS.</li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <div class="faq-item">
+                            <div class="faq-question" onclick="toggleFAQ(this)">
+                                <span><i class="fas fa-credit-card" style="color:var(--primary);margin-right:12px;width:24px;"></i> <span data-fr="Quels sont les moyens de paiement acceptés ?" data-en="What payment methods are accepted?">Quels sont les moyens de paiement acceptés ?</span></span>
+                                <i class="fas fa-chevron-down"></i>
+                            </div>
+                            <div class="faq-answer">
+                                <p data-fr="Nous acceptons deux modes de paiement :" data-en="We accept two payment methods:">Nous acceptons deux modes de paiement :</p>
+                                <ul>
+                                    <li data-fr="<strong>Wave</strong> - Paiement mobile sécurisé. Vous serez redirigé vers Wave pour finaliser le paiement." data-en="<strong>Wave</strong> - Secure mobile payment. You will be redirected to Wave to finalize the payment."><strong>Wave</strong> - Paiement mobile sécurisé. Vous serez redirigé vers Wave pour finaliser le paiement.</li>
+                                    <li data-fr="<strong>Espèces</strong> - Paiement à la livraison. Réglez directement au livreur." data-en="<strong>Cash</strong> - Payment on delivery. Pay directly to the delivery person."><strong>Espèces</strong> - Paiement à la livraison. Réglez directement au livreur.</li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <div class="faq-item">
+                            <div class="faq-question" onclick="toggleFAQ(this)">
+                                <span><i class="fas fa-map-pin" style="color:var(--primary);margin-right:12px;width:24px;"></i> <span data-fr="Comment utiliser la géolocalisation pour la livraison ?" data-en="How to use geolocation for delivery?">Comment utiliser la géolocalisation pour la livraison ?</span></span>
+                                <i class="fas fa-chevron-down"></i>
+                            </div>
+                            <div class="faq-answer">
+                                <p data-fr="Lors de la validation de votre commande, vous verrez un bouton <strong>'Utiliser ma position actuelle'</strong>." data-en="When validating your order, you will see a button <strong>'Use my current location'</strong>.">Lors de la validation de votre commande, vous verrez un bouton <strong>"Utiliser ma position actuelle"</strong>.</p>
+                                <ul>
+                                    <li data-fr="Cliquez sur ce bouton pour que votre adresse soit automatiquement remplie." data-en="Click on this button to automatically fill in your address.">Cliquez sur ce bouton pour que votre adresse soit automatiquement remplie.</li>
+                                    <li data-fr="Votre position GPS nous permet de vous livrer plus rapidement et précisément." data-en="Your GPS position allows us to deliver to you faster and more precisely.">Votre position GPS nous permet de vous livrer plus rapidement et précisément.</li>
+                                    <li data-fr="Si vous préférez, vous pouvez également saisir manuellement votre adresse." data-en="If you prefer, you can also manually enter your address.">Si vous préférez, vous pouvez également saisir manuellement votre adresse.</li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <div class="faq-item">
+                            <div class="faq-question" onclick="toggleFAQ(this)">
+                                <span><i class="fas fa-truck" style="color:var(--primary);margin-right:12px;width:24px;"></i> <span data-fr="Quels sont les délais et zones de livraison ?" data-en="What are the delivery times and areas?">Quels sont les délais et zones de livraison ?</span></span>
+                                <i class="fas fa-chevron-down"></i>
+                            </div>
+                            <div class="faq-answer">
+                                <ul>
+                                    <li data-fr="Dakar et sa banlieue : 24 à 48 heures." data-en="Dakar and its suburbs: 24 to 48 hours.">Dakar et sa banlieue : 24 à 48 heures.</li>
+                                    <li data-fr="Intérieur du Sénégal : 3 à 5 jours ouvrés." data-en="Interior of Senegal: 3 to 5 working days.">Intérieur du Sénégal : 3 à 5 jours ouvrés.</li>
+                                    <li data-fr="Nous livrons partout au Sénégal via nos partenaires de livraison." data-en="We deliver throughout Senegal via our delivery partners.">Nous livrons partout au Sénégal via nos partenaires de livraison.</li>
+                                    <li data-fr="Vous recevrez un SMS de confirmation avec le suivi de votre commande." data-en="You will receive an SMS confirmation with the tracking of your order.">Vous recevrez un SMS de confirmation avec le suivi de votre commande.</li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <div class="faq-item">
+                            <div class="faq-question" onclick="toggleFAQ(this)">
+                                <span><i class="fas fa-times-circle" style="color:var(--primary);margin-right:12px;width:24px;"></i> <span data-fr="Puis-je annuler ou modifier ma commande ?" data-en="Can I cancel or modify my order?">Puis-je annuler ou modifier ma commande ?</span></span>
+                                <i class="fas fa-chevron-down"></i>
+                            </div>
+                            <div class="faq-answer">
+                                <ul>
+                                    <li data-fr="Vous pouvez annuler votre commande tant qu'elle est en statut <strong>'En attente'</strong>." data-en="You can cancel your order as long as it is in <strong>'Pending'</strong> status.">Vous pouvez annuler votre commande tant qu'elle est en statut <strong>"En attente"</strong>.</li>
+                                    <li data-fr="Pour annuler, rendez-vous dans la section <strong>'Mes Commandes'</strong>." data-en="To cancel, go to the <strong>'My Orders'</strong> section.">Pour annuler, rendez-vous dans la section <strong>"Mes Commandes"</strong>.</li>
+                                    <li data-fr="Si vous souhaitez modifier un produit, contactez-nous rapidement au <strong>+221 78 440 51 05</strong>." data-en="If you want to modify a product, contact us quickly at <strong>+221 78 440 51 05</strong>.">Si vous souhaitez modifier un produit, contactez-nous rapidement au <strong>+221 78 440 51 05</strong>.</li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <div class="faq-item">
+                            <div class="faq-question" onclick="toggleFAQ(this)">
+                                <span><i class="fas fa-mobile-screen-button" style="color:var(--primary);margin-right:12px;width:24px;"></i> <span data-fr="Comment fonctionne le paiement avec Wave ?" data-en="How does Wave payment work?">Comment fonctionne le paiement avec Wave ?</span></span>
+                                <i class="fas fa-chevron-down"></i>
+                            </div>
+                            <div class="faq-answer">
+                                <ul>
+                                    <li data-fr="Sélectionnez <strong>'Wave'</strong> comme moyen de paiement lors de la validation." data-en="Select <strong>'Wave'</strong> as the payment method during validation.">Sélectionnez <strong>"Wave"</strong> comme moyen de paiement lors de la validation.</li>
+                                    <li data-fr="Vous recevrez les instructions de paiement avec le montant exact." data-en="You will receive payment instructions with the exact amount.">Vous recevrez les instructions de paiement avec le montant exact.</li>
+                                    <li data-fr="Ouvrez l'application Wave sur votre téléphone et effectuez le paiement." data-en="Open the Wave app on your phone and make the payment.">Ouvrez l'application Wave sur votre téléphone et effectuez le paiement.</li>
+                                    <li data-fr="Après paiement, confirmez et votre commande sera validée immédiatement." data-en="After payment, confirm and your order will be validated immediately.">Après paiement, confirmez et votre commande sera validée immédiatement.</li>
+                                    <li data-fr="⚠️ La commande n'est enregistrée qu'après confirmation du paiement Wave." data-en="⚠️ The order is only recorded after confirmation of the Wave payment.">⚠️ La commande n'est enregistrée qu'après confirmation du paiement Wave.</li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <div class="faq-item">
+                            <div class="faq-question" onclick="toggleFAQ(this)">
+                                <span><i class="fas fa-undo-alt" style="color:var(--primary);margin-right:12px;width:24px;"></i> <span data-fr="Puis-je retourner un produit ?" data-en="Can I return a product?">Puis-je retourner un produit ?</span></span>
+                                <i class="fas fa-chevron-down"></i>
+                            </div>
+                            <div class="faq-answer">
+                                <ul>
+                                    <li data-fr="Oui, vous disposez de <strong>7 jours</strong> après réception pour retourner un produit." data-en="Yes, you have <strong>7 days</strong> after receipt to return a product.">Oui, vous disposez de <strong>7 jours</strong> après réception pour retourner un produit.</li>
+                                    <li data-fr="Le produit doit être non utilisé et dans son emballage d'origine." data-en="The product must be unused and in its original packaging.">Le produit doit être non utilisé et dans son emballage d'origine.</li>
+                                    <li data-fr="Contactez-nous pour organiser le retour et le remboursement." data-en="Contact us to organize the return and refund.">Contactez-nous pour organiser le retour et le remboursement.</li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <div class="faq-item">
+                            <div class="faq-question" onclick="toggleFAQ(this)">
+                                <span><i class="fas fa-certificate" style="color:var(--primary);margin-right:12px;width:24px;"></i> <span data-fr="Les parfums sont-ils authentiques ?" data-en="Are the perfumes authentic?">Les parfums sont-ils authentiques ?</span></span>
+                                <i class="fas fa-chevron-down"></i>
+                            </div>
+                            <div class="faq-answer">
+                                <ul>
+                                    <li data-fr="Tous nos parfums sont <strong>100% authentiques</strong> et fabriqués au Sénégal." data-en="All our perfumes are <strong>100% authentic</strong> and made in Senegal.">Tous nos parfums sont <strong>100% authentiques</strong> et fabriqués au Sénégal.</li>
+                                    <li data-fr="Nous utilisons des matières premières de qualité exceptionnelle." data-en="We use exceptional quality raw materials.">Nous utilisons des matières premières de qualité exceptionnelle.</li>
+                                    <li data-fr="Chaque produit est testé et certifié conforme aux normes en vigueur." data-en="Each product is tested and certified compliant with current standards.">Chaque produit est testé et certifié conforme aux normes en vigueur.</li>
+                                </ul>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE 1 - NOS PARFUMS -->
+        <div class="slide" id="slide-produits">
+            <div class="products-header">
+                <div class="container">
+                    <h2><i class="fas fa-snowflake"></i> <span data-fr="Nos Parfums" data-en="Our Perfumes">Nos Parfums</span></h2>
+                    <p data-fr="Découvrez notre sélection de fragrances d'exception" data-en="Discover our selection of exceptional fragrances">Découvrez notre sélection de fragrances d'exception</p>
+                </div>
+            </div>
+            <div class="filters-section">
+                <div class="container">
+                    <div class="filters-wrapper">
+                        <div class="filter-group">
+                            <label data-fr="Catégorie" data-en="Category"><i class="fas fa-tag"></i> Catégorie</label>
+                            <select id="filter-categorie" class="filter-select">
+                                <option value="" data-fr="Tous" data-en="All">Tous</option>
+                                <option value="femme" data-fr="Femme" data-en="Women">Femme</option>
+                                <option value="homme" data-fr="Homme" data-en="Men">Homme</option>
+                                <option value="mixte" data-fr="Unisex" data-en="Unisex">Unisex</option>
+                            </select>
+                        </div>
+                        <div class="filter-group">
+                            <label data-fr="Type" data-en="Type"><i class="fas fa-box"></i> Type</label>
+                            <select id="filter-type" class="filter-select">
+                                <option value="" data-fr="Tous" data-en="All">Tous</option>
+                                <option value="elixir" data-fr="Elixir" data-en="Elixir">Elixir</option>
+                                <option value="extrait" data-fr="Eau de parfum" data-en="Eau de parfum">Eau de parfum</option>
+                                <option value="coffret" data-fr="Coffret" data-en="Gift Set">Coffret</option>
+                            </select>
+                        </div>
+                        <button class="btn-filter-reset" id="reset-filters"><i class="fas fa-undo"></i> <span data-fr="Réinitialiser" data-en="Reset">Réinitialiser</span></button>
+                    </div>
+                </div>
+            </div>
+            <div class="products-grid" id="products-grid">
+                <div class="loading"><i class="fas fa-spinner fa-spin"></i> Chargement des parfums...</div>
+            </div>
+        </div>
+
+        <!-- SLIDE 2 - COSMETIQUES -->
+        <div class="slide" id="slide-cosmetiques">
+            <div class="products-header">
+                <div class="container">
+                    <h2><i class="fas fa-spa"></i> <span data-fr="Beauty Store" data-en="Beauty Store">Beauty Store</span></h2>
+                    <p data-fr="Découvrez notre sélection de soins et cosmétiques d'exception" data-en="Discover our selection of exceptional care and cosmetics">Découvrez notre sélection de soins et cosmétiques d'exception</p>
+                </div>
+            </div>
+            <div class="products-grid" id="cosmetiques-grid">
+                <div class="loading"><i class="fas fa-spinner fa-spin"></i> Chargement des cosmétiques...</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- NAVIGATION MOBILE -->
+    <div class="bottom-nav-mobile">
+        <a href="/" class="nav-item-mobile slide-link active" data-slide="0"><i class="fas fa-home"></i><span data-fr="Accueil" data-en="Home">Accueil</span></a>
+        <a href="#" class="nav-item-mobile slide-link" data-slide="1"><i class="fas fa-snowflake"></i><span data-fr="Parfums" data-en="Perfumes">Parfums</span></a>
+        <a href="#" class="nav-item-mobile slide-link" data-slide="2"><i class="fas fa-spa"></i><span data-fr="Beauty Store" data-en="Beauty Store">Beauty Store</span></a>
+        <a href="panier.html" class="nav-item-mobile"><div class="cart-badge"><i class="fas fa-shopping-bag"></i><span class="cart-count-mobile" id="cart-count-mobile">0</span></div><span data-fr="Panier" data-en="Cart">Panier</span></a>
+    </div>
+
+    <!-- FOOTER -->
+    <footer class="footer">
+        <div class="footer-content">
+            <div>
+                <h3><i class="fas fa-crown"></i> Maison Yass</h3>
+                <p data-fr="L'art de la parfumerie sénégalaise,<br>des fragrances d'exception pour sublimer vos moments." data-en="The art of Senegalese perfumery,<br>exceptional fragrances to enhance your moments.">L'art de la parfumerie sénégalaise,<br>des fragrances d'exception pour sublimer vos moments.</p>
+                <div class="social-links-footer">
+                    <a href="https://www.instagram.com/maison_yass?igsh=MXBvNThwZWttNmxrMQ==" target="_blank"><i class="fab fa-instagram"></i></a>
+                    <a href="https://snapchat.com/t/HX3bOe9s" target="_blank"><i class="fab fa-snapchat-ghost"></i></a>
+                    <a href="https://wa.me/221784405105" target="_blank"><i class="fab fa-whatsapp"></i></a>
+                    <a href="https://www.tiktok.com/@maisonyass" target="_blank"><i class="fab fa-tiktok"></i></a>
+                </div>
+            </div>
+            <div>
+                <h3 data-fr="Liens utiles" data-en="Useful links">Liens utiles</h3>
+                <p><a href="/" data-fr="Accueil" data-en="Home">Accueil</a></p>
+                <p><a href="#" class="slide-link" data-slide="1" data-fr="Nos Parfums" data-en="Our Perfumes">Nos Parfums</a></p>
+                <p><a href="#" class="slide-link" data-slide="2" data-fr="Beauty Store" data-en="Beauty Store">Beauty Store</a></p>
+                <p><a href="panier.html" data-fr="Panier" data-en="Cart">Panier</a></p>
+                <p><a href="commandes.html" data-fr="Commandes" data-en="Orders">Commandes</a></p>
+            </div>
+            <div>
+                <h3 data-fr="Contact" data-en="Contact">Contact</h3>
+                <p><i class="fas fa-phone" style="color:var(--primary);"></i> +221 78 440 51 05</p>
+                <p><i class="fas fa-envelope" style="color:var(--primary);"></i> contact@maisonyass.com</p>
+                <p><i class="fas fa-map-marker-alt" style="color:var(--primary);"></i> Thiaroye Azur, Sénégal</p>
+            </div>
+            <div>
+                <h3 data-fr="Bientôt disponible" data-en="Coming soon">Bientôt disponible</h3>
+                <p data-fr="Téléchargez notre application mobile" data-en="Download our mobile app">Téléchargez notre application mobile</p>
+                <div class="app-badges">
+                    <a href="#"><i class="fab fa-apple"></i> App Store</a>
+                    <a href="#"><i class="fab fa-google-play"></i> Play Store</a>
+                </div>
+                <p style="margin-top:0.5rem;font-size:0.8rem;color:#888;" data-fr="Disponible prochainement" data-en="Available soon">Disponible prochainement</p>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2026 Maison Yass - <span data-fr="Tous droits réservés." data-en="All rights reserved.">Tous droits réservés.</span> <span data-fr="Créé avec" data-en="Made with">Créé avec</span> <i class="fas fa-heart"></i> <span data-fr="au Sénégal." data-en="in Senegal.">au Sénégal.</span></p>
+        </div>
+    </footer>
+
+    <script>
+        const API_URL = 'https://maison-yass.onrender.com';
+
+        // ===== FAQ TOGGLE =====
+        function toggleFAQ(element) {
+            const parent = element.parentElement;
+            const answer = parent.querySelector('.faq-answer');
+            const isOpen = answer.classList.contains('open');
+            
+            document.querySelectorAll('.faq-answer').forEach(a => a.classList.remove('open'));
+            document.querySelectorAll('.faq-item').forEach(i => i.classList.remove('active'));
+            
+            if (!isOpen) {
+                answer.classList.add('open');
+                parent.classList.add('active');
+            }
+        }
+
+        // ===== DARK MODE =====
+        function setTheme(mode) {
+            if (mode === 'dark') {
+                document.body.classList.add('dark-mode');
+                document.querySelectorAll('.btn-theme, .btn-theme-mobile').forEach(btn => {
+                    btn.innerHTML = '<i class="fas fa-sun"></i>';
+                });
+                localStorage.setItem('theme', 'dark');
+            } else {
+                document.body.classList.remove('dark-mode');
+                document.querySelectorAll('.btn-theme, .btn-theme-mobile').forEach(btn => {
+                    btn.innerHTML = '<i class="fas fa-moon"></i>';
+                });
+                localStorage.setItem('theme', 'light');
+            }
+        }
+
+        // ===== TRADUCTION =====
+        function translatePage(lang) {
+            document.documentElement.lang = lang;
+            localStorage.setItem('lang', lang);
+            
+            document.querySelectorAll('#lang-toggle, #lang-toggle-mobile').forEach(btn => {
+                btn.textContent = lang === 'fr' ? 'EN' : 'FR';
+            });
+
+            document.querySelectorAll('[data-fr][data-en]').forEach(el => {
+                const text = lang === 'fr' ? el.getAttribute('data-fr') : el.getAttribute('data-en');
+                if (el.tagName === 'INPUT' || el.tagName === 'TEXTAREA') {
+                    el.placeholder = text;
+                } else if (el.tagName === 'OPTION') {
+                    el.textContent = text;
+                } else {
+                    el.innerHTML = text;
+                }
+            });
+        }
+
+        // ===== PANIER =====
+        function mettreAJourPanier() {
+            const panier = JSON.parse(localStorage.getItem('panier')) || [];
+            const totalItems = panier.reduce((sum, item) => sum + item.quantite, 0);
+            document.getElementById('cart-count-desktop').textContent = totalItems;
+            document.getElementById('cart-count-mobile').textContent = totalItems;
+        }
+
+        // ===== PRODUITS (Parfums) =====
+        async function chargerProduits() {
+            const container = document.getElementById('products-grid');
+            const categorie = document.getElementById('filter-categorie').value;
+            const type = document.getElementById('filter-type').value;
+            const lang = localStorage.getItem('lang') || 'fr';
+            
+            let url = `${API_URL}/api/produits?`;
+            if (categorie) url += `categorie=${categorie}&`;
+            if (type) url += `type=${type}&`;
+
+            try {
+                const response = await fetch(url);
+                const produits = await response.json();
+
+                if (produits.length === 0) {
+                    container.innerHTML = `<div class="loading" data-fr="Aucun produit disponible" data-en="No products available">Aucun produit disponible</div>`;
+                    return;
+                }
+
+                let html = '';
+                let currentType = '';
+
+                produits.forEach(p => {
+                    if (p.type_produit !== currentType) {
+                        currentType = p.type_produit;
+                        const typeLabel = currentType.charAt(0).toUpperCase() + currentType.slice(1);
+                        html += `<div class="category-header"><i class="fas fa-tag"></i> ${typeLabel}</div>`;
+                    }
+
+                    const isPromo = p.en_promo === 1 && p.prix_promo;
+                    const isRupture = p.stock === 0;
+                    const imageUrl = (p.images && p.images.length > 0) ? p.images[0].image_url : 'https://placehold.co/400x400/cccccc/ffffff?text=Parfum';
+
+                    html += `
+                        <div class="product-card" data-id="${p.id}">
+                            ${isPromo ? `<span class="promo-badge">-${p.remise}%</span>` : ''}
+                            ${isRupture ? `<span class="rupture-badge">${lang === 'fr' ? 'Rupture' : 'Out of stock'}</span>` : ''}
+                            <div class="carousel-container">
+                                <div class="carousel-slides">
+                                    <div class="carousel-slide"><img src="${imageUrl}" alt="${p.nom}" loading="lazy"></div>
+                                    ${(p.images || []).slice(1).map(img => `<div class="carousel-slide"><img src="${img.image_url}" alt="${p.nom}" loading="lazy"></div>`).join('')}
+                                    ${(p.videos || []).map(vid => `<div class="carousel-slide"><video src="${vid.video_url}" muted playsinline></video></div>`).join('')}
+                                </div>
+                                ${((p.images || []).length + (p.videos || []).length) > 1 ? `
+                                    <button class="carousel-btn carousel-btn-prev"><i class="fas fa-chevron-left"></i></button>
+                                    <button class="carousel-btn carousel-btn-next"><i class="fas fa-chevron-right"></i></button>
+                                    <div class="carousel-dots"></div>
+                                ` : ''}
+                            </div>
+                            <div class="product-info">
+                                <div class="product-title">${p.nom}</div>
+                                <span class="product-categorie">${p.categorie || 'Mixte'}</span>
+                                <div class="product-price">
+                                    ${isPromo ? 
+                                        `<span class="old-price">${p.prix.toLocaleString('fr-FR')} FCFA</span>
+                                         <span class="promo-price">${p.prix_promo.toLocaleString('fr-FR')} FCFA</span>` :
+                                        `<span class="normal-price">${p.prix.toLocaleString('fr-FR')} FCFA</span>`
+                                    }
+                                </div>
+                                ${p.notes_olfactives ? `<div class="product-notes"><strong>${lang === 'fr' ? 'Notes' : 'Notes'} :</strong> ${p.notes_olfactives}</div>` : ''}
+                                <div class="product-stock"><strong>${lang === 'fr' ? 'Stock' : 'Stock'} :</strong> ${p.stock}</div>
+                                <div class="quantity-control">
+                                    <button class="quantity-btn" onclick="changerQuantite(${p.id}, -1)"><i class="fas fa-minus"></i></button>
+                                    <input type="number" class="quantity-input" id="qty-${p.id}" value="1" min="1" max="${p.stock}">
+                                    <button class="quantity-btn" onclick="changerQuantite(${p.id}, 1)"><i class="fas fa-plus"></i></button>
+                                </div>
+                                <button class="add-to-cart" onclick="ajouterAuPanier(${p.id})" ${isRupture ? 'disabled' : ''}>
+                                    ${isRupture ? (lang === 'fr' ? 'Rupture de stock' : 'Out of stock') : `<i class="fas fa-shopping-bag"></i> ${lang === 'fr' ? 'Ajouter au panier' : 'Add to cart'}`}
+                                </button>
+                            </div>
+                        </div>
+                    `;
+                });
+
+                container.innerHTML = html;
+                initCarousels();
+            } catch (error) {
+                console.error('Erreur chargement produits:', error);
+                container.innerHTML = `<div class="loading" data-fr="Erreur de chargement" data-en="Loading error">Erreur de chargement</div>`;
+            }
+        }
+
+        // ===== COSMETIQUES =====
+        async function chargerCosmetiques() {
+            const container = document.getElementById('cosmetiques-grid');
+            const lang = localStorage.getItem('lang') || 'fr';
+            
+            try {
+                const response = await fetch(`${API_URL}/api/cosmetiques`);
+                const produits = await response.json();
+
+                if (produits.length === 0) {
+                    container.innerHTML = `<div class="loading" data-fr="Aucun cosmétique disponible" data-en="No cosmetics available">Aucun cosmétique disponible</div>`;
+                    return;
+                }
+
+                let html = '';
+
+                produits.forEach(p => {
+                    const isPromo = p.en_promo === 1 && p.prix_promo;
+                    const isRupture = p.stock === 0;
+                    const imageUrl = (p.images && p.images.length > 0) ? p.images[0].image_url : 'https://placehold.co/400x400/cccccc/ffffff?text=Cosmétique';
+
+                    html += `
+                        <div class="product-card" data-id="${p.id}">
+                            ${isPromo ? `<span class="promo-badge">-${p.remise}%</span>` : ''}
+                            ${isRupture ? `<span class="rupture-badge">${lang === 'fr' ? 'Rupture' : 'Out of stock'}</span>` : ''}
+                            <div class="carousel-container">
+                                <div class="carousel-slides">
+                                    <div class="carousel-slide"><img src="${imageUrl}" alt="${p.nom}" loading="lazy"></div>
+                                    ${(p.images || []).slice(1).map(img => `<div class="carousel-slide"><img src="${img.image_url}" alt="${p.nom}" loading="lazy"></div>`).join('')}
+                                    ${(p.videos || []).map(vid => `<div class="carousel-slide"><video src="${vid.video_url}" muted playsinline></video></div>`).join('')}
+                                </div>
+                                ${((p.images || []).length + (p.videos || []).length) > 1 ? `
+                                    <button class="carousel-btn carousel-btn-prev"><i class="fas fa-chevron-left"></i></button>
+                                    <button class="carousel-btn carousel-btn-next"><i class="fas fa-chevron-right"></i></button>
+                                    <div class="carousel-dots"></div>
+                                ` : ''}
+                            </div>
+                            <div class="product-info">
+                                <div class="product-title">${p.nom}</div>
+                                <span class="product-categorie">${p.type_produit || 'Soin'}</span>
+                                <div class="product-price">
+                                    ${isPromo ? 
+                                        `<span class="old-price">${p.prix.toLocaleString('fr-FR')} FCFA</span>
+                                         <span class="promo-price">${p.prix_promo.toLocaleString('fr-FR')} FCFA</span>` :
+                                        `<span class="normal-price">${p.prix.toLocaleString('fr-FR')} FCFA</span>`
+                                    }
+                                </div>
+                                <div class="product-stock"><strong>${lang === 'fr' ? 'Stock' : 'Stock'} :</strong> ${p.stock}</div>
+                                <div class="quantity-control">
+                                    <button class="quantity-btn" onclick="changerQuantite(${p.id}, -1)"><i class="fas fa-minus"></i></button>
+                                    <input type="number" class="quantity-input" id="qty-${p.id}" value="1" min="1" max="${p.stock}">
+                                    <button class="quantity-btn" onclick="changerQuantite(${p.id}, 1)"><i class="fas fa-plus"></i></button>
+                                </div>
+                                <button class="add-to-cart" onclick="ajouterAuPanier(${p.id})" ${isRupture ? 'disabled' : ''}>
+                                    ${isRupture ? (lang === 'fr' ? 'Rupture de stock' : 'Out of stock') : `<i class="fas fa-shopping-bag"></i> ${lang === 'fr' ? 'Ajouter au panier' : 'Add to cart'}`}
+                                </button>
+                            </div>
+                        </div>
+                    `;
+                });
+
+                container.innerHTML = html;
+                initCarousels();
+            } catch (error) {
+                console.error('Erreur chargement cosmétiques:', error);
+                container.innerHTML = `<div class="loading" data-fr="Erreur de chargement" data-en="Loading error">Erreur de chargement</div>`;
+            }
+        }
+
+        function initCarousels() {
+            document.querySelectorAll('.carousel-container').forEach(container => {
+                const slides = container.querySelector('.carousel-slides');
+                const dotsContainer = container.querySelector('.carousel-dots');
+                const prevBtn = container.querySelector('.carousel-btn-prev');
+                const nextBtn = container.querySelector('.carousel-btn-next');
+                
+                if (!slides) return;
+                
+                const totalSlides = slides.children.length;
+                if (totalSlides <= 1) return;
+                
+                let currentIndex = 0;
+                
+                if (dotsContainer) {
+                    dotsContainer.innerHTML = '';
+                    for (let i = 0; i < totalSlides; i++) {
+                        const dot = document.createElement('div');
+                        dot.className = `carousel-dot ${i === 0 ? 'active' : ''}`;
+                        dot.addEventListener('click', () => goToSlide(i));
+                        dotsContainer.appendChild(dot);
+                    }
+                }
+                
+                function goToSlide(index) {
+                    currentIndex = index;
+                    slides.style.transform = `translateX(-${currentIndex * 100}%)`;
+                    if (dotsContainer) {
+                        dotsContainer.querySelectorAll('.carousel-dot').forEach((dot, i) => {
+                            dot.classList.toggle('active', i === currentIndex);
+                        });
+                    }
+                }
+                
+                if (prevBtn) prevBtn.addEventListener('click', () => {
+                    goToSlide((currentIndex - 1 + totalSlides) % totalSlides);
+                });
+                if (nextBtn) nextBtn.addEventListener('click', () => {
+                    goToSlide((currentIndex + 1) % totalSlides);
+                });
+                
+                let autoPlay = setInterval(() => {
+                    goToSlide((currentIndex + 1) % totalSlides);
+                }, 5000);
+                
+                container.addEventListener('mouseenter', () => clearInterval(autoPlay));
+                container.addEventListener('mouseleave', () => {
+                    autoPlay = setInterval(() => {
+                        goToSlide((currentIndex + 1) % totalSlides);
+                    }, 5000);
+                });
+            });
+        }
+
+        function changerQuantite(id, delta) {
+            const input = document.getElementById(`qty-${id}`);
+            if (input) {
+                const newVal = parseInt(input.value) + delta;
+                if (newVal >= 1) input.value = newVal;
+            }
+        }
+
+        function ajouterAuPanier(id) {
+            const produit = document.querySelector(`.product-card[data-id="${id}"]`);
+            if (!produit) return;
+            
+            const nom = produit.querySelector('.product-title').textContent;
+            const prixElement = produit.querySelector('.promo-price') || produit.querySelector('.normal-price');
+            const prix = parseInt(prixElement.textContent.replace(/\s/g, '').replace('FCFA', ''));
+            const image = produit.querySelector('.carousel-slide img')?.src || '';
+            const qtyInput = document.getElementById(`qty-${id}`);
+            const quantite = parseInt(qtyInput?.value) || 1;
+            const lang = localStorage.getItem('lang') || 'fr';
+            
+            let panier = JSON.parse(localStorage.getItem('panier')) || [];
+            const existant = panier.find(item => item.id === id);
+            
+            if (existant) {
+                existant.quantite += quantite;
+            } else {
+                panier.push({ id, nom, prix, image, quantite });
+            }
+            
+            localStorage.setItem('panier', JSON.stringify(panier));
+            mettreAJourPanier();
+            
+            // Animation feedback
+            const btn = produit.querySelector('.add-to-cart');
+            btn.textContent = lang === 'fr' ? '✅ Ajouté !' : '✅ Added!';
+            setTimeout(() => {
+                btn.innerHTML = `<i class="fas fa-shopping-bag"></i> ${lang === 'fr' ? 'Ajouter au panier' : 'Add to cart'}`;
+            }, 1500);
+        }
+
+        // ===== AVIS CLIENTS =====
+        async function chargerAvis() {
+            const container = document.getElementById('avis-clients');
+            const lang = localStorage.getItem('lang') || 'fr';
+            try {
+                const response = await fetch(`${API_URL}/api/avis`);
+                const avis = await response.json();
+                
+                if (avis.length === 0) {
+                    container.innerHTML = `<p style="text-align:center;color:var(--text-light);" data-fr="Aucun avis pour le moment. Soyez le premier à donner votre avis !" data-en="No reviews yet. Be the first to give your opinion!">Aucun avis pour le moment. Soyez le premier à donner votre avis !</p>`;
+                    return;
+                }
+                
+                const avisRecents = avis.slice(0, 6);
+                let html = '';
+                avisRecents.forEach(a => {
+                    const stars = '⭐'.repeat(a.note) + '☆'.repeat(5 - a.note);
+                    const initial = a.client_nom ? a.client_nom.charAt(0).toUpperCase() : '?';
+                    html += `
+                        <div class="avis-card">
+                            <div class="avis-header">
+                                <div class="avis-avatar">${initial}</div>
+                                <div class="avis-info">
+                                    <div class="avis-nom">${a.client_nom || 'Anonyme'}</div>
+                                    <div class="avis-date">${new Date(a.date_creation).toLocaleDateString(lang === 'fr' ? 'fr-FR' : 'en-US')}</div>
+                                </div>
+                            </div>
+                            <div class="avis-stars">${stars}</div>
+                            <div class="avis-text">"${a.commentaire || 'Aucun commentaire'}"</div>
+                            ${a.produit_nom ? `<div class="avis-produit">📦 <strong>${lang === 'fr' ? 'Produit' : 'Product'} :</strong> ${a.produit_nom}</div>` : ''}
+                        </div>
+                    `;
+                });
+                container.innerHTML = html;
+            } catch (error) {
+                console.error('Erreur chargement avis:', error);
+                container.innerHTML = `<p style="text-align:center;color:var(--text-light);" data-fr="Impossible de charger les avis." data-en="Unable to load reviews.">Impossible de charger les avis.</p>`;
+            }
+        }
+
+        // ===== FORMULAIRE AVIS =====
+        document.getElementById('avis-form').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            const nom = document.getElementById('avis-nom').value.trim();
+            const note = parseInt(document.getElementById('avis-note').value);
+            const commentaire = document.getElementById('avis-commentaire').value.trim();
+            const messageEl = document.getElementById('avis-message');
+            const btn = this.querySelector('.btn-submit');
+            const lang = localStorage.getItem('lang') || 'fr';
+
+            if (!nom || !commentaire) {
+                messageEl.className = 'form-message error';
+                messageEl.textContent = lang === 'fr' ? '❌ Veuillez remplir tous les champs' : '❌ Please fill in all fields';
+                messageEl.style.display = 'block';
+                return;
+            }
+
+            btn.disabled = true;
+            btn.innerHTML = `<span class="spinner"><i class="fas fa-circle-notch"></i></span> ${lang === 'fr' ? 'Envoi...' : 'Sending...'}`;
+
+            try {
+                const response = await fetch(`${API_URL}/api/avis`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ client_nom: nom, note, commentaire })
+                });
+                const data = await response.json();
+                
+                if (data.success) {
+                    messageEl.className = 'form-message success';
+                    messageEl.textContent = lang === 'fr' ? '✅ Merci pour votre avis ! Il sera visible après validation.' : '✅ Thank you for your review! It will be visible after validation.';
+                    messageEl.style.display = 'block';
+                    this.reset();
+                    chargerAvis();
+                } else {
+                    messageEl.className = 'form-message error';
+                    messageEl.textContent = (lang === 'fr' ? '❌ Erreur lors de l\'envoi : ' : '❌ Error sending: ') + (data.error || '');
+                    messageEl.style.display = 'block';
+                }
+            } catch (error) {
+                messageEl.className = 'form-message error';
+                messageEl.textContent = lang === 'fr' ? '❌ Erreur de connexion. Veuillez réessayer.' : '❌ Connection error. Please try again.';
+                messageEl.style.display = 'block';
+            }
+
+            btn.disabled = false;
+            btn.innerHTML = `<i class="fas fa-paper-plane"></i> ${lang === 'fr' ? 'Envoyer mon avis' : 'Send my review'}`;
+        });
+
+        // ===== FORMULAIRE MESSAGE =====
+        document.getElementById('message-form').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            const expediteur = document.getElementById('msg-nom').value.trim();
+            const email = document.getElementById('msg-email').value.trim();
+            const sujet = document.getElementById('msg-sujet').value.trim();
+            const message = document.getElementById('msg-message').value.trim();
+            const messageEl = document.getElementById('msg-message-status');
+            const btn = this.querySelector('.btn-submit');
+            const lang = localStorage.getItem('lang') || 'fr';
+
+            if (!expediteur || !sujet || !message) {
+                messageEl.className = 'form-message error';
+                messageEl.textContent = lang === 'fr' ? '❌ Veuillez remplir tous les champs obligatoires' : '❌ Please fill in all required fields';
+                messageEl.style.display = 'block';
+                return;
+            }
+
+            btn.disabled = true;
+            btn.innerHTML = `<span class="spinner"><i class="fas fa-circle-notch"></i></span> ${lang === 'fr' ? 'Envoi...' : 'Sending...'}`;
+
+            try {
+                const response = await fetch(`${API_URL}/api/messages`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ expediteur, email, sujet, message })
+                });
+                const data = await response.json();
+                
+                if (data.success) {
+                    messageEl.className = 'form-message success';
+                    messageEl.textContent = lang === 'fr' ? '✅ Votre message a été envoyé avec succès !' : '✅ Your message has been sent successfully!';
+                    messageEl.style.display = 'block';
+                    this.reset();
+                } else {
+                    messageEl.className = 'form-message error';
+                    messageEl.textContent = (lang === 'fr' ? '❌ Erreur lors de l\'envoi : ' : '❌ Error sending: ') + (data.error || '');
+                    messageEl.style.display = 'block';
+                }
+            } catch (error) {
+                messageEl.className = 'form-message error';
+                messageEl.textContent = lang === 'fr' ? '❌ Erreur de connexion. Veuillez réessayer.' : '❌ Connection error. Please try again.';
+                messageEl.style.display = 'block';
+            }
+
+            btn.disabled = false;
+            btn.innerHTML = `<i class="fas fa-paper-plane"></i> ${lang === 'fr' ? 'Envoyer le message' : 'Send message'}`;
+        });
+
+        // ===== SLIDES =====
+        document.addEventListener('DOMContentLoaded', function() {
+            mettreAJourPanier();
+            chargerProduits();
+            chargerCosmetiques();
+            chargerAvis();
+            
+            const savedTheme = localStorage.getItem('theme') || 'light';
+            setTheme(savedTheme);
+
+            const savedLang = localStorage.getItem('lang') || 'fr';
+            translatePage(savedLang);
+            
+            document.querySelectorAll('.btn-theme, .btn-theme-mobile').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    setTheme(document.body.classList.contains('dark-mode') ? 'light' : 'dark');
+                });
+            });
+
+            document.querySelectorAll('#lang-toggle, #lang-toggle-mobile').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const currentLang = localStorage.getItem('lang') || 'fr';
+                    const newLang = currentLang === 'fr' ? 'en' : 'fr';
+                    translatePage(newLang);
+                    chargerProduits(); 
+                    chargerCosmetiques();
+                });
+            });
+
+            // Slides
+            const slideLinks = document.querySelectorAll('.slide-link');
+            const slides = document.querySelectorAll('.slide');
+            const navItems = document.querySelectorAll('.nav-item-mobile');
+            
+            slideLinks.forEach(link => {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const idx = parseInt(this.dataset.slide);
+                    if (!isNaN(idx)) {
+                        slides.forEach((s, i) => s.classList.toggle('active', i === idx));
+                        navItems.forEach((item, i) => item.classList.toggle('active', i === idx));
+                    }
+                });
+            });
+
+            // Filtres Parfums
+            document.getElementById('filter-categorie').addEventListener('change', chargerProduits);
+            document.getElementById('filter-type').addEventListener('change', chargerProduits);
+            document.getElementById('reset-filters').addEventListener('click', function() {
+                document.getElementById('filter-categorie').value = '';
+                document.getElementById('filter-type').value = '';
+                chargerProduits();
+            });
+        });
+    </script>
+</body>
+</html>

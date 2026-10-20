@@ -1,0 +1,1067 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Maison Yass - Mon Panier</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        .panier-container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 2rem 20px;
+        }
+        .panier-header {
+            text-align: center;
+            padding: 3rem 0;
+            background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url('./img/banniere-accueil.jpeg');
+            background-size: cover;
+            background-position: center;
+            border-radius: var(--radius);
+            margin-bottom: 2rem;
+            color: var(--white);
+        }
+        .panier-header h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: 2.5rem;
+        }
+        .panier-header h1 i { color: var(--primary); margin-right: 10px; }
+        .panier-header .slogan {
+            font-size: 1.1rem;
+            opacity: 0.8;
+            margin-top: 0.5rem;
+            font-style: italic;
+        }
+
+        .panier-item {
+            display: flex;
+            gap: 1.5rem;
+            padding: 1.5rem;
+            background: var(--white);
+            border-radius: var(--radius);
+            margin-bottom: 1rem;
+            box-shadow: var(--shadow);
+            align-items: center;
+            flex-wrap: wrap;
+            border-left: 4px solid var(--primary);
+        }
+        .panier-item img {
+            width: 100px;
+            height: 100px;
+            object-fit: cover;
+            border-radius: 8px;
+        }
+        .panier-item-info { flex: 1; min-width: 150px; }
+        .panier-item-info h3 {
+            font-family: 'Playfair Display', serif;
+            color: var(--secondary);
+        }
+        .panier-item-info .prix {
+            color: var(--primary);
+            font-weight: 600;
+            font-size: 1.2rem;
+        }
+        .panier-item-qty {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .panier-item-qty button {
+            background: var(--background);
+            border: none;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+        .panier-item-qty button:hover {
+            background: var(--primary);
+            color: white;
+        }
+        .panier-item-qty input {
+            width: 50px;
+            text-align: center;
+            border: 2px solid #eee;
+            border-radius: 20px;
+            padding: 5px;
+        }
+        .panier-item-remove {
+            background: transparent;
+            border: none;
+            color: #e74c3c;
+            cursor: pointer;
+            font-size: 1.2rem;
+            transition: var(--transition);
+        }
+        .panier-item-remove:hover { transform: scale(1.2); }
+
+        .panier-total {
+            text-align: right;
+            padding: 2rem;
+            background: var(--white);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            margin-top: 1rem;
+            border-top: 3px solid var(--primary);
+        }
+        .panier-total h2 {
+            font-family: 'Playfair Display', serif;
+            color: var(--secondary);
+        }
+        .panier-total .total-price {
+            color: var(--primary);
+            font-size: 2rem;
+            font-weight: 700;
+        }
+        .panier-actions {
+            display: flex;
+            gap: 1rem;
+            justify-content: flex-end;
+            margin-top: 1rem;
+            flex-wrap: wrap;
+        }
+        .panier-vide {
+            text-align: center;
+            padding: 4rem 2rem;
+            color: var(--text-light);
+        }
+        .panier-vide i {
+            font-size: 4rem;
+            color: var(--primary);
+            margin-bottom: 1rem;
+        }
+        .panier-vide h2 {
+            font-family: 'Playfair Display', serif;
+            color: var(--secondary);
+        }
+
+        .form-group { margin-bottom: 1.5rem; }
+        .form-group label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: var(--secondary);
+        }
+        .form-group label .required { color: var(--primary); }
+        .form-group input, .form-group select {
+            width: 100%;
+            padding: 12px 16px;
+            border: 2px solid #eee;
+            border-radius: var(--radius);
+            font-family: 'Poppins', sans-serif;
+            transition: var(--transition);
+            background: var(--white);
+            color: var(--text-dark);
+        }
+        .form-group input:focus, .form-group select:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(204,0,0,0.1);
+        }
+        .form-group input.geoloc-success {
+            border-color: #27ae60;
+            background: #f0fff4;
+        }
+
+        .btn-geoloc {
+            background: var(--secondary);
+            color: var(--white);
+            border: none;
+            padding: 8px 16px;
+            border-radius: 30px;
+            cursor: pointer;
+            font-size: 0.8rem;
+            transition: var(--transition);
+            margin-bottom: 0.5rem;
+            font-family: 'Poppins', sans-serif;
+        }
+        .btn-geoloc:hover {
+            background: var(--primary);
+        }
+        .btn-geoloc i { margin-right: 6px; }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+        }
+
+        .btn-confirm {
+            background: var(--primary);
+            color: var(--white);
+            border: none;
+            padding: 14px 30px;
+            border-radius: 50px;
+            cursor: pointer;
+            font-weight: 600;
+            font-family: 'Poppins', sans-serif;
+            font-size: 1rem;
+            transition: var(--transition);
+            width: 100%;
+            margin-top: 0.5rem;
+        }
+        .btn-confirm:hover {
+            background: var(--primary-dark);
+            transform: scale(1.02);
+            box-shadow: 0 5px 20px rgba(204,0,0,0.3);
+        }
+
+        .btn-cancel {
+            background: transparent;
+            color: var(--text-dark);
+            border: 2px solid #ddd;
+            padding: 14px 30px;
+            border-radius: 50px;
+            cursor: pointer;
+            font-weight: 600;
+            font-family: 'Poppins', sans-serif;
+            font-size: 1rem;
+            transition: var(--transition);
+            width: 100%;
+            margin-top: 0.5rem;
+        }
+        .btn-cancel:hover {
+            border-color: var(--primary);
+            color: var(--primary);
+        }
+
+        .form-actions {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+            margin-top: 0.5rem;
+        }
+
+        .payment-options {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+        }
+        .payment-option {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 14px 18px;
+            border: 2px solid #eee;
+            border-radius: var(--radius);
+            cursor: pointer;
+            transition: var(--transition);
+            background: var(--white);
+        }
+        .payment-option:hover {
+            border-color: var(--primary);
+            background: rgba(204,0,0,0.05);
+        }
+        .payment-option.selected {
+            border-color: var(--primary);
+            background: rgba(204,0,0,0.08);
+            box-shadow: 0 0 0 3px rgba(204,0,0,0.15);
+        }
+        .payment-option img {
+            height: 35px;
+            width: auto;
+            object-fit: contain;
+        }
+        .payment-option i {
+            font-size: 1.8rem;
+            color: var(--primary);
+        }
+        .payment-option .label {
+            font-weight: 600;
+            color: var(--text-dark);
+            font-size: 0.95rem;
+        }
+        .payment-option input[type="radio"] {
+            display: none;
+        }
+        .payment-option .check {
+            margin-left: auto;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            border: 2px solid #ddd;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: var(--transition);
+        }
+        .payment-option.selected .check {
+            border-color: var(--primary);
+            background: var(--primary);
+        }
+        .payment-option.selected .check::after {
+            content: '\f00c';
+            font-family: 'Font Awesome 6 Free';
+            font-weight: 900;
+            color: white;
+            font-size: 0.7rem;
+        }
+
+        .geoloc-spinner {
+            display: inline-block;
+            animation: spin 1s linear infinite;
+            margin-right: 6px;
+        }
+        @keyframes spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        /* ===== FRAIS DE LIVRAISON ===== */
+        .delivery-info {
+            background: var(--background);
+            padding: 1rem;
+            border-radius: var(--radius);
+            margin-bottom: 1rem;
+            border-left: 4px solid var(--primary);
+        }
+        .delivery-info .delivery-label {
+            font-weight: 600;
+            color: var(--secondary);
+        }
+        .delivery-info .delivery-price {
+            font-weight: 700;
+            color: var(--primary);
+            font-size: 1.1rem;
+        }
+        .delivery-info .delivery-zone {
+            font-size: 0.85rem;
+            color: var(--text-light);
+        }
+
+        .total-with-delivery {
+            border-top: 2px solid var(--primary);
+            padding-top: 1rem;
+            margin-top: 0.5rem;
+        }
+
+        .footer {
+            background: var(--white);
+            color: var(--secondary);
+            padding: 3rem 0 1.5rem;
+            border-top: 2px solid var(--primary);
+        }
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+        }
+        .footer h3 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.2rem;
+            margin-bottom: 1rem;
+            color: var(--primary);
+        }
+        .footer p, .footer a {
+            color: var(--text-dark);
+            font-size: 0.9rem;
+            line-height: 1.8;
+        }
+        .footer a:hover { color: var(--primary); }
+        .footer .social-links-footer {
+            display: flex;
+            gap: 1rem;
+            margin-top: 0.5rem;
+        }
+        .footer .social-links-footer a {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: var(--primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: var(--transition);
+            color: var(--white);
+        }
+        .footer .social-links-footer a:hover {
+            transform: translateY(-3px);
+            opacity: 0.8;
+        }
+        .footer .app-badges {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+            margin-top: 0.5rem;
+        }
+        .footer .app-badges a {
+            display: inline-block;
+            padding: 8px 20px;
+            background: var(--background);
+            border-radius: 8px;
+            transition: var(--transition);
+            font-weight: 500;
+            font-size: 0.85rem;
+            border: 1px solid var(--primary);
+            color: var(--primary);
+        }
+        .footer .app-badges a:hover {
+            background: var(--primary);
+            color: white;
+        }
+        .footer .app-badges i { margin-right: 8px; }
+        .footer-bottom {
+            text-align: center;
+            padding-top: 2rem;
+            margin-top: 2rem;
+            border-top: 1px solid #eee;
+            font-size: 0.8rem;
+            color: #888;
+        }
+        .footer-bottom i { color: var(--primary); }
+
+        body.dark-mode .panier-item {
+            background: #2a2a2a;
+        }
+        body.dark-mode .panier-item .panier-item-info h3 {
+            color: var(--text-dark) !important;
+        }
+        body.dark-mode .panier-item .panier-item-info .prix {
+            color: var(--primary) !important;
+        }
+        body.dark-mode .panier-item .panier-item-info div {
+            color: #b8b0a8 !important;
+        }
+        body.dark-mode .panier-total {
+            background: #2a2a2a;
+        }
+        body.dark-mode .panier-total h2 {
+            color: var(--text-dark) !important;
+        }
+        body.dark-mode .panier-total .total-price {
+            color: var(--primary) !important;
+        }
+        body.dark-mode .panier-header {
+            color: var(--white) !important;
+        }
+        body.dark-mode .panier-header .slogan {
+            color: #b8b0a8 !important;
+        }
+        body.dark-mode .panier-vide h2 {
+            color: var(--text-dark) !important;
+        }
+        body.dark-mode .panier-vide p {
+            color: #b8b0a8 !important;
+        }
+        body.dark-mode .form-group label {
+            color: var(--text-dark) !important;
+        }
+        body.dark-mode .form-group input,
+        body.dark-mode .form-group select {
+            background: #2a2a2a;
+            color: var(--text-dark) !important;
+            border-color: #444;
+        }
+        body.dark-mode .form-group input::placeholder {
+            color: #888 !important;
+        }
+        body.dark-mode .payment-option {
+            background: #2a2a2a;
+            border-color: #444;
+        }
+        body.dark-mode .payment-option .label {
+            color: var(--text-dark) !important;
+        }
+        body.dark-mode .payment-option.selected {
+            border-color: var(--primary);
+            background: rgba(204,0,0,0.15);
+        }
+        body.dark-mode .btn-cancel {
+            color: var(--text-dark) !important;
+            border-color: #444;
+        }
+        body.dark-mode .btn-cancel:hover {
+            border-color: var(--primary);
+            color: var(--primary) !important;
+        }
+        body.dark-mode .delivery-info {
+            background: #2a2a2a;
+        }
+        body.dark-mode .delivery-info .delivery-label {
+            color: var(--text-dark) !important;
+        }
+        body.dark-mode .delivery-info .delivery-zone {
+            color: #b8b0a8 !important;
+        }
+        body.dark-mode .footer {
+            background: #1a1a1a;
+            color: var(--text-dark) !important;
+            border-color: var(--primary);
+        }
+        body.dark-mode .footer h3 {
+            color: var(--primary) !important;
+        }
+        body.dark-mode .footer p,
+        body.dark-mode .footer a {
+            color: #b8b0a8 !important;
+        }
+        body.dark-mode .footer a:hover {
+            color: var(--primary) !important;
+        }
+        body.dark-mode .footer .social-links-footer a {
+            background: var(--primary);
+            color: var(--white) !important;
+        }
+        body.dark-mode .footer-bottom {
+            border-color: rgba(255,255,255,0.1);
+            color: #888 !important;
+        }
+        body.dark-mode .btn-geoloc {
+            background: #2a2a2a;
+            color: var(--text-dark);
+        }
+        body.dark-mode .btn-geoloc:hover {
+            background: var(--primary);
+            color: var(--white);
+        }
+
+        @media (max-width: 768px) {
+            .panier-item { flex-direction: column; text-align: center; }
+            .panier-item img { width: 150px; height: 150px; }
+            .panier-total { text-align: center; }
+            .panier-actions { justify-content: center; }
+            .form-row { grid-template-columns: 1fr; }
+            .form-actions { grid-template-columns: 1fr; }
+            .payment-options { grid-template-columns: 1fr; }
+            .footer-content { grid-template-columns: 1fr; text-align: center; }
+            .footer .social-links-footer { justify-content: center; }
+            .footer .app-badges { justify-content: center; }
+        }
+        @media (max-width: 480px) {
+            .panier-header h1 { font-size: 1.8rem; }
+            .payment-option { padding: 12px; }
+            .payment-option img { height: 28px; }
+        }
+    </style>
+</head>
+<body>
+    <!-- NAVIGATION -->
+    <nav class="navbar-desktop">
+        <div class="logo">
+            <img src="./img/logo-maison-yass.png" alt="Maison Yass" onerror="this.src='https://placehold.co/40x40/cc0000/ffffff?text=MY'">
+            <span>Maison Yass</span>
+        </div>
+        <ul class="nav-links-desktop">
+            <li><a href="/">Accueil</a></li>
+            <li><a href="/#slide-produits">Nos Parfums</a></li>
+            <li><a href="panier.html" style="color:var(--primary-dark) !important;"><i class="fas fa-shopping-bag"></i> Panier <span class="cart-count" id="cart-count-desktop">0</span></a></li>
+            <li><a href="commandes.html"><i class="fas fa-clipboard-list"></i> Commandes</a></li>
+            <li><a href="admin-login.html"><i class="fas fa-user-shield"></i> Admin</a></li>
+        </ul>
+        <div class="navbar-right">
+            <button id="theme-toggle" class="btn-theme"><i class="fas fa-moon"></i></button>
+        </div>
+    </nav>
+
+    <div class="top-header-mobile">
+        <div class="logo">
+            <img src="./img/logo-maison-yass.png" alt="Maison Yass" onerror="this.src='https://placehold.co/32x32/cc0000/ffffff?text=MY'">
+            <span>Maison Yass</span>
+        </div>
+        <div class="mobile-actions">
+            <button id="theme-toggle-mobile" class="btn-theme-mobile"><i class="fas fa-moon"></i></button>
+        </div>
+    </div>
+
+    <div class="slides-container">
+        <div class="panier-container">
+            <div class="panier-header">
+                <h1><i class="fas fa-shopping-bag"></i> Mon Panier</h1>
+                <p class="slogan"><i class="fas fa-crown" style="color:var(--primary);"></i> Un parfum, une histoire</p>
+            </div>
+            <div id="panier-content"><div class="loading">Chargement...</div></div>
+        </div>
+    </div>
+
+    <div class="bottom-nav-mobile">
+        <a href="/" class="nav-item-mobile"><i class="fas fa-home"></i><span>Accueil</span></a>
+        <a href="/#slide-produits" class="nav-item-mobile"><i class="fas fa-snowflake"></i><span>Parfums</span></a>
+        <a href="panier.html" class="nav-item-mobile active"><div class="cart-badge"><i class="fas fa-shopping-bag"></i><span class="cart-count-mobile" id="cart-count-mobile">0</span></div><span>Panier</span></a>
+        <a href="commandes.html" class="nav-item-mobile"><i class="fas fa-clipboard-list"></i><span>Commandes</span></a>
+    </div>
+
+    <!-- ===== FOOTER ===== -->
+    <footer class="footer">
+        <div class="footer-content">
+            <div>
+                <h3><i class="fas fa-crown"></i> Maison Yass</h3>
+                <p>L'art de la parfumerie sénégalaise,<br>des fragrances d'exception pour sublimer vos moments.</p>
+                <div class="social-links-footer">
+                    <a href="https://www.instagram.com/maison_yass?igsh=MXBvNThwZWttNmxrMQ==" target="_blank"><i class="fab fa-instagram"></i></a>
+                    <a href="https://snapchat.com/t/HX3bOe9s" target="_blank"><i class="fab fa-snapchat-ghost"></i></a>
+                    <a href="https://wa.me/221784405105" target="_blank"><i class="fab fa-whatsapp"></i></a>
+                    <a href="https://www.tiktok.com/@maisonyass" target="_blank"><i class="fab fa-tiktok"></i></a>
+                </div>
+            </div>
+            <div>
+                <h3>Liens utiles</h3>
+                <p><a href="/">Accueil</a></p>
+                <p><a href="/#slide-produits">Nos Parfums</a></p>
+                <p><a href="panier.html">Panier</a></p>
+                <p><a href="commandes.html">Commandes</a></p>
+            </div>
+            <div>
+                <h3>Contact</h3>
+                <p><i class="fas fa-phone" style="color:var(--primary);"></i> +221 78 440 51 05</p>
+                <p><i class="fas fa-envelope" style="color:var(--primary);"></i> contact@maisonyass.com</p>
+                <p><i class="fas fa-map-marker-alt" style="color:var(--primary);"></i> Thiaroye Azur, Sénégal</p>
+            </div>
+            <div>
+                <h3>Bientôt disponible</h3>
+                <p>Téléchargez notre application mobile</p>
+                <div class="app-badges">
+                    <a href="#"><i class="fab fa-apple"></i> App Store</a>
+                    <a href="#"><i class="fab fa-google-play"></i> Play Store</a>
+                </div>
+                <p style="margin-top:0.5rem;font-size:0.8rem;color:#888;">Disponible prochainement</p>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2026 Maison Yass - Tous droits réservés. Créé avec <i class="fas fa-heart"></i> au Sénégal.</p>
+        </div>
+    </footer>
+
+    <script>
+        let panier = JSON.parse(localStorage.getItem('panier')) || [];
+        const API_URL = 'https://maison-yass.onrender.com';
+        let userLatitude = null;
+        let userLongitude = null;
+        let selectedPayment = '';
+        let fraisLivraison = 0;
+        let zoneLivraison = '';
+
+        function mettreAJourPanier() {
+            const totalItems = panier.reduce((sum, item) => sum + item.quantite, 0);
+            document.getElementById('cart-count-desktop').textContent = totalItems;
+            document.getElementById('cart-count-mobile').textContent = totalItems;
+        }
+
+        // ===== GÉOLOCALISATION =====
+        function geolocaliser() {
+            const btn = document.getElementById('btn-geoloc');
+            const status = document.getElementById('geoloc-status');
+            
+            if (!navigator.geolocation) {
+                status.innerHTML = '<span style="color:#e74c3c;">❌ La géolocalisation n\'est pas supportée par votre navigateur</span>';
+                return;
+            }
+
+            btn.disabled = true;
+            btn.innerHTML = '<i class="fas fa-spinner geoloc-spinner"></i> Localisation en cours...';
+
+            navigator.geolocation.getCurrentPosition(
+                function(position) {
+                    userLatitude = position.coords.latitude;
+                    userLongitude = position.coords.longitude;
+                    
+                    document.getElementById('client_latitude').value = userLatitude;
+                    document.getElementById('client_longitude').value = userLongitude;
+                    
+                    fetch(`https://nominatim.openstreetmap.org/reverse?lat=${userLatitude}&lon=${userLongitude}&format=json&accept-language=fr`)
+                        .then(response => response.json())
+                        .then(data => {
+                            const adresse = data.display_name || `${userLatitude}, ${userLongitude}`;
+                            document.getElementById('client_adresse').value = adresse;
+                            document.getElementById('client_adresse').className = 'geoloc-success';
+                            status.innerHTML = '<span style="color:#27ae60;">✅ Position trouvée !</span>';
+                            btn.innerHTML = '<i class="fas fa-check"></i> Localisation réussie';
+                            btn.disabled = false;
+                            calculerFraisLivraison(adresse, userLatitude, userLongitude);
+                            document.getElementById('client_nom').focus();
+                        })
+                        .catch(() => {
+                            const adresseInput = document.getElementById('client_adresse');
+                            adresseInput.value = `Lat: ${userLatitude}, Lon: ${userLongitude}`;
+                            adresseInput.className = 'geoloc-success';
+                            status.innerHTML = '<span style="color:#27ae60;">✅ Position trouvée (coordonnées)</span>';
+                            btn.innerHTML = '<i class="fas fa-check"></i> Localisation réussie';
+                            btn.disabled = false;
+                            calculerFraisLivraison(adresseInput.value, userLatitude, userLongitude);
+                            document.getElementById('client_nom').focus();
+                        });
+                },
+                function(error) {
+                    let msg = 'Erreur de localisation';
+                    switch(error.code) {
+                        case error.PERMISSION_DENIED:
+                            msg = '❌ Permission de localisation refusée. Veuillez autoriser dans les paramètres.';
+                            break;
+                        case error.POSITION_UNAVAILABLE:
+                            msg = '❌ Position indisponible. Vérifiez votre GPS.';
+                            break;
+                        case error.TIMEOUT:
+                            msg = '⏱️ Délai de localisation dépassé.';
+                            break;
+                        default:
+                            msg = '❌ Erreur de localisation inconnue.';
+                    }
+                    status.innerHTML = `<span style="color:#e74c3c;">${msg}</span>`;
+                    btn.innerHTML = '<i class="fas fa-map-pin"></i> Réessayer la localisation';
+                    btn.disabled = false;
+                },
+                {
+                    enableHighAccuracy: true,
+                    timeout: 10000,
+                    maximumAge: 0
+                }
+            );
+        }
+
+        // ===== CALCUL DES FRAIS DE LIVRAISON =====
+        async function calculerFraisLivraison(adresse, latitude, longitude) {
+            try {
+                const response = await fetch(`${API_URL}/api/calculer-frais-livraison`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ adresse, latitude, longitude })
+                });
+                const data = await response.json();
+                fraisLivraison = data.frais || 0;
+                zoneLivraison = data.zone || 'Zone par défaut';
+                
+                const deliveryInfo = document.getElementById('delivery-info');
+                if (deliveryInfo) {
+                    deliveryInfo.innerHTML = `
+                        <div class="delivery-label"><i class="fas fa-truck"></i> Frais de livraison</div>
+                        <div class="delivery-price">${fraisLivraison.toLocaleString('fr-FR')} FCFA</div>
+                        <div class="delivery-zone">Zone : ${zoneLivraison}</div>
+                    `;
+                }
+                mettreAJourTotal();
+            } catch (error) {
+                console.error('Erreur calcul frais livraison:', error);
+                fraisLivraison = 0;
+            }
+        }
+
+        // ===== SÉLECTION PAIEMENT =====
+        function selectPayment(value) {
+            selectedPayment = value;
+            document.querySelectorAll('.payment-option').forEach(el => el.classList.remove('selected'));
+            document.querySelectorAll('.payment-option input[type="radio"]').forEach(input => {
+                if (input.value === value) {
+                    input.checked = true;
+                    input.closest('.payment-option').classList.add('selected');
+                }
+            });
+            document.getElementById('moyen_paiement').value = value;
+        }
+
+        // ===== AFFICHAGE PANIER =====
+        function afficherPanier() {
+            const container = document.getElementById('panier-content');
+            if (!panier || panier.length === 0) {
+                container.innerHTML = `
+                    <div class="panier-vide">
+                        <i class="fas fa-shopping-bag"></i>
+                        <h2>Votre panier est vide</h2>
+                        <p>Découvrez nos parfums d'exception</p>
+                        <a href="/" class="btn-primary" style="display:inline-block;margin-top:1rem;background:var(--primary);color:white;padding:12px 30px;border-radius:30px;text-decoration:none;">Découvrir</a>
+                    </div>
+                `;
+                return;
+            }
+
+            let html = '';
+            let total = 0;
+            panier.forEach((item, index) => {
+                const prix = item.prix || 0;
+                const sousTotal = prix * item.quantite;
+                total += sousTotal;
+                html += `
+                    <div class="panier-item" data-index="${index}">
+                        <img src="${item.image || 'https://placehold.co/100x100/cc0000/ffffff?text=Parfum'}" alt="${item.nom}">
+                        <div class="panier-item-info">
+                            <h3>${item.nom}</h3>
+                            <div class="prix">${prix.toLocaleString('fr-FR')} FCFA</div>
+                            <div style="font-size:0.85rem;color:var(--text-light);">Sous-total: ${sousTotal.toLocaleString('fr-FR')} FCFA</div>
+                        </div>
+                        <div class="panier-item-qty">
+                            <button onclick="modifierQuantite(${index}, -1)"><i class="fas fa-minus"></i></button>
+                            <input type="number" id="qty-${index}" value="${item.quantite}" min="1" onchange="changerQuantite(${index}, this.value)">
+                            <button onclick="modifierQuantite(${index}, 1)"><i class="fas fa-plus"></i></button>
+                        </div>
+                        <button class="panier-item-remove" onclick="supprimerItem(${index})"><i class="fas fa-trash-alt"></i></button>
+                    </div>
+                `;
+            });
+
+            const totalAvecLivraison = total + fraisLivraison;
+
+            html += `
+                <div class="panier-total">
+                    <div id="delivery-info" class="delivery-info">
+                        <div class="delivery-label"><i class="fas fa-truck"></i> Frais de livraison</div>
+                        <div class="delivery-price">${fraisLivraison.toLocaleString('fr-FR')} FCFA</div>
+                        <div class="delivery-zone">Zone : ${zoneLivraison || 'Non définie'}</div>
+                    </div>
+                    <div class="total-with-delivery">
+                        <h2>Sous-total: <span class="total-price">${total.toLocaleString('fr-FR')} FCFA</span></h2>
+                        <h2>Total avec livraison: <span class="total-price" style="font-size:1.8rem;">${totalAvecLivraison.toLocaleString('fr-FR')} FCFA</span></h2>
+                    </div>
+                    <div class="panier-actions">
+                        <button class="btn-secondary" onclick="viderPanier()" style="background:transparent;border:2px solid var(--primary);color:var(--primary);padding:12px 24px;border-radius:30px;cursor:pointer;"><i class="fas fa-trash-alt"></i> Vider</button>
+                        <button class="btn-primary" onclick="passerCommande()" style="background:var(--primary);color:white;border:none;padding:12px 24px;border-radius:30px;cursor:pointer;"><i class="fas fa-check"></i> Passer la commande</button>
+                    </div>
+                </div>
+                <div id="form-commande" style="display:none;margin-top:2rem;">
+                    <h3 style="font-family:'Playfair Display',serif;color:var(--secondary);margin-bottom:1.5rem;"><i class="fas fa-edit"></i> Informations de livraison</h3>
+                    
+                    <div style="margin-bottom:1rem;">
+                        <button class="btn-geoloc" id="btn-geoloc" onclick="geolocaliser()">
+                            <i class="fas fa-map-pin"></i> Utiliser ma position actuelle
+                        </button>
+                        <span id="geoloc-status" style="font-size:0.8rem;color:var(--text-light);"></span>
+                    </div>
+                    
+                    <form id="commande-form">
+                        <input type="hidden" id="client_latitude" value="">
+                        <input type="hidden" id="client_longitude" value="">
+                        <input type="hidden" id="frais_livraison" value="${fraisLivraison}">
+                        <input type="hidden" id="zone_livraison" value="${zoneLivraison}">
+                        
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label><i class="fas fa-user"></i> Nom complet <span class="required">*</span></label>
+                                <input type="text" id="client_nom" placeholder="Votre nom complet" required>
+                            </div>
+                            <div class="form-group">
+                                <label><i class="fas fa-phone"></i> Téléphone <span class="required">*</span></label>
+                                <input type="tel" id="client_telephone" placeholder="77 123 45 67" required>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label><i class="fas fa-map-marker-alt"></i> Adresse de livraison <span class="required">*</span></label>
+                            <input type="text" id="client_adresse" placeholder="Quartier, rue, numéro" required onchange="calculerFraisLivraison(this.value, null, null)">
+                            <small style="color:var(--text-light);font-size:0.75rem;"><i class="fas fa-info-circle"></i> Cliquez sur le bouton ci-dessus pour une géolocalisation automatique</small>
+                        </div>
+                        <div class="form-group">
+                            <label><i class="fas fa-envelope"></i> Email (optionnel)</label>
+                            <input type="email" id="client_email" placeholder="votre@email.com">
+                        </div>
+                        <div class="form-group">
+                            <label><i class="fas fa-credit-card"></i> Moyen de paiement <span class="required">*</span></label>
+                            <input type="hidden" id="moyen_paiement" value="">
+                            <div class="payment-options">
+                                <div class="payment-option" onclick="selectPayment('Espèces')">
+                                    <input type="radio" name="payment" value="Espèces">
+                                    <i class="fas fa-money-bill-wave"></i>
+                                    <span class="label">Espèces</span>
+                                    <div class="check"></div>
+                                </div>
+                                <div class="payment-option" onclick="selectPayment('Wave')">
+                                    <input type="radio" name="payment" value="Wave">
+                                    <img src="./img/WAVE.webp" alt="Wave" onerror="this.src='https://upload.wikimedia.org/wikipedia/commons/thumb/5/5a/Wave_Logo_2023.svg/120px-Wave_Logo_2023.svg.png'">
+                                    <span class="label">Wave</span>
+                                    <div class="check"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-actions">
+                            <button type="button" class="btn-cancel" onclick="annulerCommande()"><i class="fas fa-times"></i> Annuler</button>
+                            <button type="submit" class="btn-confirm"><i class="fas fa-check-circle"></i> Confirmer la commande</button>
+                        </div>
+                    </form>
+                </div>
+            `;
+
+            container.innerHTML = html;
+            mettreAJourPanier();
+
+            document.getElementById('commande-form')?.addEventListener('submit', function(e) {
+                e.preventDefault();
+                confirmerCommande();
+            });
+        }
+
+        function mettreAJourTotal() {
+            const total = panier.reduce((sum, item) => sum + (item.prix || 0) * item.quantite, 0);
+            const totalAvecLivraison = total + fraisLivraison;
+            const deliveryInfo = document.getElementById('delivery-info');
+            if (deliveryInfo) {
+                deliveryInfo.innerHTML = `
+                    <div class="delivery-label"><i class="fas fa-truck"></i> Frais de livraison</div>
+                    <div class="delivery-price">${fraisLivraison.toLocaleString('fr-FR')} FCFA</div>
+                    <div class="delivery-zone">Zone : ${zoneLivraison || 'Non définie'}</div>
+                `;
+            }
+            // Mettre à jour le total
+            const totalElements = document.querySelectorAll('.total-price');
+            if (totalElements.length >= 2) {
+                totalElements[0].textContent = total.toLocaleString('fr-FR') + ' FCFA';
+                totalElements[1].textContent = totalAvecLivraison.toLocaleString('fr-FR') + ' FCFA';
+            }
+        }
+
+        function modifierQuantite(index, delta) {
+            if (panier[index]) {
+                panier[index].quantite = Math.max(1, panier[index].quantite + delta);
+                localStorage.setItem('panier', JSON.stringify(panier));
+                afficherPanier();
+            }
+        }
+
+        function changerQuantite(index, value) {
+            if (panier[index]) {
+                panier[index].quantite = Math.max(1, parseInt(value) || 1);
+                localStorage.setItem('panier', JSON.stringify(panier));
+                afficherPanier();
+            }
+        }
+
+        function supprimerItem(index) {
+            panier.splice(index, 1);
+            localStorage.setItem('panier', JSON.stringify(panier));
+            afficherPanier();
+        }
+
+        function viderPanier() {
+            if (confirm('Voulez-vous vraiment vider votre panier ?')) {
+                panier = [];
+                localStorage.setItem('panier', JSON.stringify(panier));
+                afficherPanier();
+            }
+        }
+
+        function passerCommande() {
+            const form = document.getElementById('form-commande');
+            if (form.style.display === 'none') {
+                form.style.display = 'block';
+                form.scrollIntoView({ behavior: 'smooth' });
+            } else {
+                form.style.display = 'none';
+            }
+        }
+
+        function annulerCommande() {
+            document.getElementById('form-commande').style.display = 'none';
+        }
+
+        async function confirmerCommande() {
+            const nom = document.getElementById('client_nom').value.trim();
+            const telephone = document.getElementById('client_telephone').value.trim();
+            const adresse = document.getElementById('client_adresse').value.trim();
+            const email = document.getElementById('client_email').value.trim();
+            const paiement = document.getElementById('moyen_paiement').value;
+            const latitude = document.getElementById('client_latitude').value || null;
+            const longitude = document.getElementById('client_longitude').value || null;
+            const frais = parseInt(document.getElementById('frais_livraison').value) || fraisLivraison;
+            const zone = document.getElementById('zone_livraison').value || zoneLivraison;
+
+            if (!nom || !telephone || !adresse || !paiement) {
+                alert('Veuillez remplir tous les champs obligatoires et sélectionner un moyen de paiement');
+                return;
+            }
+
+            const totalProduits = panier.reduce((sum, item) => sum + (item.prix || 0) * item.quantite, 0);
+            const total = totalProduits + frais;
+
+            // ===== PAIEMENT WAVE =====
+            if (paiement === 'Wave') {
+                const reference = `MY-${Date.now()}`;
+                
+                const waveMessage = `💳 Paiement WAVE\n\n` +
+                    `Montant total : ${total.toLocaleString('fr-FR')} FCFA\n` +
+                    `Dont frais de livraison : ${frais.toLocaleString('fr-FR')} FCFA\n` +
+                    `Référence : ${reference}\n\n` +
+                    `📱 Veuillez ouvrir l'application Wave sur votre téléphone\n` +
+                    `💰 Effectuez le paiement de ${total.toLocaleString('fr-FR')} FCFA\n` +
+                    `📝 Utilisez la référence : ${reference}\n\n` +
+                    `Cliquez sur "OK" après avoir effectué le paiement.`;
+
+                const confirmation = confirm(waveMessage + '\n\n✅ Avez-vous effectué le paiement sur Wave ?');
+
+                if (!confirmation) {
+                    alert('❌ Commande annulée. Veuillez effectuer le paiement Wave pour valider votre commande.');
+                    return;
+                }
+
+                const verification = confirm('🔍 Vérification du paiement...\n\nAvez-vous bien reçu la confirmation de paiement Wave ?');
+
+                if (!verification) {
+                    alert('❌ Commande annulée. Nous n\'avons pas reçu la confirmation de paiement Wave.');
+                    return;
+                }
+
+                alert('✅ Paiement Wave confirmé !');
+            }
+
+            // ===== ENREGISTRER LA COMMANDE =====
+            const commande = {
+                client_nom: nom,
+                client_telephone: telephone,
+                client_adresse: adresse,
+                client_email: email,
+                client_latitude: latitude ? parseFloat(latitude) : null,
+                client_longitude: longitude ? parseFloat(longitude) : null,
+                moyen_paiement: paiement,
+                produits: panier.map(p => ({ id: p.id, nom: p.nom, quantite: p.quantite, prix: p.prix || 0 })),
+                total: total,
+                frais_livraison: frais,
+                zone_livraison: zone
+            };
+
+            try {
+                const response = await fetch(`${API_URL}/api/commandes`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(commande)
+                });
+                const data = await response.json();
+                if (data.success) {
+                    const msg = paiement === 'Espèces' 
+                        ? '💵 Paiement à la livraison' 
+                        : '📱 Paiement WAVE validé';
+                    alert(`✅ Commande validée !\n\nMode de paiement : ${paiement}\nTotal : ${total.toLocaleString('fr-FR')} FCFA\nDont livraison : ${frais.toLocaleString('fr-FR')} FCFA\nZone : ${zone}\n\n${msg}`);
+                    localStorage.setItem('client_telephone', telephone);
+                    panier = [];
+                    localStorage.setItem('panier', JSON.stringify(panier));
+                    afficherPanier();
+                } else {
+                    alert('❌ Erreur lors de la commande.');
+                }
+            } catch (error) {
+                console.error('Erreur commande:', error);
+                alert('❌ Erreur de connexion.');
+            }
+        }
+
+        // ===== DARK MODE =====
+        function setTheme(mode) {
+            if (mode === 'dark') {
+                document.body.classList.add('dark-mode');
+                document.querySelectorAll('.btn-theme, .btn-theme-mobile').forEach(btn => {
+                    btn.innerHTML = '<i class="fas fa-sun"></i>';
+                });
+                localStorage.setItem('theme', 'dark');
+            } else {
+                document.body.classList.remove('dark-mode');
+                document.querySelectorAll('.btn-theme, .btn-theme-mobile').forEach(btn => {
+                    btn.innerHTML = '<i class="fas fa-moon"></i>';
+                });
+                localStorage.setItem('theme', 'light');
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            afficherPanier();
+            const savedTheme = localStorage.getItem('theme') || 'light';
+            setTheme(savedTheme);
+            
+            document.querySelectorAll('.btn-theme, .btn-theme-mobile').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    setTheme(document.body.classList.contains('dark-mode') ? 'light' : 'dark');
+                });
+            });
+        });
+    </script>
+</body>
+</html>

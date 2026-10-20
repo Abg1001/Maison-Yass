@@ -1,0 +1,3966 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard - Maison Yass</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        /* ===== VARIABLES ===== */
+        :root {
+            --primary: #cc0000;
+            --primary-light: #ff1a1a;
+            --primary-dark: #990000;
+            --secondary: #1a1a1a;
+            --secondary-light: #333333;
+            --background: #f8f8f8;
+            --white: #ffffff;
+            --shadow: 0 5px 20px rgba(0,0,0,0.05);
+            --shadow-hover: 0 10px 30px rgba(204,0,0,0.1);
+            --sidebar-width: 260px;
+            --radius: 12px;
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            --text-light: #999;
+            --text-dark: #333;
+            --success: #27ae60;
+            --warning: #f39c12;
+            --info: #3498db;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: var(--background);
+            min-height: 100vh;
+        }
+
+        .admin-header-banner {
+            background: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)), url('./img/banniere-accueil.png');
+            background-size: cover;
+            background-position: center;
+            padding: 1.5rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: fixed;
+            top: 0;
+            right: 0;
+            left: var(--sidebar-width);
+            z-index: 999;
+            border-bottom: 3px solid var(--primary);
+        }
+        .admin-header-banner .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-family: 'Playfair Display', serif;
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: var(--white);
+        }
+        .admin-header-banner .logo img {
+            height: 36px;
+            width: auto;
+            filter: drop-shadow(0 2px 10px rgba(204,0,0,0.3));
+        }
+        .admin-header-banner .admin-user {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            color: var(--white);
+        }
+        .admin-header-banner .admin-user .btn-logout {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 8px 20px;
+            border-radius: 30px;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+        .admin-header-banner .admin-user .btn-logout:hover {
+            background: var(--primary-dark);
+        }
+
+        .sidebar {
+            position: fixed;
+            left: 0;
+            top: 0;
+            width: var(--sidebar-width);
+            height: 100%;
+            background: var(--secondary);
+            box-shadow: 2px 0 20px rgba(0,0,0,0.2);
+            z-index: 1000;
+            padding: 0;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+        }
+        .sidebar-logo {
+            text-align: center;
+            padding: 1.5rem 1rem 1rem;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            margin-bottom: 0.5rem;
+        }
+        .sidebar-logo h2 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.1rem;
+            color: var(--white);
+        }
+        .sidebar-logo h2 img {
+            height: 35px;
+            width: auto;
+            display: block;
+            margin: 0 auto 8px;
+        }
+        .sidebar-logo .subtitle {
+            color: rgba(255,255,255,0.5);
+            font-size: 0.6rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .sidebar-menu { 
+            list-style: none; 
+            padding: 0 0.8rem; 
+            flex: 1;
+        }
+        .sidebar-menu .menu-label {
+            color: rgba(255,255,255,0.3);
+            font-size: 0.6rem;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            padding: 0.8rem 0.8rem 0.3rem;
+            font-weight: 600;
+        }
+        .sidebar-menu li { margin-bottom: 0.2rem; }
+        .sidebar-menu a {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 10px 14px;
+            text-decoration: none;
+            color: rgba(255,255,255,0.7);
+            border-radius: 8px;
+            transition: var(--transition);
+            font-weight: 400;
+            font-size: 0.85rem;
+        }
+        .sidebar-menu a i { 
+            width: 20px; 
+            font-size: 0.95rem; 
+            text-align: center;
+        }
+        .sidebar-menu a:hover { 
+            background: rgba(204,0,0,0.15); 
+            color: var(--white); 
+        }
+        .sidebar-menu .active { 
+            background: var(--primary); 
+            color: var(--white);
+            box-shadow: 0 4px 15px rgba(204,0,0,0.3);
+        }
+        .sidebar-menu .active i { color: var(--white); }
+        .sidebar-menu a .badge-sidebar {
+            margin-left: auto;
+            background: var(--primary);
+            color: white;
+            font-size: 0.6rem;
+            padding: 2px 8px;
+            border-radius: 20px;
+        }
+        .sidebar-menu a .badge-sidebar.success { background: var(--success); }
+        .sidebar-menu a .badge-sidebar.warning { background: var(--warning); }
+        .sidebar-menu a .badge-sidebar.info { background: var(--info); }
+
+        .sidebar-bottom {
+            padding: 0.8rem;
+            border-top: 1px solid rgba(255,255,255,0.08);
+        }
+        .sidebar-bottom a {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 10px 14px;
+            text-decoration: none;
+            color: rgba(255,255,255,0.7);
+            border-radius: 8px;
+            transition: var(--transition);
+            font-size: 0.85rem;
+        }
+        .sidebar-bottom a i { width: 20px; text-align: center; }
+        .sidebar-bottom a:hover { background: rgba(204,0,0,0.15); color: var(--white); }
+
+        .main-content {
+            margin-left: var(--sidebar-width);
+            padding: 90px 2rem 2rem;
+        }
+
+        .dashboard-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+        .dashboard-header h1 {
+            font-family: 'Playfair Display', serif;
+            color: var(--secondary);
+            font-size: 1.8rem;
+        }
+        .dashboard-header h1 i { color: var(--primary); }
+        .dashboard-header .header-actions {
+            display: flex;
+            gap: 0.8rem;
+            align-items: center;
+        }
+        .dashboard-header .header-actions .date-display {
+            font-size: 0.85rem;
+            color: var(--text-light);
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.2rem;
+            margin-bottom: 1.5rem;
+        }
+        .stat-card {
+            background: var(--white);
+            border-radius: var(--radius);
+            padding: 1.2rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+            border-left: 4px solid var(--primary);
+        }
+        .stat-card:hover { transform: translateY(-3px); box-shadow: var(--shadow-hover); }
+        .stat-info h3 { color: #aaa; font-size: 0.75rem; margin-bottom: 0.3rem; font-weight: 500; }
+        .stat-number { font-size: 1.5rem; font-weight: 700; color: var(--secondary); }
+        .stat-icon {
+            width: 45px;
+            height: 45px;
+            background: var(--primary);
+            border-radius: var(--radius);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .stat-icon i { font-size: 1.3rem; color: white; }
+
+        .admin-filters {
+            background: var(--white);
+            border-radius: var(--radius);
+            padding: 1rem;
+            margin-bottom: 1.5rem;
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+            align-items: flex-end;
+            border: 1px solid rgba(204,0,0,0.1);
+            box-shadow: var(--shadow);
+        }
+        .admin-filters .filter-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.3rem;
+            min-width: 140px;
+        }
+        .admin-filters .filter-group label {
+            font-size: 0.7rem;
+            font-weight: 600;
+            color: var(--text-light);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .admin-filters .filter-group select,
+        .admin-filters .filter-group input {
+            padding: 8px 12px;
+            border: 2px solid #eee;
+            border-radius: var(--radius);
+            font-size: 0.85rem;
+            font-family: 'Poppins', sans-serif;
+            background: var(--background);
+            color: var(--text-dark);
+            transition: var(--transition);
+            min-width: 120px;
+        }
+        .admin-filters .filter-group select:focus,
+        .admin-filters .filter-group input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(204,0,0,0.1);
+        }
+        .admin-filters .btn-filter-reset {
+            background: var(--secondary);
+            color: white;
+            border: none;
+            padding: 8px 18px;
+            border-radius: 30px;
+            cursor: pointer;
+            transition: var(--transition);
+            font-size: 0.8rem;
+            font-weight: 500;
+            height: 42px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .admin-filters .btn-filter-reset:hover {
+            background: var(--primary);
+        }
+
+        .filters-bar {
+            background: var(--white);
+            border-radius: var(--radius);
+            padding: 1rem;
+            margin-bottom: 1.5rem;
+            display: flex;
+            gap: 0.8rem;
+            flex-wrap: wrap;
+            align-items: center;
+            border: 1px solid rgba(204,0,0,0.1);
+        }
+        .filters-bar select, .filters-bar input {
+            padding: 8px 12px;
+            border: 1px solid #ddd;
+            border-radius: var(--radius);
+            font-size: 0.85rem;
+            font-family: 'Poppins', sans-serif;
+            background: var(--background);
+        }
+        .filters-bar select:focus, .filters-bar input:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+        .filters-bar button {
+            background: var(--secondary);
+            color: white;
+            border: none;
+            padding: 8px 18px;
+            border-radius: 30px;
+            cursor: pointer;
+            transition: var(--transition);
+            font-size: 0.8rem;
+        }
+        .filters-bar button:hover { background: var(--primary); }
+
+        .orders-table-container {
+            background: var(--white);
+            border-radius: var(--radius);
+            padding: 1rem;
+            box-shadow: var(--shadow);
+            overflow-x: auto;
+            border: 1px solid rgba(204,0,0,0.1);
+        }
+        .orders-table { width: 100%; border-collapse: collapse; font-size: 0.85rem; }
+        .orders-table th {
+            background: var(--secondary);
+            color: white;
+            padding: 0.8rem;
+            text-align: left;
+            font-weight: 600;
+            font-size: 0.8rem;
+        }
+        .orders-table td { padding: 0.8rem; border-bottom: 1px solid #f0f0f0; vertical-align: middle; }
+        .orders-table tr:hover td { background: #fef8f9; }
+
+        .adresse-link {
+            color: var(--primary);
+            text-decoration: none;
+            cursor: pointer;
+            transition: var(--transition);
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            font-weight: 500;
+        }
+        .adresse-link:hover {
+            color: var(--primary-dark);
+            text-decoration: underline;
+        }
+        .adresse-link i { font-size: 0.8rem; color: var(--primary); }
+
+        .btn-detail {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 4px 12px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 0.7rem;
+            transition: var(--transition);
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+        }
+        .btn-detail:hover {
+            background: var(--primary-dark);
+            transform: scale(1.05);
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: 30px;
+            font-size: 0.7rem;
+            font-weight: 500;
+        }
+        .badge-warning { background: #fff3e0; color: #e89c3e; }
+        .badge-success { background: #e8f5e9; color: #4caf50; }
+        .badge-danger { background: #ffebee; color: #f44336; }
+        .badge-categorie { background: rgba(204,0,0,0.15); color: var(--primary); }
+        .badge-format { background: var(--secondary); color: white; }
+        .badge-hidden { background: #f5f5f5; color: #999; }
+        .badge-info { background: #e3f2fd; color: #1976d2; }
+
+        .promo-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+        .promo-stat-card {
+            background: var(--white);
+            border-radius: var(--radius);
+            padding: 1rem 1.2rem;
+            box-shadow: var(--shadow);
+            border-left: 4px solid var(--primary);
+        }
+        .promo-stat-card .number {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--primary);
+            font-family: 'Playfair Display', serif;
+        }
+        .promo-stat-card .label {
+            font-size: 0.75rem;
+            color: var(--text-light);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .promo-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 1rem;
+        }
+        .promo-card {
+            background: var(--white);
+            border-radius: var(--radius);
+            padding: 1.2rem;
+            box-shadow: var(--shadow);
+            border: 1px solid #eee;
+            transition: var(--transition);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 0.8rem;
+        }
+        .promo-card:hover {
+            transform: translateY(-3px);
+            box-shadow: var(--shadow-hover);
+            border-color: var(--primary);
+        }
+        .promo-card .info {
+            flex: 1;
+            min-width: 150px;
+        }
+        .promo-card .info .nom {
+            font-weight: 600;
+            color: var(--secondary);
+            font-size: 1rem;
+            font-family: 'Playfair Display', serif;
+        }
+        .promo-card .info .prix {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-top: 2px;
+            flex-wrap: wrap;
+        }
+        .promo-card .info .prix .original {
+            color: #999;
+            text-decoration: line-through;
+            font-size: 0.85rem;
+        }
+        .promo-card .info .prix .promo {
+            color: var(--primary);
+            font-weight: 700;
+            font-size: 1.1rem;
+        }
+        .promo-card .info .badges {
+            display: flex;
+            gap: 6px;
+            margin-top: 4px;
+            flex-wrap: wrap;
+        }
+        .promo-card .info .badges .badge {
+            font-size: 0.6rem;
+        }
+        .promo-card .actions {
+            display: flex;
+            gap: 0.5rem;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+        .promo-card .actions .promo-input {
+            width: 70px;
+            padding: 6px 8px;
+            border: 2px solid #ddd;
+            border-radius: 20px;
+            text-align: center;
+            font-family: 'Poppins', sans-serif;
+            font-size: 0.8rem;
+            transition: var(--transition);
+        }
+        .promo-card .actions .promo-input:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+        .btn-promo-apply {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 6px 14px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 0.7rem;
+            transition: var(--transition);
+            font-weight: 500;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+        }
+        .btn-promo-apply:hover {
+            background: var(--primary-dark);
+            transform: scale(1.05);
+        }
+        .btn-promo-remove {
+            background: transparent;
+            color: var(--primary);
+            border: 2px solid var(--primary);
+            padding: 6px 14px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 0.7rem;
+            transition: var(--transition);
+            font-weight: 500;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+        }
+        .btn-promo-remove:hover {
+            background: var(--primary);
+            color: white;
+            transform: scale(1.05);
+        }
+        .promo-badge-active {
+            background: var(--primary);
+            color: white;
+            padding: 2px 12px;
+            border-radius: 20px;
+            font-size: 0.65rem;
+            font-weight: 600;
+            display: inline-block;
+            animation: pulse-promo 2s infinite;
+        }
+        @keyframes pulse-promo {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.7; }
+        }
+        .promo-badge-inactive {
+            background: #eee;
+            color: #999;
+            padding: 2px 12px;
+            border-radius: 20px;
+            font-size: 0.65rem;
+            font-weight: 600;
+            display: inline-block;
+        }
+
+        .btn-add-produit {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 40px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: var(--transition);
+        }
+        .btn-add-produit:hover { background: var(--primary-dark); transform: scale(1.02); }
+
+        .produits-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+        .produit-card {
+            background: #fef8f9;
+            border-radius: var(--radius);
+            padding: 1rem;
+            border: 1px solid rgba(204,0,0,0.1);
+            transition: var(--transition);
+        }
+        .produit-card:hover { box-shadow: var(--shadow); }
+        .produit-card.hidden-produit {
+            opacity: 0.6;
+            border-color: #ccc;
+            background: #f9f9f9;
+        }
+        .produit-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.8rem;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+        .produit-nom { font-weight: 700; color: var(--secondary); }
+        .produit-prix { font-weight: 600; color: var(--primary); }
+        .images-list {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin: 8px 0;
+        }
+        .images-list img, .images-list video {
+            width: 50px;
+            height: 50px;
+            object-fit: cover;
+            border-radius: 8px;
+            border: 1px solid #eee;
+        }
+        .produit-actions {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+            margin-top: 0.8rem;
+        }
+        .btn-edit {
+            background: #fdf0f3;
+            color: var(--secondary);
+            border: 1px solid var(--primary-light);
+            padding: 6px 12px;
+            border-radius: 30px;
+            cursor: pointer;
+            font-size: 0.7rem;
+            transition: var(--transition);
+        }
+        .btn-edit:hover { background: var(--primary); color: white; }
+        .btn-delete {
+            background: #ffebee;
+            color: #f44336;
+            border: 1px solid #f44336;
+            padding: 6px 12px;
+            border-radius: 30px;
+            cursor: pointer;
+            font-size: 0.7rem;
+            transition: var(--transition);
+        }
+        .btn-delete:hover { background: #f44336; color: white; }
+        .btn-stock {
+            background: #e8f5e9;
+            color: #4caf50;
+            border: 1px solid #4caf50;
+            padding: 6px 12px;
+            border-radius: 30px;
+            cursor: pointer;
+            font-size: 0.7rem;
+            transition: var(--transition);
+        }
+        .btn-stock:hover { background: #4caf50; color: white; }
+        .btn-stock.rupture { background: #ffebee; color: #f44336; border-color: #f44336; }
+        .btn-stock.rupture:hover { background: #f44336; color: white; }
+        .btn-toggle-hidden {
+            background: #fff3e0;
+            color: #e89c3e;
+            border: 1px solid #e89c3e;
+            padding: 6px 12px;
+            border-radius: 30px;
+            cursor: pointer;
+            font-size: 0.7rem;
+            transition: var(--transition);
+        }
+        .btn-toggle-hidden:hover { background: #e89c3e; color: white; }
+        .btn-toggle-hidden.hidden-active {
+            background: #e8f5e9;
+            color: #4caf50;
+            border-color: #4caf50;
+        }
+        .btn-toggle-hidden.hidden-active:hover { background: #4caf50; color: white; }
+
+        .modal-detail {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.7);
+            z-index: 3000;
+            justify-content: center;
+            align-items: center;
+            backdrop-filter: blur(4px);
+        }
+        .modal-detail.active { display: flex; }
+        .modal-detail-content {
+            background: var(--white);
+            border-radius: var(--radius);
+            padding: 2rem;
+            max-width: 900px;
+            width: 95%;
+            max-height: 92vh;
+            overflow-y: auto;
+            position: relative;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            border-top: 4px solid var(--primary);
+        }
+        .modal-detail-close {
+            position: absolute;
+            top: 15px;
+            right: 20px;
+            background: none;
+            border: none;
+            font-size: 1.8rem;
+            cursor: pointer;
+            color: var(--text-light);
+            transition: var(--transition);
+            z-index: 10;
+        }
+        .modal-detail-close:hover { color: var(--primary); transform: rotate(90deg); }
+        .modal-detail-title {
+            font-family: 'Playfair Display', serif;
+            color: var(--secondary);
+            font-size: 1.6rem;
+            margin-bottom: 0.3rem;
+        }
+        .modal-detail-subtitle {
+            color: var(--text-light);
+            font-size: 0.9rem;
+            margin-bottom: 1.5rem;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 0.8rem;
+        }
+
+        .detail-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0.8rem 2rem;
+            margin-bottom: 1.5rem;
+            background: var(--background);
+            padding: 1rem;
+            border-radius: var(--radius);
+        }
+        .detail-grid .item {
+            display: flex;
+            flex-direction: column;
+        }
+        .detail-grid .item .label {
+            font-size: 0.7rem;
+            color: var(--text-light);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            font-weight: 600;
+        }
+        .detail-grid .item .value {
+            font-size: 0.95rem;
+            color: var(--text-dark);
+            font-weight: 500;
+        }
+        .detail-grid .item .value .badge { font-size: 0.7rem; }
+
+        .detail-produits {
+            margin-top: 1rem;
+        }
+        .detail-produits-title {
+            font-weight: 600;
+            color: var(--secondary);
+            margin-bottom: 0.8rem;
+            font-size: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .detail-produits-title span {
+            background: var(--primary);
+            color: white;
+            padding: 0 10px;
+            border-radius: 20px;
+            font-size: 0.7rem;
+            line-height: 1.8;
+        }
+
+        .detail-produit-item {
+            display: flex;
+            gap: 1.2rem;
+            padding: 1rem;
+            background: var(--white);
+            border-radius: var(--radius);
+            margin-bottom: 0.8rem;
+            border: 1px solid #eee;
+            transition: var(--transition);
+            align-items: flex-start;
+        }
+        .detail-produit-item:hover { border-color: var(--primary); box-shadow: var(--shadow); }
+        .detail-produit-item .img-wrapper {
+            width: 100px;
+            height: 100px;
+            flex-shrink: 0;
+            border-radius: 8px;
+            overflow: hidden;
+            border: 1px solid #eee;
+            background: #f5f5f5;
+        }
+        .detail-produit-item .img-wrapper img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        .detail-produit-item .info {
+            flex: 1;
+            min-width: 0;
+        }
+        .detail-produit-item .info .nom {
+            font-weight: 700;
+            color: var(--secondary);
+            font-size: 1.1rem;
+            font-family: 'Playfair Display', serif;
+        }
+        .detail-produit-item .info .badges {
+            display: flex;
+            gap: 6px;
+            flex-wrap: wrap;
+            margin: 4px 0;
+        }
+        .detail-produit-item .info .badges .badge {
+            font-size: 0.6rem;
+        }
+        .detail-produit-item .info .famille {
+            font-size: 0.85rem;
+            color: var(--text-light);
+            margin: 4px 0;
+        }
+        .detail-produit-item .info .famille strong {
+            color: var(--secondary);
+        }
+        .detail-produit-item .info .notes {
+            font-size: 0.8rem;
+            color: var(--text-light);
+            margin: 4px 0;
+        }
+        .detail-produit-item .info .notes strong {
+            color: var(--secondary);
+        }
+        .detail-produit-item .info .description {
+            font-size: 0.85rem;
+            color: var(--text-light);
+            margin: 6px 0;
+            line-height: 1.5;
+        }
+        .detail-produit-item .info .meta {
+            font-size: 0.75rem;
+            color: var(--text-light);
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+            margin-top: 4px;
+        }
+        .detail-produit-item .info .meta span {
+            background: var(--background);
+            padding: 2px 10px;
+            border-radius: 12px;
+        }
+        .detail-produit-item .prix-block {
+            text-align: right;
+            flex-shrink: 0;
+            min-width: 120px;
+        }
+        .detail-produit-item .prix-block .prix-unitaire {
+            font-size: 0.75rem;
+            color: var(--text-light);
+        }
+        .detail-produit-item .prix-block .sous-total {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: var(--primary);
+        }
+        .detail-produit-item .prix-block .quantite {
+            font-size: 0.85rem;
+            color: var(--secondary);
+        }
+
+        .detail-total {
+            text-align: right;
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: var(--primary);
+            margin-top: 1rem;
+            padding-top: 0.8rem;
+            border-top: 2px solid var(--primary);
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 2000;
+            justify-content: center;
+            align-items: center;
+        }
+        .modal-content {
+            background: white;
+            border-radius: 30px;
+            padding: 2rem;
+            max-width: 700px;
+            width: 90%;
+            max-height: 90%;
+            overflow-y: auto;
+        }
+        .modal-content h3 {
+            color: var(--secondary);
+            margin-bottom: 1rem;
+            font-family: 'Playfair Display', serif;
+        }
+        .modal-content input, .modal-content textarea, .modal-content select {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 1rem;
+            border: 1px solid #ddd;
+            border-radius: var(--radius);
+            font-family: 'Poppins', sans-serif;
+            transition: var(--transition);
+        }
+        .modal-content input:focus, .modal-content textarea:focus, .modal-content select:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+        .modal-content button {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 30px;
+            cursor: pointer;
+            margin-right: 0.5rem;
+            transition: var(--transition);
+        }
+        .modal-content button:hover { background: var(--primary-dark); }
+        .modal-buttons {
+            display: flex;
+            justify-content: flex-end;
+            gap: 0.5rem;
+            margin-top: 1rem;
+        }
+        .media-preview {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin: 10px 0;
+        }
+        .media-item {
+            position: relative;
+            width: 80px;
+            height: 80px;
+            border-radius: 10px;
+            overflow: hidden;
+            border: 1px solid #ddd;
+        }
+        .media-item img, .media-item video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        .media-item .remove-media {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            background: #f44336;
+            color: white;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            font-size: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            border: none;
+        }
+        .media-item .media-label {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: rgba(0,0,0,0.6);
+            color: white;
+            font-size: 0.5rem;
+            text-align: center;
+            padding: 2px;
+        }
+
+        .menu-toggle {
+            display: none;
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            z-index: 1001;
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 10px;
+            border-radius: 10px;
+            cursor: pointer;
+        }
+
+        .status-select {
+            padding: 3px 8px;
+            border-radius: 20px;
+            border: 1px solid #ddd;
+            font-size: 0.7rem;
+            font-family: 'Poppins', sans-serif;
+            margin-top: 4px;
+            background: var(--white);
+            color: var(--text-dark);
+        }
+        .status-select:focus { outline: none; border-color: var(--primary); }
+
+        .settings-section {
+            display: none;
+        }
+        .settings-section.active {
+            display: block;
+        }
+        .settings-form {
+            background: var(--white);
+            border-radius: var(--radius);
+            padding: 2rem;
+            box-shadow: var(--shadow);
+            max-width: 600px;
+        }
+        .settings-form .form-group {
+            margin-bottom: 1.5rem;
+        }
+        .settings-form .form-group label {
+            display: block;
+            font-weight: 500;
+            color: var(--secondary);
+            margin-bottom: 0.5rem;
+            font-size: 0.9rem;
+        }
+        .settings-form .form-group input {
+            width: 100%;
+            padding: 12px 16px;
+            border: 2px solid #eee;
+            border-radius: var(--radius);
+            font-size: 1rem;
+            font-family: 'Poppins', sans-serif;
+            transition: var(--transition);
+            background: var(--background);
+        }
+        .settings-form .form-group input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(204,0,0,0.1);
+        }
+        .settings-form .btn-save {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 40px;
+            font-size: 1rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+        .settings-form .btn-save:hover {
+            background: var(--primary-dark);
+            transform: translateY(-2px);
+        }
+        .settings-form .btn-save:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .card-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1rem;
+        }
+        .card-item {
+            background: var(--white);
+            border-radius: var(--radius);
+            padding: 1.2rem;
+            box-shadow: var(--shadow);
+            border: 1px solid #eee;
+            transition: var(--transition);
+        }
+        .card-item:hover {
+            transform: translateY(-3px);
+            box-shadow: var(--shadow-hover);
+        }
+        .card-item .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.8rem;
+        }
+        .card-item .card-header .card-title {
+            font-weight: 600;
+            color: var(--secondary);
+        }
+        .card-item .card-body {
+            color: var(--text-light);
+            font-size: 0.9rem;
+        }
+        .card-item .card-actions {
+            margin-top: 0.8rem;
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+        }
+
+        .btn-sm {
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.7rem;
+            border: none;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+        .btn-sm-primary { background: var(--primary); color: white; }
+        .btn-sm-primary:hover { background: var(--primary-dark); }
+        .btn-sm-success { background: var(--success); color: white; }
+        .btn-sm-success:hover { background: #219a52; }
+        .btn-sm-danger { background: #f44336; color: white; }
+        .btn-sm-danger:hover { background: #d32f2f; }
+        .btn-sm-warning { background: var(--warning); color: white; }
+        .btn-sm-warning:hover { background: #e08e0b; }
+        .btn-sm-info { background: var(--info); color: white; }
+        .btn-sm-info:hover { background: #2980b9; }
+
+        .loading {
+            text-align: center;
+            padding: 2rem;
+            color: var(--text-light);
+        }
+
+        .section-content {
+            display: none;
+        }
+        .section-content.active {
+            display: block;
+        }
+
+        .delivery-method {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 0.8rem;
+            background: var(--background);
+            border-radius: var(--radius);
+            margin-bottom: 0.5rem;
+        }
+        .delivery-method .method-info {
+            flex: 1;
+        }
+        .delivery-method .method-info .name {
+            font-weight: 600;
+            color: var(--secondary);
+        }
+        .delivery-method .method-info .desc {
+            font-size: 0.8rem;
+            color: var(--text-light);
+        }
+        .delivery-method .method-price {
+            font-weight: 600;
+            color: var(--primary);
+        }
+
+        .zone-item {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 0.8rem;
+            background: var(--background);
+            border-radius: var(--radius);
+            margin-bottom: 0.5rem;
+        }
+        .zone-item .zone-info {
+            flex: 1;
+        }
+        .zone-item .zone-info .name {
+            font-weight: 600;
+            color: var(--secondary);
+        }
+        .zone-item .zone-info .desc {
+            font-size: 0.8rem;
+            color: var(--text-light);
+        }
+        .zone-item .zone-fee {
+            font-weight: 600;
+            color: var(--primary);
+        }
+
+        .review-item {
+            display: flex;
+            gap: 1rem;
+            padding: 1rem;
+            background: var(--background);
+            border-radius: var(--radius);
+            margin-bottom: 0.8rem;
+            border-left: 3px solid var(--primary);
+        }
+        .review-item .review-avatar {
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            background: var(--primary);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            flex-shrink: 0;
+        }
+        .review-item .review-content {
+            flex: 1;
+        }
+        .review-item .review-content .review-author {
+            font-weight: 600;
+            color: var(--secondary);
+        }
+        .review-item .review-content .review-date {
+            font-size: 0.7rem;
+            color: var(--text-light);
+        }
+        .review-item .review-content .review-text {
+            font-size: 0.9rem;
+            color: var(--text-dark);
+            margin-top: 4px;
+        }
+        .review-item .review-content .review-stars {
+            color: var(--warning);
+            font-size: 0.85rem;
+        }
+        .review-item .review-actions {
+            display: flex;
+            gap: 0.5rem;
+            align-items: center;
+        }
+
+        .client-item {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 0.8rem;
+            background: var(--background);
+            border-radius: var(--radius);
+            margin-bottom: 0.5rem;
+        }
+        .client-item .client-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: var(--secondary);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            flex-shrink: 0;
+        }
+        .client-item .client-info {
+            flex: 1;
+        }
+        .client-item .client-info .name {
+            font-weight: 600;
+            color: var(--secondary);
+        }
+        .client-item .client-info .email {
+            font-size: 0.8rem;
+            color: var(--text-light);
+        }
+        .client-item .client-orders {
+            font-size: 0.8rem;
+            color: var(--text-light);
+        }
+
+        .report-card {
+            background: var(--white);
+            border-radius: var(--radius);
+            padding: 1.5rem;
+            box-shadow: var(--shadow);
+            border: 1px solid #eee;
+        }
+        .report-card .report-title {
+            font-weight: 600;
+            color: var(--secondary);
+            margin-bottom: 1rem;
+            font-size: 1.1rem;
+        }
+        .report-card .report-value {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--primary);
+            font-family: 'Playfair Display', serif;
+        }
+        .report-card .report-change {
+            font-size: 0.8rem;
+            margin-top: 0.3rem;
+        }
+        .report-card .report-change.up { color: var(--success); }
+        .report-card .report-change.down { color: #f44336; }
+
+        .message-item {
+            display: flex;
+            gap: 1rem;
+            padding: 1rem;
+            background: var(--background);
+            border-radius: var(--radius);
+            margin-bottom: 0.8rem;
+            border-left: 3px solid var(--info);
+            transition: var(--transition);
+            cursor: pointer;
+        }
+        .message-item:hover { background: #eef4f7; }
+        .message-item.unread { border-left-color: var(--primary); background: #fef8f9; }
+        .message-item .msg-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: var(--info);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            flex-shrink: 0;
+        }
+        .message-item .msg-content {
+            flex: 1;
+        }
+        .message-item .msg-content .msg-sender {
+            font-weight: 600;
+            color: var(--secondary);
+        }
+        .message-item .msg-content .msg-date {
+            font-size: 0.7rem;
+            color: var(--text-light);
+        }
+        .message-item .msg-content .msg-subject {
+            font-size: 0.9rem;
+            color: var(--text-dark);
+        }
+        .message-item .msg-content .msg-preview {
+            font-size: 0.8rem;
+            color: var(--text-light);
+            margin-top: 2px;
+        }
+
+        .menu-toggle {
+            display: none;
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            z-index: 1001;
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 10px;
+            border-radius: 10px;
+            cursor: pointer;
+        }
+
+        @media (max-width: 768px) {
+            .sidebar { transform: translateX(-100%); transition: transform 0.3s; z-index: 2000; }
+            .sidebar.open { transform: translateX(0); }
+            .admin-header-banner { left: 0; }
+            .main-content { margin-left: 0; padding: 80px 1rem 1rem; }
+            .stats-grid { grid-template-columns: 1fr 1fr; gap: 0.8rem; }
+            .filters-bar { flex-direction: column; align-items: stretch; }
+            .admin-filters { flex-direction: column; align-items: stretch; }
+            .admin-filters .filter-group { min-width: auto; }
+            .admin-filters .btn-filter-reset { height: auto; justify-content: center; }
+            .menu-toggle { display: block; }
+            .produits-grid { grid-template-columns: 1fr; }
+            .promo-grid { grid-template-columns: 1fr; }
+            .promo-stats { grid-template-columns: 1fr 1fr; }
+            .modal-detail-content { padding: 1.5rem; }
+            .detail-grid { grid-template-columns: 1fr; gap: 0.5rem; padding: 0.8rem; }
+            .detail-produit-item { flex-direction: column; align-items: center; text-align: center; }
+            .detail-produit-item .img-wrapper { width: 120px; height: 120px; margin: 0 auto; }
+            .detail-produit-item .prix-block { text-align: center; width: 100%; }
+            .detail-produit-item .info .badges { justify-content: center; }
+            .detail-produit-item .info .meta { justify-content: center; }
+            .settings-form { padding: 1.5rem; }
+            .card-grid { grid-template-columns: 1fr; }
+        }
+        @media (max-width: 480px) {
+            .stats-grid { grid-template-columns: 1fr; }
+            .promo-stats { grid-template-columns: 1fr; }
+            .orders-table { font-size: 0.75rem; }
+            .orders-table th, .orders-table td { padding: 6px 8px; }
+            .admin-header-banner { padding: 1rem; flex-direction: column; gap: 0.5rem; text-align: center; }
+            .admin-header-banner .logo { font-size: 1rem; }
+            .admin-header-banner .logo img { height: 28px; }
+            .promo-card { flex-direction: column; text-align: center; }
+            .promo-card .actions { justify-content: center; }
+        }
+    </style>
+</head>
+<body>
+    <button class="menu-toggle" onclick="toggleSidebar()"><i class="fas fa-bars"></i></button>
+
+    <div class="sidebar" id="sidebar">
+        <div class="sidebar-logo">
+            <h2>
+                <img src="./img/logo-maison-yass.png" alt="Maison Yass" onerror="this.src='https://placehold.co/35x35/cc0000/ffffff?text=MY'">
+                Maison Yass
+            </h2>
+            <div class="subtitle">Administration</div>
+        </div>
+        <ul class="sidebar-menu">
+            <li class="menu-label">Navigation</li>
+            <li><a href="#" onclick="showSection('dashboard'); return false;" class="active" id="menu-dashboard"><i class="fas fa-chart-pie"></i> Tableau de bord</a></li>
+            <li><a href="#" onclick="showSection('produits'); return false;" id="menu-produits"><i class="fas fa-boxes"></i> Produits <span class="badge-sidebar info" id="produitsCount">0</span></a></li>
+            <li><a href="#" onclick="showSection('cosmetiques'); return false;" id="menu-cosmetiques"><i class="fas fa-spa"></i> Cosmétiques <span class="badge-sidebar info" id="cosmetiquesCount">0</span></a></li>
+            <li><a href="#" onclick="showSection('commandes'); return false;" id="menu-commandes"><i class="fas fa-shopping-cart"></i> Commandes <span class="badge-sidebar warning" id="commandesCount">0</span></a></li>
+            <li><a href="#" onclick="showSection('clients'); return false;" id="menu-clients"><i class="fas fa-users"></i> Clients <span class="badge-sidebar success" id="clientsCount">0</span></a></li>
+            <li><a href="#" onclick="showSection('promotions'); return false;" id="menu-promotions"><i class="fas fa-tags"></i> Promotions</a></li>
+            <li><a href="#" onclick="showSection('avis'); return false;" id="menu-avis"><i class="fas fa-star"></i> Avis clients <span class="badge-sidebar" id="avisCount">0</span></a></li>
+            <li><a href="#" onclick="showSection('livraison'); return false;" id="menu-livraison"><i class="fas fa-truck"></i> Livraison</a></li>
+            <li><a href="#" onclick="showSection('zones'); return false;" id="menu-zones"><i class="fas fa-map-marker-alt"></i> Zones livraison</a></li>
+            <li><a href="#" onclick="showSection('rapports'); return false;" id="menu-rapports"><i class="fas fa-chart-bar"></i> Rapports</a></li>
+            <li><a href="#" onclick="showSection('messages'); return false;" id="menu-messages"><i class="fas fa-envelope"></i> Messages <span class="badge-sidebar" id="messagesCount">0</span></a></li>
+        </ul>
+        <div class="sidebar-bottom">
+            <a href="#" onclick="showSection('settings'); return false;" id="menu-settings">
+                <i class="fas fa-cog"></i> Paramètres
+            </a>
+            <a href="#" onclick="deconnexion()" style="color:#ff6b6b;">
+                <i class="fas fa-sign-out-alt"></i> Déconnexion
+            </a>
+        </div>
+    </div>
+
+    <!-- HEADER ADMIN -->
+    <div class="admin-header-banner">
+        <div class="logo">
+            <img src="./img/logo-maison-yass.png" alt="Maison Yass" onerror="this.src='https://placehold.co/36x36/cc0000/ffffff?text=MY'">
+            <span>Administration Maison Yass</span>
+        </div>
+        <div class="admin-user">
+            <span><i class="fas fa-user"></i> <span id="admin-username">Admin</span></span>
+            <button class="btn-logout" onclick="deconnexion()"><i class="fas fa-sign-out-alt"></i> Déconnexion</button>
+        </div>
+    </div>
+
+    <div class="main-content" id="mainContent">
+        <!-- ===== DASHBOARD ===== -->
+        <div id="dashboardSection" class="section-content active">
+            <div class="dashboard-header">
+                <h1><i class="fas fa-chart-pie"></i> Tableau de bord</h1>
+                <div class="header-actions">
+                    <span class="date-display"><i class="far fa-calendar-alt"></i> <span id="currentDate"></span></span>
+                </div>
+            </div>
+            <div class="stats-grid">
+                <div class="stat-card"><div class="stat-info"><h3>Commandes</h3><div class="stat-number" id="statTotalCommandes">0</div></div><div class="stat-icon"><i class="fas fa-shopping-cart"></i></div></div>
+                <div class="stat-card"><div class="stat-info"><h3>En attente</h3><div class="stat-number" id="statEnAttente">0</div></div><div class="stat-icon"><i class="fas fa-clock"></i></div></div>
+                <div class="stat-card"><div class="stat-info"><h3>Livrées</h3><div class="stat-number" id="statLivrees">0</div></div><div class="stat-icon"><i class="fas fa-check-circle"></i></div></div>
+                <div class="stat-card"><div class="stat-info"><h3>CA total</h3><div class="stat-number" id="statCA">0 FCFA</div></div><div class="stat-icon"><i class="fas fa-chart-line"></i></div></div>
+                <div class="stat-card"><div class="stat-info"><h3>Clients</h3><div class="stat-number" id="statClients">0</div></div><div class="stat-icon"><i class="fas fa-users"></i></div></div>
+                <div class="stat-card"><div class="stat-info"><h3>Produits</h3><div class="stat-number" id="statProduits">0</div></div><div class="stat-icon"><i class="fas fa-boxes"></i></div></div>
+            </div>
+
+            <div style="background:var(--white);border-radius:var(--radius);padding:1.5rem;box-shadow:var(--shadow);margin-bottom:1.5rem;">
+                <h4 style="margin-bottom:1rem;"><i class="fas fa-chart-bar"></i> Évolution des commandes</h4>
+                <canvas id="commandesChart" height="100"></canvas>
+            </div>
+
+            <div class="filters-bar">
+                <select id="filterStatus"><option value="">Tous les statuts</option><option value="en attente">En attente</option><option value="livrée">Livrée</option><option value="annulée">Annulée</option></select>
+                <input type="date" id="filterDateStart"><input type="date" id="filterDateEnd">
+                <button onclick="chargerCommandes()"><i class="fas fa-search"></i> Filtrer</button>
+                <button onclick="resetFilters()"><i class="fas fa-undo"></i> Réinitialiser</button>
+            </div>
+
+            <div class="orders-table-container">
+                <h3 style="margin-bottom:0.8rem;"><i class="fas fa-list"></i> Dernières commandes <span style="font-size:0.7rem;color:#aaa;" id="ordersCount"></span></h3>
+                <div id="commandesList"><div class="loading">Chargement...</div></div>
+            </div>
+        </div>
+
+        <!-- ===== PRODUITS ===== -->
+        <div id="produitsSection" class="section-content">
+            <div class="dashboard-header">
+                <h1><i class="fas fa-boxes"></i> Gestion des produits</h1>
+                <button class="btn-add-produit" onclick="openAddProductModal()"><i class="fas fa-plus"></i> Ajouter un produit</button>
+            </div>
+
+            <div class="admin-filters" id="produitsFilters">
+                <div class="filter-group">
+                    <label><i class="fas fa-tag"></i> Catégorie</label>
+                    <select id="filterProduitsCategorie">
+                        <option value="">Tous</option>
+                        <option value="femme">Femme</option>
+                        <option value="homme">Homme</option>
+                        <option value="mixte">Unisex</option>
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <label><i class="fas fa-box"></i> Type</label>
+                    <select id="filterProduitsType">
+                        <option value="">Tous</option>
+                        <option value="elixir">Elixir</option>
+                        <option value="extrait">Eau de parfum</option>
+                        <option value="coffret">Coffret</option>
+                        <option value="parfum">Parfum</option>
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <label><i class="fas fa-tag"></i> Promo</label>
+                    <select id="filterProduitsPromo">
+                        <option value="">Tous</option>
+                        <option value="1">En promotion</option>
+                        <option value="0">Sans promotion</option>
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <label><i class="fas fa-eye"></i> Visibilité</label>
+                    <select id="filterProduitsVisibilite">
+                        <option value="">Tous</option>
+                        <option value="1">Visible</option>
+                        <option value="0">Masqué</option>
+                    </select>
+                </div>
+                <button class="btn-filter-reset" onclick="resetProduitsFilters()"><i class="fas fa-undo"></i> Réinitialiser</button>
+            </div>
+
+            <div class="orders-table-container">
+                <div id="produitsList"><div class="loading">Chargement...</div></div>
+            </div>
+        </div>
+
+        <!-- ===== COSMETIQUES ===== -->
+        <div id="cosmetiquesSection" class="section-content">
+            <div class="dashboard-header">
+                <h1><i class="fas fa-spa"></i> Gestion des cosmétiques</h1>
+                <button class="btn-add-produit" onclick="openAddCosmetiqueModal()"><i class="fas fa-plus"></i> Ajouter un cosmétique</button>
+            </div>
+
+            <div class="orders-table-container">
+                <div id="cosmetiquesList"><div class="loading">Chargement...</div></div>
+            </div>
+        </div>
+
+        <!-- ===== COMMANDES ===== -->
+        <div id="commandesSection" class="section-content">
+            <div class="dashboard-header">
+                <h1><i class="fas fa-shopping-cart"></i> Toutes les commandes</h1>
+                <button onclick="effacerHistorique()" style="background:#fdf0f3;color:var(--primary-dark);border:1px solid var(--primary-light);padding:10px 20px;border-radius:30px;cursor:pointer;"><i class="fas fa-trash"></i> Effacer historique</button>
+            </div>
+
+            <div class="filters-bar">
+                <select id="filterStatusCommandes"><option value="">Tous</option><option value="en attente">En attente</option><option value="livrée">Livrée</option><option value="annulée">Annulée</option></select>
+                <input type="date" id="filterDateStartCmd"><input type="date" id="filterDateEndCmd">
+                <button onclick="chargerToutesCommandes()"><i class="fas fa-search"></i> Filtrer</button>
+                <button onclick="resetCommandesFilters()"><i class="fas fa-undo"></i> Réinitialiser</button>
+            </div>
+
+            <div class="orders-table-container">
+                <div id="toutesCommandesList"><div class="loading">Chargement...</div></div>
+            </div>
+        </div>
+
+        <!-- ===== CLIENTS ===== -->
+        <div id="clientsSection" class="section-content">
+            <div class="dashboard-header">
+                <h1><i class="fas fa-users"></i> Gestion des clients</h1>
+                <span style="font-size:0.9rem;color:var(--text-light);">Total: <strong id="clientsTotal">0</strong> clients</span>
+            </div>
+
+            <div class="admin-filters">
+                <div class="filter-group">
+                    <label><i class="fas fa-search"></i> Rechercher</label>
+                    <input type="text" id="searchClient" placeholder="Nom ou email..." oninput="chargerClients()">
+                </div>
+                <button class="btn-filter-reset" onclick="document.getElementById('searchClient').value='';chargerClients();"><i class="fas fa-undo"></i> Réinitialiser</button>
+            </div>
+
+            <div class="orders-table-container">
+                <div id="clientsList"><div class="loading">Chargement...</div></div>
+            </div>
+        </div>
+
+        <!-- ===== PROMOTIONS ===== -->
+        <div id="promotionsSection" class="section-content">
+            <div class="dashboard-header">
+                <h1><i class="fas fa-tags"></i> Gestion des promotions</h1>
+                <span style="font-size:0.9rem;color:var(--text-light);">
+                    <i class="fas fa-info-circle"></i> Appliquez des remises sur vos produits
+                </span>
+            </div>
+
+            <div class="admin-filters" id="promoFilters">
+                <div class="filter-group">
+                    <label><i class="fas fa-tag"></i> Catégorie</label>
+                    <select id="filterPromoCategorie">
+                        <option value="">Tous</option>
+                        <option value="femme">Femme</option>
+                        <option value="homme">Homme</option>
+                        <option value="mixte">Unisex</option>
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <label><i class="fas fa-box"></i> Type</label>
+                    <select id="filterPromoType">
+                        <option value="">Tous</option>
+                        <option value="elixir">Elixir</option>
+                        <option value="extrait">Eau de parfum</option>
+                        <option value="coffret">Coffret</option>
+                        <option value="parfum">Parfum</option>
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <label><i class="fas fa-tag"></i> Statut promo</label>
+                    <select id="filterPromoStatut">
+                        <option value="">Tous</option>
+                        <option value="1">En promotion</option>
+                        <option value="0">Sans promotion</option>
+                    </select>
+                </div>
+                <button class="btn-filter-reset" onclick="resetPromoFilters()"><i class="fas fa-undo"></i> Réinitialiser</button>
+            </div>
+
+            <div class="promo-stats" id="promoStats">
+                <div class="promo-stat-card">
+                    <div class="number" id="promoTotal">0</div>
+                    <div class="label">Total produits</div>
+                </div>
+                <div class="promo-stat-card" style="border-left-color: #27ae60;">
+                    <div class="number" id="promoActives" style="color:#27ae60;">0</div>
+                    <div class="label">En promotion</div>
+                </div>
+                <div class="promo-stat-card" style="border-left-color: #e89c3e;">
+                    <div class="number" id="promoInactives" style="color:#e89c3e;">0</div>
+                    <div class="label">Sans promotion</div>
+                </div>
+            </div>
+
+            <div class="orders-table-container">
+                <div id="produitsPromoList"><div class="loading">Chargement des produits...</div></div>
+            </div>
+        </div>
+
+        <!-- ===== AVIS CLIENTS ===== -->
+        <div id="avisSection" class="section-content">
+            <div class="dashboard-header">
+                <h1><i class="fas fa-star"></i> Avis clients</h1>
+                <span style="font-size:0.9rem;color:var(--text-light);">Note moyenne: <strong id="noteMoyenne">0</strong> ⭐</span>
+            </div>
+
+            <div class="admin-filters">
+                <div class="filter-group">
+                    <label><i class="fas fa-star"></i> Note</label>
+                    <select id="filterAvisNote" onchange="chargerAvis()">
+                        <option value="">Toutes</option>
+                        <option value="5">5 ⭐</option>
+                        <option value="4">4 ⭐</option>
+                        <option value="3">3 ⭐</option>
+                        <option value="2">2 ⭐</option>
+                        <option value="1">1 ⭐</option>
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <label><i class="fas fa-check-circle"></i> Statut</label>
+                    <select id="filterAvisStatut" onchange="chargerAvis()">
+                        <option value="">Tous</option>
+                        <option value="approuve">Approuvés</option>
+                        <option value="en_attente">En attente</option>
+                        <option value="rejete">Rejetés</option>
+                    </select>
+                </div>
+                <button class="btn-filter-reset" onclick="document.getElementById('filterAvisNote').value='';document.getElementById('filterAvisStatut').value='';chargerAvis();"><i class="fas fa-undo"></i> Réinitialiser</button>
+            </div>
+
+            <div class="orders-table-container">
+                <div id="avisList"><div class="loading">Chargement des avis...</div></div>
+            </div>
+        </div>
+
+        <!-- ===== LIVRAISON ===== -->
+        <div id="livraisonSection" class="section-content">
+            <div class="dashboard-header">
+                <h1><i class="fas fa-truck"></i> Gestion de la livraison</h1>
+                <button class="btn-add-produit" onclick="openAddDeliveryMethod()"><i class="fas fa-plus"></i> Ajouter un mode</button>
+            </div>
+
+            <div class="orders-table-container">
+                <h3 style="margin-bottom:1rem;">Modes de livraison disponibles</h3>
+                <div id="deliveryMethods"><div class="loading">Chargement...</div></div>
+            </div>
+        </div>
+
+        <!-- ===== ZONES LIVRAISON ===== -->
+        <div id="zonesSection" class="section-content">
+            <div class="dashboard-header">
+                <h1><i class="fas fa-map-marker-alt"></i> Zones de livraison</h1>
+                <button class="btn-add-produit" onclick="openAddZone()"><i class="fas fa-plus"></i> Ajouter une zone</button>
+            </div>
+
+            <div class="orders-table-container">
+                <div id="zonesList"><div class="loading">Chargement...</div></div>
+            </div>
+        </div>
+
+        <!-- ===== RAPPORTS ===== -->
+        <div id="rapportsSection" class="section-content">
+            <div class="dashboard-header">
+                <h1><i class="fas fa-chart-bar"></i> Rapports et statistiques</h1>
+            </div>
+
+            <div style="display:flex;gap:1rem;flex-wrap:wrap;margin-bottom:1.5rem;padding:1rem;background:var(--white);border-radius:var(--radius);">
+                <button class="btn-sm btn-sm-primary" onclick="exporterRapport('hebdomadaire', 'pdf')"><i class="fas fa-file-pdf"></i> PDF Hebdomadaire</button>
+                <button class="btn-sm btn-sm-primary" onclick="exporterRapport('mensuel', 'pdf')"><i class="fas fa-file-pdf"></i> PDF Mensuel</button>
+                <button class="btn-sm btn-sm-primary" onclick="exporterRapport('trimestriel', 'pdf')"><i class="fas fa-file-pdf"></i> PDF Trimestriel</button>
+                <button class="btn-sm btn-sm-primary" onclick="exporterRapport('annuel', 'pdf')"><i class="fas fa-file-pdf"></i> PDF Annuel</button>
+                <button class="btn-sm btn-sm-success" onclick="exporterRapport('mensuel', 'excel')"><i class="fas fa-file-excel"></i> Excel Mensuel</button>
+                <button class="btn-sm btn-sm-success" onclick="exporterRapport('trimestriel', 'excel')"><i class="fas fa-file-excel"></i> Excel Trimestriel</button>
+            </div>
+
+            <div class="stats-grid" style="margin-bottom:1.5rem;">
+                <div class="stat-card"><div class="stat-info"><h3>Chiffre d'affaires (mois)</h3><div class="stat-number" id="reportCAMois">0 FCFA</div></div><div class="stat-icon"><i class="fas fa-chart-line"></i></div></div>
+                <div class="stat-card"><div class="stat-info"><h3>Commandes (mois)</h3><div class="stat-number" id="reportCommandesMois">0</div></div><div class="stat-icon"><i class="fas fa-shopping-cart"></i></div></div>
+                <div class="stat-card"><div class="stat-info"><h3>Panier moyen</h3><div class="stat-number" id="reportPanierMoyen">0 FCFA</div></div><div class="stat-icon"><i class="fas fa-calculator"></i></div></div>
+                <div class="stat-card"><div class="stat-info"><h3>Taux de conversion</h3><div class="stat-number" id="reportConversion">0%</div></div><div class="stat-icon"><i class="fas fa-percent"></i></div></div>
+            </div>
+
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;">
+                <div class="report-card">
+                    <div class="report-title"><i class="fas fa-chart-pie"></i> Répartition des commandes</div>
+                    <canvas id="repartitionChart" height="200"></canvas>
+                </div>
+                <div class="report-card">
+                    <div class="report-title"><i class="fas fa-chart-line"></i> Top produits</div>
+                    <div id="topProduits"><div class="loading">Chargement...</div></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ===== MESSAGES ===== -->
+        <div id="messagesSection" class="section-content">
+            <div class="dashboard-header">
+                <h1><i class="fas fa-envelope"></i> Messages</h1>
+                <span style="font-size:0.9rem;color:var(--text-light);">Non lus: <strong id="messagesNonLus">0</strong></span>
+            </div>
+
+            <div class="admin-filters">
+                <div class="filter-group">
+                    <label><i class="fas fa-filter"></i> Filtre</label>
+                    <select id="filterMessages" onchange="chargerMessages()">
+                        <option value="">Tous</option>
+                        <option value="non_lu">Non lus</option>
+                        <option value="lu">Lus</option>
+                    </select>
+                </div>
+                <button class="btn-filter-reset" onclick="document.getElementById('filterMessages').value='';chargerMessages();"><i class="fas fa-undo"></i> Réinitialiser</button>
+            </div>
+
+            <div class="orders-table-container">
+                <div id="messagesList"><div class="loading">Chargement des messages...</div></div>
+            </div>
+        </div>
+
+        <!-- ===== PROFIL SETTINGS ===== -->
+        <div id="settingsSection" class="section-content">
+            <div class="dashboard-header">
+                <h1><i class="fas fa-cog"></i> Paramètres</h1>
+            </div>
+            <div class="settings-form">
+                <h3 style="margin-bottom:1.5rem;font-family:'Playfair Display',serif;">Modifier mes identifiants</h3>
+                <div id="settingsMessage" style="margin-bottom:1rem;font-weight:500;"></div>
+                <div class="form-group">
+                    <label>Nom d'utilisateur</label>
+                    <input type="text" id="settingsUsername" placeholder="Nouveau nom d'utilisateur">
+                </div>
+                <div class="form-group">
+                    <label>Mot de passe actuel <span style="color:#f44336;font-size:0.8rem;">(obligatoire pour modifier)</span></label>
+                    <input type="password" id="settingsCurrentPassword" placeholder="Mot de passe actuel">
+                </div>
+                <div class="form-group">
+                    <label>Nouveau mot de passe</label>
+                    <input type="password" id="settingsPassword" placeholder="Nouveau mot de passe (laisser vide pour ne pas changer)">
+                </div>
+                <div class="form-group">
+                    <label>Confirmer le mot de passe</label>
+                    <input type="password" id="settingsPasswordConfirm" placeholder="Confirmer le mot de passe">
+                </div>
+                <button class="btn-save" onclick="saveSettings()"><i class="fas fa-save"></i> Enregistrer les modifications</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL DÉTAILS COMMANDE -->
+    <div class="modal-detail" id="modalDetail">
+        <div class="modal-detail-content">
+            <button class="modal-detail-close" onclick="closeDetailModal()"><i class="fas fa-times"></i></button>
+            <h3 class="modal-detail-title">📦 Commande #<span id="detailId">0</span></h3>
+            <p class="modal-detail-subtitle" id="detailDate">Date : -</p>
+
+            <div class="detail-grid">
+                <div class="item">
+                    <span class="label"><i class="fas fa-user"></i> Client</span>
+                    <span class="value" id="detailClient">-</span>
+                </div>
+                <div class="item">
+                    <span class="label"><i class="fas fa-phone"></i> Téléphone</span>
+                    <span class="value" id="detailTelephone">-</span>
+                </div>
+                <div class="item">
+                    <span class="label"><i class="fas fa-map-marker-alt"></i> Adresse</span>
+                    <span class="value" id="detailAdresse">-</span>
+                </div>
+                <div class="item">
+                    <span class="label"><i class="fas fa-credit-card"></i> Paiement</span>
+                    <span class="value" id="detailPaiement">-</span>
+                </div>
+                <div class="item">
+                    <span class="label"><i class="fas fa-tag"></i> Statut</span>
+                    <span class="value" id="detailStatut">-</span>
+                </div>
+            </div>
+
+            <div class="detail-produits">
+                <div class="detail-produits-title">
+                    <i class="fas fa-box"></i> Produits commandés
+                    <span id="detailNbProduits">0</span>
+                </div>
+                <div id="detailProduitsList"></div>
+                <div class="detail-total" id="detailTotal">Total : 0 FCFA</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL PRODUIT (Parfum) -->
+    <div id="productModal" class="modal">
+        <div class="modal-content">
+            <h3 id="modalTitle">Ajouter un produit</h3>
+            <input type="hidden" id="productId">
+            <input type="text" id="productNom" placeholder="Nom du produit" required>
+            <textarea id="productDescription" placeholder="Description" rows="3"></textarea>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;">
+                <input type="number" id="productPrix" placeholder="Prix (FCFA)" required>
+                <input type="number" id="productStock" placeholder="Stock" value="0">
+            </div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;">
+                <select id="productCategorie"><option value="mixte">Unisex</option><option value="femme">Femme</option><option value="homme">Homme</option></select>
+                <select id="productType"><option value="parfum">Parfum</option><option value="elixir">Elixir</option><option value="extrait">Eau de parfum</option><option value="coffret">Coffret</option></select>
+            </div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;">
+                <input type="text" id="productFamille" placeholder="Famille">
+                <input type="text" id="productFormat" placeholder="Format" value="50ml">
+            </div>
+            <input type="text" id="productNotes" placeholder="Notes olfactives">
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;">
+                <input type="number" id="productPrixPromo" placeholder="Prix promo (optionnel)">
+                <input type="number" id="productRemise" placeholder="Remise %" value="0">
+            </div>
+
+            <div>
+                <label style="font-weight:500;">Images (JPG, PNG, GIF)</label>
+                <input type="file" id="productImages" multiple accept="image/*">
+                <div id="imagePreview" class="media-preview"></div>
+            </div>
+            <div>
+                <label style="font-weight:500;">Vidéos (MP4, WEBM)</label>
+                <input type="file" id="productVideos" multiple accept="video/*">
+                <div id="videoPreview" class="media-preview"></div>
+            </div>
+
+            <div id="existingMediaSection" style="display:none;margin-top:10px;">
+                <label style="font-weight:500;">Médias existants</label>
+                <div id="existingMedia" class="media-preview"></div>
+            </div>
+
+            <div class="modal-buttons">
+                <button onclick="closeProductModal()">Annuler</button>
+                <button onclick="saveProduct()" style="background:var(--primary);">Enregistrer</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL COSMETIQUE -->
+    <div id="cosmetiqueModal" class="modal">
+        <div class="modal-content">
+            <h3 id="cosmetiqueModalTitle">Ajouter un cosmétique</h3>
+            <input type="hidden" id="cosmetiqueId">
+            <input type="text" id="cosmetiqueNom" placeholder="Nom du cosmétique" required>
+            <textarea id="cosmetiqueDescription" placeholder="Description" rows="3"></textarea>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;">
+                <input type="number" id="cosmetiquePrix" placeholder="Prix (FCFA)" required>
+                <input type="number" id="cosmetiqueStock" placeholder="Stock" value="0">
+            </div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;">
+                <select id="cosmetiqueCategorie"><option value="mixte">Unisex</option><option value="femme">Femme</option><option value="homme">Homme</option></select>
+                <input type="text" id="cosmetiqueType" placeholder="Type (ex: Soin, Savon...)" value="Soin">
+            </div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;">
+                <input type="text" id="cosmetiqueFamille" placeholder="Famille (ex: Visage, Corps)">
+                <input type="text" id="cosmetiqueFormat" placeholder="Format" value="100ml">
+            </div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;">
+                <input type="number" id="cosmetiquePrixPromo" placeholder="Prix promo (optionnel)">
+                <input type="number" id="cosmetiqueRemise" placeholder="Remise %" value="0">
+            </div>
+
+            <div>
+                <label style="font-weight:500;">Images (JPG, PNG, GIF)</label>
+                <input type="file" id="cosmetiqueImages" multiple accept="image/*">
+                <div id="cosmetiqueImagePreview" class="media-preview"></div>
+            </div>
+            <div>
+                <label style="font-weight:500;">Vidéos (MP4, WEBM)</label>
+                <input type="file" id="cosmetiqueVideos" multiple accept="video/*">
+                <div id="cosmetiqueVideoPreview" class="media-preview"></div>
+            </div>
+
+            <div id="cosmetiqueExistingMediaSection" style="display:none;margin-top:10px;">
+                <label style="font-weight:500;">Médias existants</label>
+                <div id="cosmetiqueExistingMedia" class="media-preview"></div>
+            </div>
+
+            <div class="modal-buttons">
+                <button onclick="closeCosmetiqueModal()">Annuler</button>
+                <button onclick="saveCosmetique()" style="background:var(--primary);">Enregistrer</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL LIVRAISON -->
+    <div id="deliveryModal" class="modal">
+        <div class="modal-content">
+            <h3 id="deliveryModalTitle">Ajouter un mode de livraison</h3>
+            <input type="hidden" id="deliveryId">
+            <input type="text" id="deliveryName" placeholder="Nom du mode (ex: Livraison express)" required>
+            <textarea id="deliveryDesc" placeholder="Description" rows="2"></textarea>
+            <input type="number" id="deliveryPrice" placeholder="Prix (FCFA)" required>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;">
+                <input type="number" id="deliveryDelay" placeholder="Délai (jours)" value="3">
+                <select id="deliveryStatus">
+                    <option value="actif">Actif</option>
+                    <option value="inactif">Inactif</option>
+                </select>
+            </div>
+            <div class="modal-buttons">
+                <button onclick="closeDeliveryModal()">Annuler</button>
+                <button onclick="saveDeliveryMethod()" style="background:var(--primary);">Enregistrer</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL ZONE -->
+    <div id="zoneModal" class="modal">
+        <div class="modal-content">
+            <h3 id="zoneModalTitle">Ajouter une zone de livraison</h3>
+            <input type="hidden" id="zoneId">
+            <input type="text" id="zoneName" placeholder="Nom de la zone (ex: Dakar)" required>
+            <textarea id="zoneDesc" placeholder="Description (ex: Région de Dakar)" rows="2"></textarea>
+            <input type="number" id="zoneFee" placeholder="Frais de livraison (FCFA)" required>
+            <input type="text" id="zoneCities" placeholder="Villes concernées (séparées par des virgules)" required>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;">
+                <select id="zoneStatus">
+                    <option value="actif">Actif</option>
+                    <option value="inactif">Inactif</option>
+                </select>
+                <input type="number" id="zoneMinOrder" placeholder="Commande min (FCFA)" value="0">
+            </div>
+            <div class="modal-buttons">
+                <button onclick="closeZoneModal()">Annuler</button>
+                <button onclick="saveZone()" style="background:var(--primary);">Enregistrer</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const API_URL = 'https://maison-yass.onrender.com';
+        let produitsData = [];
+        let cosmetiquesData = [];
+        let currentAdminUsername = '';
+        let commandesChart = null;
+        let repartitionChart = null;
+        window.commandesData = []; 
+
+        // ===== FONCTION CLÉ POUR LES IMAGES =====
+        function formatImageUrl(imgPath) {
+            if (!imgPath) return 'https://placehold.co/100x100/cccccc/ffffff?text=Parfum';
+            if (imgPath.startsWith('http') || imgPath.startsWith('data:')) {
+                return imgPath;
+            }
+            if (imgPath.startsWith('/')) {
+                return `${API_URL}${imgPath}`;
+            } else {
+                return `${API_URL}/${imgPath}`;
+            }
+        }
+
+        // ===== VÉRIFICATION DE LA SESSION =====
+        async function verifierSession() {
+            const token = localStorage.getItem('admin_token');
+            if (!token) {
+                window.location.href = 'admin-login.html';
+                return false;
+            }
+
+            try {
+                const response = await fetch(`${API_URL}/api/admin/verify`, {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+                const data = await response.json();
+                if (data.success) {
+                    currentAdminUsername = data.username || 'Admin';
+                    document.getElementById('admin-username').textContent = currentAdminUsername;
+                    document.getElementById('settingsUsername').value = currentAdminUsername;
+                    return true;
+                } else {
+                    localStorage.removeItem('admin_token');
+                    window.location.href = 'admin-login.html';
+                    return false;
+                }
+            } catch (error) {
+                localStorage.removeItem('admin_token');
+                window.location.href = 'admin-login.html';
+                return false;
+            }
+        }
+
+        async function getToken() {
+            return localStorage.getItem('admin_token');
+        }
+
+        function deconnexion() {
+            localStorage.removeItem('admin_token');
+            window.location.href = 'admin-login.html';
+        }
+
+        function toggleSidebar() {
+            document.getElementById('sidebar').classList.toggle('open');
+        }
+
+        // ===== DATE ACTUELLE =====
+        function updateDate() {
+            const now = new Date();
+            document.getElementById('currentDate').textContent = now.toLocaleDateString('fr-FR', {
+                weekday: 'long',
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric'
+            });
+        }
+
+        // ===== NAVIGATION =====
+        function showSection(section) {
+            document.querySelectorAll('.section-content').forEach(el => {
+                el.classList.remove('active');
+            });
+            
+            document.querySelectorAll('.sidebar-menu a, .sidebar-bottom a').forEach(el => {
+                el.classList.remove('active');
+            });
+
+            const sectionMap = {
+                'dashboard': 'dashboardSection',
+                'produits': 'produitsSection',
+                'cosmetiques': 'cosmetiquesSection',
+                'commandes': 'commandesSection',
+                'clients': 'clientsSection',
+                'promotions': 'promotionsSection',
+                'avis': 'avisSection',
+                'livraison': 'livraisonSection',
+                'zones': 'zonesSection',
+                'rapports': 'rapportsSection',
+                'messages': 'messagesSection',
+                'settings': 'settingsSection'
+            };
+
+            const menuMap = {
+                'dashboard': 'menu-dashboard',
+                'produits': 'menu-produits',
+                'cosmetiques': 'menu-cosmetiques',
+                'commandes': 'menu-commandes',
+                'clients': 'menu-clients',
+                'promotions': 'menu-promotions',
+                'avis': 'menu-avis',
+                'livraison': 'menu-livraison',
+                'zones': 'menu-zones',
+                'rapports': 'menu-rapports',
+                'messages': 'menu-messages',
+                'settings': 'menu-settings'
+            };
+
+            if (sectionMap[section]) {
+                document.getElementById(sectionMap[section]).classList.add('active');
+            }
+            if (menuMap[section]) {
+                document.getElementById(menuMap[section]).classList.add('active');
+            }
+
+            switch(section) {
+                case 'dashboard':
+                    chargerStats();
+                    chargerCommandes();
+                    chargerGraphique();
+                    break;
+                case 'produits':
+                    chargerProduits();
+                    break;
+                case 'cosmetiques':
+                    chargerCosmetiques();
+                    break;
+                case 'commandes':
+                    chargerToutesCommandes();
+                    break;
+                case 'clients':
+                    chargerClients();
+                    break;
+                case 'promotions':
+                    chargerProduitsPourPromo();
+                    break;
+                case 'avis':
+                    chargerAvis();
+                    break;
+                case 'livraison':
+                    chargerDeliveryMethods();
+                    break;
+                case 'zones':
+                    chargerZones();
+                    break;
+                case 'rapports':
+                    chargerRapports();
+                    break;
+                case 'messages':
+                    chargerMessages();
+                    break;
+            }
+
+            if (window.innerWidth <= 768) {
+                document.getElementById('sidebar').classList.remove('open');
+            }
+        }
+
+        // ===== STATISTIQUES =====
+        async function chargerStats() {
+            try {
+                const token = await getToken();
+                const res = await fetch(`${API_URL}/api/admin/stats`, {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+                const stats = await res.json();
+                
+                document.getElementById('statTotalCommandes').innerText = stats.total || 0;
+                document.getElementById('statEnAttente').innerText = stats.en_attente || 0;
+                document.getElementById('statLivrees').innerText = stats.livrees || 0;
+                document.getElementById('statCA').innerHTML = (stats.chiffre_affaires || 0).toLocaleString('fr-FR') + ' FCFA';
+                document.getElementById('statClients').innerText = stats.clients || 0;
+                document.getElementById('statProduits').innerText = stats.produits || 0;
+                document.getElementById('cosmetiquesCount').innerText = stats.cosmetiques || 0;
+                
+                document.getElementById('commandesCount').innerText = stats.en_attente || 0;
+                document.getElementById('clientsCount').innerText = stats.clients || 0;
+                document.getElementById('produitsCount').innerText = stats.produits || 0;
+                document.getElementById('avisCount').innerText = stats.avis_en_attente || 0;
+                document.getElementById('messagesCount').innerText = stats.messages_non_lus || 0;
+            } catch(e) {
+                console.error('Erreur stats:', e);
+            }
+        }
+
+        // ===== GRAPHIQUE =====
+        async function chargerGraphique() {
+            try {
+                const token = await getToken();
+                const res = await fetch(`${API_URL}/api/admin/commandes/by-month`, {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+                const data = await res.json();
+                
+                const ctx = document.getElementById('commandesChart').getContext('2d');
+                if (commandesChart) commandesChart.destroy();
+
+                const labels = data.map(d => d.mois);
+                const totals = data.map(d => d.total);
+                const livrees = data.map(d => d.livrees);
+
+                commandesChart = new Chart(ctx, {
+                    type: 'bar',
+                    data: {
+                        labels: labels,
+                        datasets: [
+                            {
+                                label: 'Total commandes',
+                                data: totals,
+                                backgroundColor: 'rgba(204,0,0,0.6)',
+                                borderColor: 'rgba(204,0,0,1)',
+                                borderWidth: 1
+                            },
+                            {
+                                label: 'Commandes livrées',
+                                data: livrees,
+                                backgroundColor: 'rgba(39,174,96,0.6)',
+                                borderColor: 'rgba(39,174,96,1)',
+                                borderWidth: 1
+                            }
+                        ]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: true,
+                        plugins: {
+                            legend: {
+                                position: 'top',
+                            }
+                        },
+                        scales: {
+                            y: {
+                                beginAtZero: true,
+                                ticks: { stepSize: 1 }
+                            }
+                        }
+                    }
+                });
+            } catch(e) {
+                console.error('Erreur graphique:', e);
+            }
+        }
+
+        // ===== COMMANDES (Dashboard) =====
+        async function chargerCommandes() {
+            const token = await getToken();
+            let url = `${API_URL}/api/admin/commandes?`;
+            if (document.getElementById('filterStatus').value) url += `&statut=${document.getElementById('filterStatus').value}`;
+            if (document.getElementById('filterDateStart').value) url += `&date_debut=${document.getElementById('filterDateStart').value}`;
+            if (document.getElementById('filterDateEnd').value) url += `&date_fin=${document.getElementById('filterDateEnd').value}`;
+
+            try {
+                const res = await fetch(url, {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+                
+                if (!res.ok) {
+                    const errText = await res.text();
+                    throw new Error(`HTTP ${res.status}: ${errText}`);
+                }
+                
+                const commandes = await res.json();
+                document.getElementById('ordersCount').innerHTML = `(${commandes.length})`;
+
+                if (commandes.length === 0) {
+                    document.getElementById('commandesList').innerHTML = '<div class="loading">Aucune commande</div>';
+                    return;
+                }
+
+                window.commandesData = commandes;
+
+                let html = `<table class="orders-table"><thead><tr>
+                    <th>#</th><th>Client</th><th>Téléphone</th><th>Total</th><th>Date</th><th>Statut</th><th>Actions</th>
+                </tr></thead><tbody>`;
+
+                for (const cmd of commandes) {
+                    let details = [];
+                    try {
+                        const detailsRes = await fetch(`${API_URL}/api/admin/commandes/${cmd.id}/details`, {
+                            headers: { 'Authorization': `Bearer ${token}` }
+                        });
+                        if (detailsRes.ok) details = await detailsRes.json();
+                    } catch(e) { console.warn('Détails non trouvés pour la commande', cmd.id); }
+                    
+                    cmd.details = details;
+
+                    const statutClass = cmd.statut === 'en attente' ? 'badge-warning' :
+                                      cmd.statut === 'livrée' ? 'badge-success' : 'badge-danger';
+
+                    html += `<tr>
+                        <td>#${cmd.id}</td>
+                        <td>${cmd.client_nom || 'Non renseigné'}</td>
+                        <td>${cmd.client_telephone || 'Non renseigné'}</td>
+                        <td><strong>${(cmd.total || 0).toLocaleString('fr-FR')} FCFA</strong></td>
+                        <td>${new Date(cmd.date_creation).toLocaleDateString('fr-FR')}</td>
+                        <td><span class="badge ${statutClass}">${cmd.statut}</span></td>
+                        <td>
+                            <button class="btn-detail" onclick="openDetailModal(${cmd.id})">
+                                <i class="fas fa-eye"></i> Détails
+                            </button>
+                            <br>
+                            <select class="status-select" onchange="changerStatut(${cmd.id}, this.value)">
+                                <option value="en attente" ${cmd.statut === 'en attente' ? 'selected' : ''}>En attente</option>
+                                <option value="livrée" ${cmd.statut === 'livrée' ? 'selected' : ''}>Livrée</option>
+                                <option value="annulée" ${cmd.statut === 'annulée' ? 'selected' : ''}>Annulée</option>
+                            </select>
+                        </td>
+                    </tr>`;
+                }
+                html += `</tbody></table>`;
+                document.getElementById('commandesList').innerHTML = html;
+            } catch(e) {
+                console.error('Erreur commandes:', e);
+                document.getElementById('commandesList').innerHTML = `<div class="loading" style="color:red; text-align:left; padding:1rem;">
+                    <strong>Erreur de chargement des commandes.</strong><br>
+                    ${e.message}<br><br>
+                    <em style="color:#666;">Vérifiez que votre serveur backend (API) est bien démarré sur le port 3000 et qu'il n'y a pas d'erreur SQL.</em>
+                </div>`;
+            }
+        }
+
+        // ===== TOUTES LES COMMANDES =====
+        async function chargerToutesCommandes() {
+            const token = await getToken();
+            let url = `${API_URL}/api/admin/commandes?`;
+            if (document.getElementById('filterStatusCommandes').value) url += `statut=${document.getElementById('filterStatusCommandes').value}&`;
+            if (document.getElementById('filterDateStartCmd').value) url += `date_debut=${document.getElementById('filterDateStartCmd').value}&`;
+            if (document.getElementById('filterDateEndCmd').value) url += `date_fin=${document.getElementById('filterDateEndCmd').value}&`;
+
+            try {
+                const res = await fetch(url, {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+                if (!res.ok) {
+                    const errText = await res.text();
+                    throw new Error(`HTTP ${res.status}: ${errText}`);
+                }
+                const commandes = await res.json();
+
+                if (commandes.length === 0) {
+                    document.getElementById('toutesCommandesList').innerHTML = '<div class="loading">Aucune commande</div>';
+                    return;
+                }
+
+                window.commandesData = commandes;
+
+                let html = `<table class="orders-table"><thead><tr>
+                    <th>#</th><th>Client</th><th>Téléphone</th><th>Adresse</th><th>Total</th><th>Date</th><th>Statut</th><th>Actions</th>
+                </tr></thead><tbody>`;
+
+                for (const cmd of commandes) {
+                    let details = [];
+                    try {
+                        const detailsRes = await fetch(`${API_URL}/api/admin/commandes/${cmd.id}/details`, {
+                            headers: { 'Authorization': `Bearer ${token}` }
+                        });
+                        if (detailsRes.ok) details = await detailsRes.json();
+                    } catch(e) { console.warn('Détails non trouvés pour la commande', cmd.id); }
+                    
+                    cmd.details = details;
+
+                    const statutClass = cmd.statut === 'en attente' ? 'badge-warning' :
+                                      cmd.statut === 'livrée' ? 'badge-success' : 'badge-danger';
+
+                    html += `<tr>
+                        <td>#${cmd.id}</td>
+                        <td>${cmd.client_nom || 'Non renseigné'}</td>
+                        <td>${cmd.client_telephone || 'Non renseigné'}</td>
+                        <td style="max-width:150px;white-space:normal;">${cmd.client_adresse || 'Non renseignée'}</td>
+                        <td><strong>${(cmd.total || 0).toLocaleString('fr-FR')} FCFA</strong></td>
+                        <td>${new Date(cmd.date_creation).toLocaleDateString('fr-FR')}</td>
+                        <td><span class="badge ${statutClass}">${cmd.statut}</span></td>
+                        <td>
+                            <button class="btn-detail" onclick="openDetailModal(${cmd.id})">
+                                <i class="fas fa-eye"></i> Détails
+                            </button>
+                            <br>
+                            <select class="status-select" onchange="changerStatut(${cmd.id}, this.value)">
+                                <option value="en attente" ${cmd.statut === 'en attente' ? 'selected' : ''}>En attente</option>
+                                <option value="livrée" ${cmd.statut === 'livrée' ? 'selected' : ''}>Livrée</option>
+                                <option value="annulée" ${cmd.statut === 'annulée' ? 'selected' : ''}>Annulée</option>
+                            </select>
+                        </td>
+                    </tr>`;
+                }
+                html += `</tbody></table>`;
+                document.getElementById('toutesCommandesList').innerHTML = html;
+            } catch(e) {
+                console.error('Erreur commandes:', e);
+                document.getElementById('toutesCommandesList').innerHTML = `<div class="loading" style="color:red; text-align:left; padding:1rem;">
+                    <strong>Erreur de chargement des commandes.</strong><br>
+                    ${e.message}
+                </div>`;
+            }
+        }
+
+        function resetCommandesFilters() {
+            document.getElementById('filterStatusCommandes').value = '';
+            document.getElementById('filterDateStartCmd').value = '';
+            document.getElementById('filterDateEndCmd').value = '';
+            chargerToutesCommandes();
+        }
+
+        async function changerStatut(id, statut) {
+            const token = await getToken();
+            try {
+                await fetch(`${API_URL}/api/admin/commandes/${id}/statut`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`
+                    },
+                    body: JSON.stringify({ statut })
+                });
+                chargerCommandes();
+                chargerToutesCommandes();
+                chargerStats();
+            } catch(e) {
+                console.error('Erreur changement statut:', e);
+            }
+        }
+
+        async function effacerHistorique() {
+            if (confirm('Supprimer toutes les commandes livrées et annulées ?')) {
+                const token = await getToken();
+                try {
+                    await fetch(`${API_URL}/api/admin/commandes/historique`, {
+                        method: 'DELETE',
+                        headers: { 'Authorization': `Bearer ${token}` }
+                    });
+                    chargerCommandes();
+                    chargerToutesCommandes();
+                    chargerStats();
+                } catch(e) {
+                    console.error('Erreur effacement:', e);
+                }
+            }
+        }
+
+        function resetFilters() {
+            document.getElementById('filterStatus').value = '';
+            document.getElementById('filterDateStart').value = '';
+            document.getElementById('filterDateEnd').value = '';
+            chargerCommandes();
+        }
+
+        // ===== MODALE DÉTAILS =====
+        function openDetailModal(id) {
+            const commande = window.commandesData ? window.commandesData.find(c => c.id === id) : null;
+            if (!commande) {
+                alert('Détails de la commande introuvables.');
+                return;
+            }
+
+            document.getElementById('detailId').textContent = commande.id;
+            document.getElementById('detailDate').textContent =
+                `📅 ${new Date(commande.date_creation).toLocaleDateString('fr-FR')} à ${new Date(commande.date_creation).toLocaleTimeString('fr-FR')}`;
+            document.getElementById('detailClient').textContent = commande.client_nom || 'Non renseigné';
+            document.getElementById('detailTelephone').textContent = commande.client_telephone || 'Non renseigné';
+            document.getElementById('detailAdresse').textContent = commande.client_adresse || 'Non renseignée';
+            document.getElementById('detailPaiement').textContent = commande.moyen_paiement || 'Non renseigné';
+
+            const statutClass = commande.statut === 'en attente' ? 'badge-warning' :
+                              commande.statut === 'livrée' ? 'badge-success' : 'badge-danger';
+            document.getElementById('detailStatut').innerHTML = `<span class="badge ${statutClass}">${commande.statut.toUpperCase()}</span>`;
+
+            const list = document.getElementById('detailProduitsList');
+            list.innerHTML = '';
+            let total = 0;
+            let nbProduits = 0;
+
+            if (commande.details && commande.details.length > 0) {
+                commande.details.forEach(d => {
+                    const prixTotal = d.prix_unitaire * d.quantite;
+                    total += prixTotal;
+                    nbProduits += d.quantite;
+
+                    let imageUrl = 'https://placehold.co/100x100/cccccc/ffffff?text=Parfum';
+                    if (d.produit_image_url) {
+                        imageUrl = formatImageUrl(d.produit_image_url);
+                    } else {
+                        let prodInfo = null;
+                        if (d.produit_id) {
+                            prodInfo = produitsData.find(p => p.id === d.produit_id) || cosmetiquesData.find(p => p.id === d.produit_id);
+                        }
+                        if (prodInfo && prodInfo.images && prodInfo.images.length > 0) {
+                            imageUrl = formatImageUrl(prodInfo.images[0].image_url);
+                        }
+                    }
+
+                    const categorie = 'mixte';
+                    const format = '50ml';
+                    const type = 'parfum';
+                    const stock = 'N/A';
+
+                    const div = document.createElement('div');
+                    div.className = 'detail-produit-item';
+                    div.innerHTML = `
+                        <div class="img-wrapper">
+                            <img src="${imageUrl}" alt="${d.produit_nom}" onerror="this.src='https://placehold.co/100x100/cccccc/ffffff?text=Parfum'">
+                        </div>
+                        <div class="info">
+                            <div class="nom">${d.produit_nom}</div>
+                            <div class="badges">
+                                <span class="badge badge-categorie"><i class="fas fa-tag"></i> ${categorie.toUpperCase()}</span>
+                                <span class="badge badge-format"><i class="fas fa-flask"></i> ${format}</span>
+                                <span class="badge" style="background:var(--secondary);color:white;"><i class="fas fa-box"></i> ${type.toUpperCase()}</span>
+                            </div>
+                            <div class="meta">
+                                <span><i class="fas fa-cube"></i> Quantité : <strong>${d.quantite}</strong></span>
+                                <span><i class="fas fa-tag"></i> Prix unitaire : <strong>${d.prix_unitaire.toLocaleString('fr-FR')} FCFA</strong></span>
+                            </div>
+                        </div>
+                        <div class="prix-block">
+                            <div class="prix-unitaire">${d.prix_unitaire.toLocaleString('fr-FR')} FCFA × ${d.quantite}</div>
+                            <div class="sous-total">${prixTotal.toLocaleString('fr-FR')} FCFA</div>
+                            <div class="quantite">Quantité : ${d.quantite}</div>
+                        </div>
+                    `;
+                    list.appendChild(div);
+                });
+            } else {
+                list.innerHTML = '<p style="color:var(--text-light);padding:1rem;text-align:center;">Aucun détail de produit disponible</p>';
+            }
+
+            document.getElementById('detailNbProduits').textContent = nbProduits;
+            document.getElementById('detailTotal').textContent = `Total : ${total.toLocaleString('fr-FR')} FCFA`;
+            document.getElementById('modalDetail').classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeDetailModal() {
+            document.getElementById('modalDetail').classList.remove('active');
+            document.body.style.overflow = '';
+        }
+
+        document.getElementById('modalDetail').addEventListener('click', function(e) {
+            if (e.target === this) closeDetailModal();
+        });
+
+        // ===== PRODUITS (Parfums) =====
+        function getProduitsFiltres() {
+            return {
+                categorie: document.getElementById('filterProduitsCategorie').value,
+                type: document.getElementById('filterProduitsType').value,
+                promo: document.getElementById('filterProduitsPromo').value,
+                visibilite: document.getElementById('filterProduitsVisibilite').value
+            };
+        }
+
+        function resetProduitsFilters() {
+            document.getElementById('filterProduitsCategorie').value = '';
+            document.getElementById('filterProduitsType').value = '';
+            document.getElementById('filterProduitsPromo').value = '';
+            document.getElementById('filterProduitsVisibilite').value = '';
+            chargerProduits();
+        }
+
+        async function chargerProduits() {
+            const token = await getToken();
+            const container = document.getElementById('produitsList');
+            try {
+                const res = await fetch(`${API_URL}/api/admin/produits`, {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+                let produits = await res.json();
+
+                produitsData = produits; 
+
+                const filtres = getProduitsFiltres();
+                if (filtres.categorie) {
+                    produits = produits.filter(p => p.categorie === filtres.categorie);
+                }
+                if (filtres.type) {
+                    produits = produits.filter(p => p.type_produit === filtres.type);
+                }
+                if (filtres.promo !== '') {
+                    const isPromo = filtres.promo === '1';
+                    produits = produits.filter(p => (p.en_promo === 1 && p.prix_promo) === isPromo);
+                }
+                if (filtres.visibilite !== '') {
+                    const isVisible = filtres.visibilite === '1';
+                    produits = produits.filter(p => p.masque === (isVisible ? 0 : 1));
+                }
+
+                if (produits.length === 0) {
+                    container.innerHTML = '<div class="loading">Aucun produit correspondant aux filtres</div>';
+                    return;
+                }
+
+                container.innerHTML = `<div class="produits-grid">${produits.map(p => {
+                    const isRupture = p.stock === 0;
+                    const isHidden = p.masque === 1;
+                    const imgUrl = (p.images && p.images.length > 0) ? formatImageUrl(p.images[0].image_url) : 'https://placehold.co/50/cccccc/ffffff?text=?';
+                    
+                    return `<div class="produit-card ${isHidden ? 'hidden-produit' : ''}">
+                        <div class="produit-header">
+                            <span class="produit-nom">${isHidden ? '🙈 ' : ''}${p.nom}</span>
+                            <span class="produit-prix">${p.prix.toLocaleString('fr-FR')} FCFA</span>
+                        </div>
+                        <div class="images-list">
+                            ${(p.images || []).slice(0, 3).map(img => `<img src="${formatImageUrl(img.image_url)}" onerror="this.src='https://placehold.co/50/cccccc/ffffff?text=?'">`).join('')}
+                            ${(p.videos || []).slice(0, 2).map(vid => `<video src="${vid.video_url}" muted style="width:50px;height:50px;object-fit:cover;border-radius:8px;"></video>`).join('')}
+                        </div>
+                        <div style="font-size:0.8rem;color:#666;margin-bottom:0.5rem;">${p.description || ''}</div>
+                        <div style="font-size:0.8rem;margin-bottom:0.5rem;">
+                            <span class="badge ${isRupture ? 'badge-danger' : 'badge-success'}">${isRupture ? '⚠️ Rupture' : `📦 Stock: ${p.stock}`}</span>
+                            ${p.en_promo ? `<span class="badge badge-warning" style="margin-left:5px;">🔥 -${p.remise}%</span>` : ''}
+                            <span class="badge" style="background:var(--primary);color:white;margin-left:5px;">${p.type_produit || 'parfum'}</span>
+                            <span class="badge badge-categorie" style="margin-left:5px;">${(p.categorie || 'mixte').toUpperCase()}</span>
+                            ${isHidden ? `<span class="badge badge-hidden" style="margin-left:5px;">Masqué</span>` : ''}
+                        </div>
+                        <div class="produit-actions">
+                            <button class="btn-edit" onclick="openEditProductModal(${p.id})"><i class="fas fa-edit"></i></button>
+                            <button class="btn-stock ${isRupture ? 'rupture' : ''}" onclick="gererStock(${p.id}, ${p.stock})"><i class="fas fa-cube"></i></button>
+                            <button class="btn-toggle-hidden ${isHidden ? 'hidden-active' : ''}" onclick="toggleMasquerProduit(${p.id}, ${p.masque || 0})">
+                                ${isHidden ? '<i class="fas fa-eye"></i> Afficher' : '<i class="fas fa-eye-slash"></i> Masquer'}
+                            </button>
+                            <button class="btn-delete" onclick="supprimerProduit(${p.id})"><i class="fas fa-trash"></i></button>
+                        </div>
+                    </div>`;
+                }).join('')}</div>`;
+            } catch(e) {
+                console.error('Erreur produits:', e);
+                container.innerHTML = '<div class="loading">Erreur de chargement</div>';
+            }
+        }
+
+        // ===== COSMETIQUES =====
+        async function chargerCosmetiques() {
+            const token = await getToken();
+            const container = document.getElementById('cosmetiquesList');
+            try {
+                const res = await fetch(`${API_URL}/api/admin/cosmetiques`, {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+                let cosmetiques = await res.json();
+
+                cosmetiquesData = cosmetiques;
+
+                if (cosmetiques.length === 0) {
+                    container.innerHTML = '<div class="loading">Aucun cosmétique disponible</div>';
+                    return;
+                }
+
+                container.innerHTML = `<div class="produits-grid">${cosmetiques.map(p => {
+                    const isRupture = p.stock === 0;
+                    const isHidden = p.masque === 1;
+                    const imgUrl = (p.images && p.images.length > 0) ? formatImageUrl(p.images[0].image_url) : 'https://placehold.co/50/cccccc/ffffff?text=?';
+                    
+                    return `<div class="produit-card ${isHidden ? 'hidden-produit' : ''}">
+                        <div class="produit-header">
+                            <span class="produit-nom">${isHidden ? '🙈 ' : ''}${p.nom}</span>
+                            <span class="produit-prix">${p.prix.toLocaleString('fr-FR')} FCFA</span>
+                        </div>
+                        <div class="images-list">
+                            ${(p.images || []).slice(0, 3).map(img => `<img src="${formatImageUrl(img.image_url)}" onerror="this.src='https://placehold.co/50/cccccc/ffffff?text=?'">`).join('')}
+                            ${(p.videos || []).slice(0, 2).map(vid => `<video src="${vid.video_url}" muted style="width:50px;height:50px;object-fit:cover;border-radius:8px;"></video>`).join('')}
+                        </div>
+                        <div style="font-size:0.8rem;color:#666;margin-bottom:0.5rem;">${p.description || ''}</div>
+                        <div style="font-size:0.8rem;margin-bottom:0.5rem;">
+                            <span class="badge ${isRupture ? 'badge-danger' : 'badge-success'}">${isRupture ? '⚠️ Rupture' : `📦 Stock: ${p.stock}`}</span>
+                            ${p.en_promo ? `<span class="badge badge-warning" style="margin-left:5px;">🔥 -${p.remise}%</span>` : ''}
+                            <span class="badge" style="background:var(--primary);color:white;margin-left:5px;">${p.type_produit || 'soin'}</span>
+                            <span class="badge badge-categorie" style="margin-left:5px;">${(p.categorie || 'mixte').toUpperCase()}</span>
+                            ${isHidden ? `<span class="badge badge-hidden" style="margin-left:5px;">Masqué</span>` : ''}
+                        </div>
+                        <div class="produit-actions">
+                            <button class="btn-edit" onclick="openEditCosmetiqueModal(${p.id})"><i class="fas fa-edit"></i></button>
+                            <button class="btn-stock ${isRupture ? 'rupture' : ''}" onclick="gererStock(${p.id}, ${p.stock})"><i class="fas fa-cube"></i></button>
+                            <button class="btn-toggle-hidden ${isHidden ? 'hidden-active' : ''}" onclick="toggleMasquerProduit(${p.id}, ${p.masque || 0})">
+                                ${isHidden ? '<i class="fas fa-eye"></i> Afficher' : '<i class="fas fa-eye-slash"></i> Masquer'}
+                            </button>
+                            <button class="btn-delete" onclick="supprimerProduit(${p.id})"><i class="fas fa-trash"></i></button>
+                        </div>
+                    </div>`;
+                }).join('')}</div>`;
+            } catch(e) {
+                console.error('Erreur cosmétiques:', e);
+                container.innerHTML = '<div class="loading">Erreur de chargement</div>';
+            }
+        }
+
+        async function toggleMasquerProduit(id, currentMasque) {
+            const token = await getToken();
+            const newMasque = currentMasque === 1 ? 0 : 1;
+            try {
+                const res = await fetch(`${API_URL}/api/admin/produits/${id}/masquer`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`
+                    },
+                    body: JSON.stringify({ masque: newMasque })
+                });
+                const data = await res.json();
+                if (data.success) {
+                    chargerProduits();
+                    chargerCosmetiques();
+                    chargerProduitsPourPromo();
+                }
+            } catch(e) {
+                console.error('Erreur masquage:', e);
+            }
+        }
+
+        // ===== PROMOTIONS =====
+        function getPromoFiltres() {
+            return {
+                categorie: document.getElementById('filterPromoCategorie').value,
+                type: document.getElementById('filterPromoType').value,
+                statut: document.getElementById('filterPromoStatut').value
+            };
+        }
+
+        function resetPromoFilters() {
+            document.getElementById('filterPromoCategorie').value = '';
+            document.getElementById('filterPromoType').value = '';
+            document.getElementById('filterPromoStatut').value = '';
+            chargerProduitsPourPromo();
+        }
+
+        async function chargerProduitsPourPromo() {
+            const token = await getToken();
+            const container = document.getElementById('produitsPromoList');
+            try {
+                // On récupère tous les produits (parfums et cosmétiques)
+                const res = await fetch(`${API_URL}/api/admin/produits`, {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+                let produits = await res.json();
+
+                const resCos = await fetch(`${API_URL}/api/admin/cosmetiques`, {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+                let cosmetiques = await resCos.json();
+
+                let tousLesProduits = [...produits, ...cosmetiques];
+
+                const filtres = getPromoFiltres();
+                if (filtres.categorie) {
+                    tousLesProduits = tousLesProduits.filter(p => p.categorie === filtres.categorie);
+                }
+                if (filtres.type) {
+                    tousLesProduits = tousLesProduits.filter(p => p.type_produit === filtres.type);
+                }
+                if (filtres.statut !== '') {
+                    const isPromo = filtres.statut === '1';
+                    tousLesProduits = tousLesProduits.filter(p => (p.en_promo === 1 && p.prix_promo) === isPromo);
+                }
+
+                const produitsVisibles = tousLesProduits.filter(p => p.masque === 0);
+
+                if (produitsVisibles.length === 0) {
+                    container.innerHTML = '<div class="loading">Aucun produit visible correspondant aux filtres</div>';
+                    return;
+                }
+
+                const total = produitsVisibles.length;
+                const actives = produitsVisibles.filter(p => p.en_promo === 1 && p.prix_promo).length;
+                const inactives = total - actives;
+                document.getElementById('promoTotal').textContent = total;
+                document.getElementById('promoActives').textContent = actives;
+                document.getElementById('promoInactives').textContent = inactives;
+
+                container.innerHTML = `
+                    <div class="promo-grid">
+                        ${produitsVisibles.map(produit => {
+                            const isPromo = produit.en_promo === 1 && produit.prix_promo;
+                            const imageUrl = (produit.images && produit.images.length > 0)
+                                ? formatImageUrl(produit.images[0].image_url)
+                                : 'https://placehold.co/60x60/cccccc/ffffff?text=?';
+
+                            return `
+                                <div class="promo-card" data-id="${produit.id}">
+                                    <div class="info">
+                                        <div style="display:flex;align-items:center;gap:10px;">
+                                            <img src="${imageUrl}" alt="${produit.nom}" style="width:45px;height:45px;object-fit:cover;border-radius:8px;border:1px solid #eee;" onerror="this.src='https://placehold.co/45x45/cccccc/ffffff?text=?'">
+                                            <div>
+                                                <div class="nom">${produit.nom}</div>
+                                                <div class="badges">
+                                                    <span class="badge" style="background:var(--secondary);color:white;font-size:0.55rem;">${produit.type_produit || 'parfum'}</span>
+                                                    <span class="badge badge-categorie" style="font-size:0.55rem;">${(produit.categorie || 'mixte').toUpperCase()}</span>
+                                                    <span class="badge" style="background:var(--info);color:white;font-size:0.55rem;">${produit.type_categorie}</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="prix">
+                                            ${isPromo ?
+                                                `<span class="original">${produit.prix.toLocaleString('fr-FR')} FCFA</span>
+                                                 <span class="promo">${produit.prix_promo.toLocaleString('fr-FR')} FCFA</span>
+                                                 <span class="promo-badge-active">-${produit.remise}%</span>` :
+                                                `<span>${produit.prix.toLocaleString('fr-FR')} FCFA</span>
+                                                 <span class="promo-badge-inactive">Pas de promo</span>`
+                                            }
+                                        </div>
+                                    </div>
+                                    <div class="actions">
+                                        ${isPromo ?
+                                            `<button class="btn-promo-remove" onclick="retirerPromo(${produit.id})">
+                                                <i class="fas fa-times"></i> Retirer
+                                            </button>` :
+                                            `<input type="number" id="remise-${produit.id}" class="promo-input" placeholder="%" min="1" max="90" step="1">
+                                             <button class="btn-promo-apply" onclick="appliquerPromo(${produit.id})">
+                                                <i class="fas fa-tag"></i> Appliquer
+                                             </button>`
+                                        }
+                                    </div>
+                                </div>
+                            `;
+                        }).join('')}
+                    </div>
+                `;
+            } catch (error) {
+                console.error('Erreur promo:', error);
+                container.innerHTML = '<div class="loading">Erreur de chargement</div>';
+            }
+        }
+
+        async function appliquerPromo(produitId) {
+            const remiseInput = document.getElementById(`remise-${produitId}`);
+            const remise = remiseInput ? parseInt(remiseInput.value) : null;
+
+            if (!remise || remise < 1 || remise > 90) {
+                alert('❌ Entrez une remise entre 1% et 90%');
+                return;
+            }
+
+            const token = await getToken();
+            try {
+                const response = await fetch(`${API_URL}/api/admin/produits/${produitId}/promo`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`
+                    },
+                    body: JSON.stringify({ remise: remise })
+                });
+
+                const result = await response.json();
+                if (result.success) {
+                    alert(`✅ Promotion de ${remise}% appliquée !`);
+                    await chargerProduitsPourPromo();
+                    await chargerProduits();
+                    await chargerCosmetiques();
+                }
+            } catch (error) {
+                console.error('Erreur application promo:', error);
+                alert('❌ Erreur lors de l\'application');
+            }
+        }
+
+        async function retirerPromo(produitId) {
+            const token = await getToken();
+            try {
+                const response = await fetch(`${API_URL}/api/admin/produits/${produitId}/promo`, {
+                    method: 'DELETE',
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+
+                const result = await response.json();
+                if (result.success) {
+                    alert('✅ Promotion retirée');
+                    await chargerProduitsPourPromo();
+                    await chargerProduits();
+                    await chargerCosmetiques();
+                }
+            } catch (error) {
+                console.error('Erreur retrait promo:', error);
+                alert('❌ Erreur lors du retrait');
+            }
+        }
+
+        // ===== CLIENTS =====
+        async function chargerClients() {
+            const token = await getToken();
+            const search = document.getElementById('searchClient').value.trim();
+            try {
+                const url = search ? `${API_URL}/api/admin/clients?search=${encodeURIComponent(search)}` : `${API_URL}/api/admin/clients`;
+                const res = await fetch(url, {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+                const clients = await res.json();
+                document.getElementById('clientsTotal').textContent = clients.length;
+
+                if (clients.length === 0) {
+                    document.getElementById('clientsList').innerHTML = '<div class="loading">Aucun client</div>';
+                    return;
+                }
+
+                let html = `<table class="orders-table"><thead><tr>
+                    <th>Client</th><th>Email</th><th>Téléphone</th><th>Commandes</th><th>Total dépensé</th><th>Inscription</th><th>Actions</th>
+                </tr></thead><tbody>`;
+
+                clients.forEach(client => {
+                    html += `<tr>
+                        <td><strong>${client.nom || 'Non renseigné'}</strong></td>
+                        <td>${client.email || '-'}</td>
+                        <td>${client.telephone || '-'}</td>
+                        <td>${client.nb_commandes || 0}</td>
+                        <td>${(client.total_depense || 0).toLocaleString('fr-FR')} FCFA</td>
+                        <td>${client.date_inscription ? new Date(client.date_inscription).toLocaleDateString('fr-FR') : '-'}</td>
+                        <td>
+                            <button class="btn-detail" onclick="voirClient(${client.id})"><i class="fas fa-eye"></i> Voir</button>
+                        </td>
+                    </tr>`;
+                });
+                html += `</tbody></table>`;
+                document.getElementById('clientsList').innerHTML = html;
+            } catch(e) {
+                console.error('Erreur clients:', e);
+                document.getElementById('clientsList').innerHTML = '<div class="loading">Erreur de chargement</div>';
+            }
+        }
+
+        function voirClient(id) {
+            alert(`📋 Affichage du client #${id} (fonctionnalité à implémenter)`);
+        }
+
+        // ===== AVIS CLIENTS =====
+        async function chargerAvis() {
+            const token = await getToken();
+            const note = document.getElementById('filterAvisNote').value;
+            const statut = document.getElementById('filterAvisStatut').value;
+            
+            let url = `${API_URL}/api/admin/avis?`;
+            if (note) url += `note=${note}&`;
+            if (statut) url += `statut=${statut}&`;
+
+            try {
+                const res = await fetch(url, {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+                const avis = await res.json();
+                document.getElementById('avisCount').textContent = avis.filter(a => a.statut === 'en_attente').length;
+
+                if (avis.length === 0) {
+                    document.getElementById('avisList').innerHTML = '<div class="loading">Aucun avis</div>';
+                    return;
+                }
+
+                const totalNotes = avis.reduce((sum, a) => sum + a.note, 0);
+                const moyenne = avis.length > 0 ? (totalNotes / avis.length).toFixed(1) : 0;
+                document.getElementById('noteMoyenne').textContent = moyenne;
+
+                let html = '';
+                avis.forEach(a => {
+                    const stars = '⭐'.repeat(a.note) + '☆'.repeat(5 - a.note);
+                    const statutClass = a.statut === 'approuve' ? 'badge-success' :
+                                       a.statut === 'en_attente' ? 'badge-warning' : 'badge-danger';
+                    const statutText = a.statut === 'approuve' ? 'Approuvé' :
+                                      a.statut === 'en_attente' ? 'En attente' : 'Rejeté';
+
+                    html += `
+                        <div class="review-item">
+                            <div class="review-avatar">${a.client_nom ? a.client_nom.charAt(0).toUpperCase() : '?'}</div>
+                            <div class="review-content">
+                                <div class="review-author">${a.client_nom || 'Anonyme'}</div>
+                                <div class="review-stars">${stars}</div>
+                                <div class="review-date">${new Date(a.date_creation).toLocaleDateString('fr-FR')}</div>
+                                <div class="review-text">"${a.commentaire || 'Aucun commentaire'}"</div>
+                                <div style="margin-top:4px;">
+                                    <span class="badge ${statutClass}">${statutText}</span>
+                                    ${a.produit_nom ? `<span class="badge badge-info">${a.produit_nom}</span>` : ''}
+                                </div>
+                            </div>
+                            <div class="review-actions">
+                                ${a.statut === 'en_attente' ? `
+                                    <button class="btn-sm btn-sm-success" onclick="approuverAvis(${a.id})"><i class="fas fa-check"></i></button>
+                                    <button class="btn-sm btn-sm-danger" onclick="rejeterAvis(${a.id})"><i class="fas fa-times"></i></button>
+                                ` : ''}
+                                <button class="btn-sm btn-sm-danger" onclick="supprimerAvis(${a.id})"><i class="fas fa-trash"></i></button>
+                            </div>
+                        </div>
+                    `;
+                });
+                document.getElementById('avisList').innerHTML = html;
+            } catch(e) {
+                console.error('Erreur avis:', e);
+                document.getElementById('avisList').innerHTML = '<div class="loading">Erreur de chargement</div>';
+            }
+        }
+
+        async function approuverAvis(id) {
+            const token = await getToken();
+            try {
+                await fetch(`${API_URL}/api/admin/avis/${id}/approuver`, {
+                    method: 'PUT',
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+                chargerAvis();
+            } catch(e) {
+                console.error('Erreur approbation avis:', e);
+            }
+        }
+
+        async function rejeterAvis(id) {
+            const token = await getToken();
+            try {
+                await fetch(`${API_URL}/api/admin/avis/${id}/rejeter`, {
+                    method: 'PUT',
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+                chargerAvis();
+            } catch(e) {
+                console.error('Erreur rejet avis:', e);
+            }
+        }
+
+        async function supprimerAvis(id) {
+            if (!confirm('Supprimer cet avis ?')) return;
+            const token = await getToken();
+            try {
+                await fetch(`${API_URL}/api/admin/avis/${id}`, {
+                    method: 'DELETE',
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+                chargerAvis();
+            } catch(e) {
+                console.error('Erreur suppression avis:', e);
+            }
+        }
+
+        // ===== LIVRAISON =====
+        async function chargerDeliveryMethods() {
+            const token = await getToken();
+            try {
+                const res = await fetch(`${API_URL}/api/admin/livraison`, {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+                const methods = await res.json();
+
+                if (methods.length === 0) {
+                    document.getElementById('deliveryMethods').innerHTML = '<div class="loading">Aucun mode de livraison</div>';
+                    return;
+                }
+
+                let html = '';
+                methods.forEach(m => {
+                    const statusClass = m.statut === 'actif' ? 'badge-success' : 'badge-danger';
+                    html += `
+                        <div class="delivery-method">
+                            <div class="method-info">
+                                <div class="name">${m.nom}</div>
+                                <div class="desc">${m.description || ''}</div>
+                                <div style="font-size:0.8rem;color:var(--text-light);">
+                                    Délai: ${m.delai || 'N/A'} jours • <span class="badge ${statusClass}">${m.statut}</span>
+                                </div>
+                            </div>
+                            <div class="method-price">${(m.prix || 0).toLocaleString('fr-FR')} FCFA</div>
+                            <div style="display:flex;gap:0.5rem;">
+                                <button class="btn-sm btn-sm-warning" onclick="editDeliveryMethod(${m.id})"><i class="fas fa-edit"></i></button>
+                                <button class="btn-sm btn-sm-danger" onclick="deleteDeliveryMethod(${m.id})"><i class="fas fa-trash"></i></button>
+                            </div>
+                        </div>
+                    `;
+                });
+                document.getElementById('deliveryMethods').innerHTML = html;
+            } catch(e) {
+                console.error('Erreur livraison:', e);
+                document.getElementById('deliveryMethods').innerHTML = '<div class="loading">Erreur de chargement</div>';
+            }
+        }
+
+        function openAddDeliveryMethod() {
+            document.getElementById('deliveryModalTitle').textContent = 'Ajouter un mode de livraison';
+            document.getElementById('deliveryId').value = '';
+            document.getElementById('deliveryName').value = '';
+            document.getElementById('deliveryDesc').value = '';
+            document.getElementById('deliveryPrice').value = '';
+            document.getElementById('deliveryDelay').value = '3';
+            document.getElementById('deliveryStatus').value = 'actif';
+            document.getElementById('deliveryModal').style.display = 'flex';
+        }
+
+        function closeDeliveryModal() {
+            document.getElementById('deliveryModal').style.display = 'none';
+        }
+
+        async function saveDeliveryMethod() {
+            const id = document.getElementById('deliveryId').value;
+            const nom = document.getElementById('deliveryName').value;
+            const description = document.getElementById('deliveryDesc').value;
+            const prix = parseInt(document.getElementById('deliveryPrice').value);
+            const delai = parseInt(document.getElementById('deliveryDelay').value);
+            const statut = document.getElementById('deliveryStatus').value;
+
+            if (!nom || !prix) {
+                alert('Veuillez remplir tous les champs obligatoires');
+                return;
+            }
+
+            const token = await getToken();
+            const data = { nom, description, prix, delai, statut };
+
+            try {
+                const url = id ? `${API_URL}/api/admin/livraison/${id}` : `${API_URL}/api/admin/livraison`;
+                const method = id ? 'PUT' : 'POST';
+                const res = await fetch(url, {
+                    method: method,
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`
+                    },
+                    body: JSON.stringify(data)
+                });
+                const result = await res.json();
+                if (result.success) {
+                    alert(id ? '✅ Mode de livraison modifié !' : '✅ Mode de livraison ajouté !');
+                    closeDeliveryModal();
+                    chargerDeliveryMethods();
+                }
+            } catch(e) {
+                console.error('Erreur sauvegarde livraison:', e);
+                alert('❌ Erreur de sauvegarde');
+            }
+        }
+
+        function editDeliveryMethod(id) {
+            alert(`📝 Modification du mode de livraison #${id}`);
+        }
+
+        async function deleteDeliveryMethod(id) {
+            if (!confirm('Supprimer ce mode de livraison ?')) return;
+            const token = await getToken();
+            try {
+                await fetch(`${API_URL}/api/admin/livraison/${id}`, {
+                    method: 'DELETE',
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+                chargerDeliveryMethods();
+            } catch(e) {
+                console.error('Erreur suppression livraison:', e);
+            }
+        }
+
+        // ===== ZONES LIVRAISON (Basé sur la distance depuis Thiaroye) =====
+        async function chargerZones() {
+            const token = await getToken();
+            try {
+                const res = await fetch(`${API_URL}/api/admin/zones`, {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+                const zones = await res.json();
+
+                const tranchesParDefaut = [
+                    { min: 0, max: 5, frais: 1000, label: '0 - 5 km' },
+                    { min: 5, max: 10, frais: 1500, label: '5 - 10 km' },
+                    { min: 10, max: 15, frais: 2000, label: '10 - 15 km' },
+                    { min: 15, max: 20, frais: 2500, label: '15 - 20 km' },
+                    { min: 20, max: 999, frais: 3000, label: '20 km et +' },
+                ];
+
+                let html = `
+                    <div style="background:var(--white);border-radius:var(--radius);padding:1.5rem;margin-bottom:1.5rem;border:1px solid rgba(204,0,0,0.1);">
+                        <h4 style="font-family:'Playfair Display',serif;color:var(--secondary);margin-bottom:1rem;">
+                            <i class="fas fa-map-marker-alt" style="color:var(--primary);"></i> 
+                            Tarification basée sur la distance depuis Thiaroye Sur-Mer
+                        </h4>
+                        <p style="font-size:0.85rem;color:var(--text-light);margin-bottom:1rem;">
+                            Les frais de livraison sont calculés automatiquement en fonction de la distance entre la boutique (Thiaroye) et le client.
+                        </p>
+                        <table class="orders-table">
+                            <thead>
+                                <tr>
+                                    <th>Distance</th>
+                                    <th>Frais de livraison</th>
+                                    <th>Statut</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                `;
+
+                tranchesParDefaut.forEach((t, index) => {
+                    html += `
+                        <tr>
+                            <td><strong>${t.label}</strong></td>
+                            <td><span style="font-weight:700;color:var(--primary);">${t.frais.toLocaleString('fr-FR')} FCFA</span></td>
+                            <td><span class="badge badge-success">Actif</span></td>
+                            <td>
+                                <button class="btn-sm btn-sm-warning" onclick="modifierTarifDistance('${t.label}', ${t.frais})">
+                                    <i class="fas fa-edit"></i> Modifier
+                                </button>
+                            </td>
+                        </tr>
+                    `;
+                });
+
+                html += `
+                            </tbody>
+                        </table>
+                    </div>
+                `;
+
+                if (zones.length > 0) {
+                    html += `<h4 style="margin-top:1.5rem;margin-bottom:1rem;">Zones personnalisées</h4>`;
+                    html += `<div class="orders-table-container"><table class="orders-table"><thead><tr>
+                        <th>Nom</th><th>Description</th><th>Villes</th><th>Frais</th><th>Statut</th><th>Actions</th>
+                    </tr></thead><tbody>`;
+                    
+                    zones.forEach(z => {
+                        const statusClass = z.statut === 'actif' ? 'badge-success' : 'badge-danger';
+                        html += `
+                            <tr>
+                                <td><strong>${z.nom}</strong></td>
+                                <td>${z.description || '-'}</td>
+                                <td>${z.villes || 'Toutes'}</td>
+                                <td><strong>${(z.frais || 0).toLocaleString('fr-FR')} FCFA</strong></td>
+                                <td><span class="badge ${statusClass}">${z.statut}</span></td>
+                                <td>
+                                    <button class="btn-sm btn-sm-warning" onclick="editZone(${z.id})"><i class="fas fa-edit"></i></button>
+                                    <button class="btn-sm btn-sm-danger" onclick="deleteZone(${z.id})"><i class="fas fa-trash"></i></button>
+                                </td>
+                            </tr>
+                        `;
+                    });
+                    html += `</tbody></table></div>`;
+                }
+
+                document.getElementById('zonesList').innerHTML = html;
+            } catch(e) {
+                console.error('Erreur zones:', e);
+                document.getElementById('zonesList').innerHTML = '<div class="loading">Erreur de chargement</div>';
+            }
+        }
+
+        function modifierTarifDistance(label, currentFrais) {
+            const nouveauFrais = prompt(`Modifier les frais pour la tranche "${label}" :`, currentFrais);
+            if (nouveauFrais !== null && !isNaN(parseInt(nouveauFrais))) {
+                alert(`✅ Tarif pour "${label}" mis à jour à ${parseInt(nouveauFrais).toLocaleString('fr-FR')} FCFA.\n\n(Note: Cette modification nécessite une mise à jour côté serveur pour être persistante.)`);
+            }
+        }
+
+        function openAddZone() {
+            document.getElementById('zoneModalTitle').textContent = 'Ajouter une zone de livraison';
+            document.getElementById('zoneId').value = '';
+            document.getElementById('zoneName').value = '';
+            document.getElementById('zoneDesc').value = '';
+            document.getElementById('zoneFee').value = '';
+            document.getElementById('zoneCities').value = '';
+            document.getElementById('zoneStatus').value = 'actif';
+            document.getElementById('zoneMinOrder').value = '0';
+            document.getElementById('zoneModal').style.display = 'flex';
+        }
+
+        function closeZoneModal() {
+            document.getElementById('zoneModal').style.display = 'none';
+        }
+
+        async function saveZone() {
+            const id = document.getElementById('zoneId').value;
+            const nom = document.getElementById('zoneName').value;
+            const description = document.getElementById('zoneDesc').value;
+            const frais = parseInt(document.getElementById('zoneFee').value);
+            const villes = document.getElementById('zoneCities').value;
+            const statut = document.getElementById('zoneStatus').value;
+            const min_commande = parseInt(document.getElementById('zoneMinOrder').value) || 0;
+
+            if (!nom || !frais) {
+                alert('Veuillez remplir tous les champs obligatoires');
+                return;
+            }
+
+            const token = await getToken();
+            const data = { nom, description, frais, villes, statut, min_commande };
+
+            try {
+                const url = id ? `${API_URL}/api/admin/zones/${id}` : `${API_URL}/api/admin/zones`;
+                const method = id ? 'PUT' : 'POST';
+                const res = await fetch(url, {
+                    method: method,
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`
+                    },
+                    body: JSON.stringify(data)
+                });
+                const result = await res.json();
+                if (result.success) {
+                    alert(id ? '✅ Zone modifiée !' : '✅ Zone ajoutée !');
+                    closeZoneModal();
+                    chargerZones();
+                }
+            } catch(e) {
+                console.error('Erreur sauvegarde zone:', e);
+                alert('❌ Erreur de sauvegarde');
+            }
+        }
+
+        function editZone(id) {
+            alert(`📝 Modification de la zone #${id}`);
+        }
+
+        async function deleteZone(id) {
+            if (!confirm('Supprimer cette zone de livraison ?')) return;
+            const token = await getToken();
+            try {
+                await fetch(`${API_URL}/api/admin/zones/${id}`, {
+                    method: 'DELETE',
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+                chargerZones();
+            } catch(e) {
+                console.error('Erreur suppression zone:', e);
+            }
+        }
+
+        // ===== RAPPORTS =====
+        async function chargerRapports() {
+            const token = await getToken();
+            try {
+                const statsRes = await fetch(`${API_URL}/api/admin/stats/mois`, {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+                const stats = await statsRes.json();
+                
+                document.getElementById('reportCAMois').innerHTML = (stats.ca_mois || 0).toLocaleString('fr-FR') + ' FCFA';
+                document.getElementById('reportCommandesMois').textContent = stats.commandes_mois || 0;
+                document.getElementById('reportPanierMoyen').innerHTML = (stats.panier_moyen || 0).toLocaleString('fr-FR') + ' FCFA';
+                document.getElementById('reportConversion').textContent = (stats.taux_conversion || 0) + '%';
+
+                const topRes = await fetch(`${API_URL}/api/admin/produits/top`, {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+                const topProduits = await topRes.json();
+                
+                if (topProduits.length === 0) {
+                    document.getElementById('topProduits').innerHTML = '<div class="loading">Aucune donnée</div>';
+                } else {
+                    let html = '';
+                    topProduits.forEach((p, index) => {
+                        html += `
+                            <div style="display:flex;justify-content:space-between;padding:0.5rem 0;border-bottom:1px solid #f0f0f0;">
+                                <span>${index + 1}. ${p.nom}</span>
+                                <span style="font-weight:600;color:var(--primary);">${p.total_vendu} vendus</span>
+                            </div>
+                        `;
+                    });
+                    document.getElementById('topProduits').innerHTML = html;
+                }
+
+                const repartitionRes = await fetch(`${API_URL}/api/admin/commandes/repartition`, {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+                const repartition = await repartitionRes.json();
+                
+                const ctxRepartition = document.getElementById('repartitionChart').getContext('2d');
+                if (repartitionChart) repartitionChart.destroy();
+
+                repartitionChart = new Chart(ctxRepartition, {
+                    type: 'doughnut',
+                    data: {
+                        labels: ['En attente', 'Livrées', 'Annulées'],
+                        datasets: [{
+                            data: [repartition.en_attente || 0, repartition.livrees || 0, repartition.annulees || 0],
+                            backgroundColor: ['#f39c12', '#27ae60', '#e74c3c'],
+                            borderWidth: 2,
+                            borderColor: '#fff'
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: true,
+                        plugins: {
+                            legend: {
+                                position: 'bottom',
+                            }
+                        }
+                    }
+                });
+            } catch(e) {
+                console.error('Erreur rapports:', e);
+            }
+        }
+
+        // ===== EXPORT RAPPORTS =====
+        async function exporterRapport(periode, format) {
+            const token = await getToken();
+            const btn = event.target;
+            btn.disabled = true;
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Génération...';
+            
+            try {
+                const response = await fetch(`${API_URL}/api/admin/rapports/generer`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`
+                    },
+                    body: JSON.stringify({ periode, format })
+                });
+                const data = await response.json();
+                if (data.success && data.url) {
+                    window.open(data.url, '_blank');
+                    alert(`✅ Rapport ${periode} généré avec succès !`);
+                } else {
+                    alert('❌ Erreur lors de la génération du rapport');
+                }
+            } catch (e) {
+                console.error('Erreur export:', e);
+                alert('❌ Erreur de connexion');
+            }
+            btn.disabled = false;
+            btn.innerHTML = `<i class="fas fa-file-${format === 'pdf' ? 'pdf' : 'excel'}"></i> ${format.toUpperCase()} ${periode}`;
+        }
+
+        // ===== MESSAGES =====
+        async function chargerMessages() {
+            const token = await getToken();
+            const filter = document.getElementById('filterMessages').value;
+            
+            let url = `${API_URL}/api/admin/messages?`;
+            if (filter) url += `statut=${filter}&`;
+
+            try {
+                const res = await fetch(url, {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+                const messages = await res.json();
+                document.getElementById('messagesNonLus').textContent = messages.filter(m => m.statut === 'non_lu').length;
+                document.getElementById('messagesCount').textContent = messages.filter(m => m.statut === 'non_lu').length;
+
+                if (messages.length === 0) {
+                    document.getElementById('messagesList').innerHTML = '<div class="loading">Aucun message</div>';
+                    return;
+                }
+
+                let html = '';
+                messages.forEach(m => {
+                    const isUnread = m.statut === 'non_lu';
+                    html += `
+                        <div class="message-item ${isUnread ? 'unread' : ''}" onclick="voirMessage(${m.id})">
+                            <div class="msg-avatar">${m.expediteur ? m.expediteur.charAt(0).toUpperCase() : '?'}</div>
+                            <div class="msg-content">
+                                <div class="msg-sender">${m.expediteur || 'Inconnu'} ${isUnread ? '• <span style="color:var(--primary);font-size:0.7rem;">NON LU</span>' : ''}</div>
+                                <div class="msg-date">${new Date(m.date_creation).toLocaleDateString('fr-FR')} à ${new Date(m.date_creation).toLocaleTimeString('fr-FR')}</div>
+                                <div class="msg-subject">${m.sujet || 'Sans sujet'}</div>
+                                <div class="msg-preview">${m.message ? m.message.substring(0, 100) + (m.message.length > 100 ? '...' : '') : ''}</div>
+                            </div>
+                            <div style="display:flex;gap:0.5rem;align-items:center;">
+                                ${isUnread ? `<button class="btn-sm btn-sm-info" onclick="event.stopPropagation();marquerLu(${m.id})"><i class="fas fa-check"></i></button>` : ''}
+                                <button class="btn-sm btn-sm-danger" onclick="event.stopPropagation();supprimerMessage(${m.id})"><i class="fas fa-trash"></i></button>
+                            </div>
+                        </div>
+                    `;
+                });
+                document.getElementById('messagesList').innerHTML = html;
+            } catch(e) {
+                console.error('Erreur messages:', e);
+                document.getElementById('messagesList').innerHTML = '<div class="loading">Erreur de chargement</div>';
+            }
+        }
+
+        function voirMessage(id) {
+            alert(`📧 Affichage du message #${id}`);
+            marquerLu(id);
+        }
+
+        async function marquerLu(id) {
+            const token = await getToken();
+            try {
+                await fetch(`${API_URL}/api/admin/messages/${id}/lu`, {
+                    method: 'PUT',
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+                chargerMessages();
+            } catch(e) {
+                console.error('Erreur marquage lu:', e);
+            }
+        }
+
+        async function supprimerMessage(id) {
+            if (!confirm('Supprimer ce message ?')) return;
+            const token = await getToken();
+            try {
+                await fetch(`${API_URL}/api/admin/messages/${id}`, {
+                    method: 'DELETE',
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+                chargerMessages();
+            } catch(e) {
+                console.error('Erreur suppression message:', e);
+            }
+        }
+
+        // ===== PROFIL SETTINGS =====
+        async function saveSettings() {
+            const newUsername = document.getElementById('settingsUsername').value.trim();
+            const currentPassword = document.getElementById('settingsCurrentPassword').value;
+            const newPassword = document.getElementById('settingsPassword').value;
+            const confirmPassword = document.getElementById('settingsPasswordConfirm').value;
+            const msgEl = document.getElementById('settingsMessage');
+
+            if (!newUsername) {
+                msgEl.innerHTML = '<span style="color:#f44336;">❌ Le nom d\'utilisateur ne peut pas être vide</span>';
+                return;
+            }
+
+            if (!currentPassword) {
+                msgEl.innerHTML = '<span style="color:#f44336;">❌ Veuillez entrer votre mot de passe actuel</span>';
+                return;
+            }
+
+            if (newPassword && newPassword !== confirmPassword) {
+                msgEl.innerHTML = '<span style="color:#f44336;">❌ Les mots de passe ne correspondent pas</span>';
+                return;
+            }
+
+            const token = await getToken();
+            const btn = document.querySelector('.settings-form .btn-save');
+            btn.disabled = true;
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Enregistrement...';
+
+            try {
+                const body = {
+                    username: newUsername,
+                    current_password: currentPassword
+                };
+                if (newPassword) {
+                    body.new_password = newPassword;
+                }
+
+                const response = await fetch(`${API_URL}/api/admin/update`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`
+                    },
+                    body: JSON.stringify(body)
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    msgEl.innerHTML = '<span style="color:#4caf50;">✅ ' + data.message + '</span>';
+                    document.getElementById('admin-username').textContent = newUsername;
+                    currentAdminUsername = newUsername;
+                    document.getElementById('settingsCurrentPassword').value = '';
+                    document.getElementById('settingsPassword').value = '';
+                    document.getElementById('settingsPasswordConfirm').value = '';
+                } else {
+                    msgEl.innerHTML = '<span style="color:#f44336;">❌ ' + (data.error || 'Erreur lors de la mise à jour') + '</span>';
+                }
+            } catch (error) {
+                msgEl.innerHTML = '<span style="color:#f44336;">❌ Erreur de connexion au serveur</span>';
+            }
+
+            btn.disabled = false;
+            btn.innerHTML = '<i class="fas fa-save"></i> Enregistrer les modifications';
+        }
+
+        // ===== CRUD PRODUITS (Parfums) =====
+        let currentEditProduit = null;
+
+        function openAddProductModal() {
+            currentEditProduit = null;
+            document.getElementById('modalTitle').innerText = 'Ajouter un produit';
+            document.getElementById('productId').value = '';
+            document.getElementById('productNom').value = '';
+            document.getElementById('productDescription').value = '';
+            document.getElementById('productPrix').value = '';
+            document.getElementById('productStock').value = '0';
+            document.getElementById('productCategorie').value = 'mixte';
+            document.getElementById('productType').value = 'parfum';
+            document.getElementById('productFamille').value = '';
+            document.getElementById('productFormat').value = '50ml';
+            document.getElementById('productNotes').value = '';
+            document.getElementById('productPrixPromo').value = '';
+            document.getElementById('productRemise').value = '0';
+            document.getElementById('productImages').value = '';
+            document.getElementById('productVideos').value = '';
+            document.getElementById('imagePreview').innerHTML = '';
+            document.getElementById('videoPreview').innerHTML = '';
+            document.getElementById('existingMediaSection').style.display = 'none';
+            document.getElementById('productModal').style.display = 'flex';
+            document.getElementById('productImages').onchange = () => previewMedia('image');
+            document.getElementById('productVideos').onchange = () => previewMedia('video');
+        }
+
+        function previewMedia(type) {
+            const input = type === 'image' ? document.getElementById('productImages') : document.getElementById('productVideos');
+            const preview = type === 'image' ? document.getElementById('imagePreview') : document.getElementById('videoPreview');
+            preview.innerHTML = '';
+            for (let i = 0; i < input.files.length; i++) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const div = document.createElement('div');
+                    div.className = 'media-item';
+                    if (type === 'image') {
+                        div.innerHTML = `<img src="${e.target.result}"><button class="remove-media" onclick="this.parentElement.remove()">×</button><div class="media-label">Image</div>`;
+                    } else {
+                        div.innerHTML = `<video src="${e.target.result}" muted></video><button class="remove-media" onclick="this.parentElement.remove()">×</button><div class="media-label">Vidéo</div>`;
+                    }
+                    preview.appendChild(div);
+                };
+                reader.readAsDataURL(input.files[i]);
+            }
+        }
+
+        async function openEditProductModal(id) {
+            const token = await getToken();
+            const res = await fetch(`${API_URL}/api/admin/produits/${id}`, {
+                headers: { 'Authorization': `Bearer ${token}` }
+            });
+            const p = await res.json();
+            if (!p) return;
+
+            currentEditProduit = p;
+            document.getElementById('modalTitle').innerText = 'Modifier le produit';
+            document.getElementById('productId').value = p.id;
+            document.getElementById('productNom').value = p.nom;
+            document.getElementById('productDescription').value = p.description || '';
+            document.getElementById('productPrix').value = p.prix;
+            document.getElementById('productStock').value = p.stock || 0;
+            document.getElementById('productCategorie').value = p.categorie || 'mixte';
+            document.getElementById('productType').value = p.type_produit || 'parfum';
+            document.getElementById('productFamille').value = p.famille || '';
+            document.getElementById('productFormat').value = p.format || '50ml';
+            document.getElementById('productNotes').value = p.notes_olfactives || '';
+            document.getElementById('productPrixPromo').value = p.prix_promo || '';
+            document.getElementById('productRemise').value = p.remise || 0;
+            document.getElementById('productImages').value = '';
+            document.getElementById('productVideos').value = '';
+            document.getElementById('imagePreview').innerHTML = '';
+            document.getElementById('videoPreview').innerHTML = '';
+            document.getElementById('productImages').onchange = () => previewMedia('image');
+            document.getElementById('productVideos').onchange = () => previewMedia('video');
+
+            const existingDiv = document.getElementById('existingMedia');
+            existingDiv.innerHTML = '';
+            if (p.images) p.images.forEach(img => {
+                const div = document.createElement('div');
+                div.className = 'media-item';
+                div.innerHTML = `<img src="${formatImageUrl(img.image_url)}" onerror="this.src='https://placehold.co/80/cccccc/ffffff?text=?'"><button class="remove-media" onclick="supprimerMedia(${p.id}, 'image', ${img.id})">×</button><div class="media-label">Image</div>`;
+                existingDiv.appendChild(div);
+            });
+            if (p.videos) p.videos.forEach(vid => {
+                const div = document.createElement('div');
+                div.className = 'media-item';
+                div.innerHTML = `<video src="${vid.video_url}" muted></video><button class="remove-media" onclick="supprimerMedia(${p.id}, 'video', ${vid.id})">×</button><div class="media-label">Vidéo</div>`;
+                existingDiv.appendChild(div);
+            });
+            document.getElementById('existingMediaSection').style.display = (p.images && p.images.length > 0) || (p.videos && p.videos.length > 0) ? 'block' : 'none';
+            document.getElementById('productModal').style.display = 'flex';
+        }
+
+        async function supprimerMedia(produitId, type, mediaId) {
+            if (!confirm('Supprimer ce média ?')) return;
+            const token = await getToken();
+            const endpoint = type === 'image' ? 'images' : 'videos';
+            try {
+                await fetch(`${API_URL}/api/admin/produits/${produitId}/${endpoint}/${mediaId}`, {
+                    method: 'DELETE',
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+                openEditProductModal(produitId);
+            } catch(e) {
+                console.error('Erreur suppression média:', e);
+            }
+        }
+
+        async function saveProduct() {
+            const id = document.getElementById('productId').value;
+            const nom = document.getElementById('productNom').value;
+            const description = document.getElementById('productDescription').value;
+            const prix = parseInt(document.getElementById('productPrix').value);
+            const stock = parseInt(document.getElementById('productStock').value);
+            const categorie = document.getElementById('productCategorie').value;
+            const type_produit = document.getElementById('productType').value;
+            const famille = document.getElementById('productFamille').value;
+            const format = document.getElementById('productFormat').value;
+            const notes_olfactives = document.getElementById('productNotes').value;
+            const prix_promo = document.getElementById('productPrixPromo').value ? parseInt(document.getElementById('productPrixPromo').value) : null;
+            const remise = parseInt(document.getElementById('productRemise').value) || 0;
+            const en_promo = prix_promo ? 1 : 0;
+
+            if (!nom || !prix) {
+                alert('Veuillez remplir le nom et le prix');
+                return;
+            }
+
+            const token = await getToken();
+            const formData = new FormData();
+            formData.append('nom', nom);
+            formData.append('description', description);
+            formData.append('prix', prix);
+            formData.append('stock', stock);
+            formData.append('categorie', categorie);
+            formData.append('type_produit', type_produit);
+            formData.append('famille', famille);
+            formData.append('format', format);
+            formData.append('notes_olfactives', notes_olfactives);
+            if (prix_promo) formData.append('prix_promo', prix_promo);
+            formData.append('remise', remise);
+            formData.append('en_promo', en_promo);
+
+            const images = document.getElementById('productImages').files;
+            const videos = document.getElementById('productVideos').files;
+            for (let i = 0; i < images.length; i++) formData.append('images', images[i]);
+            for (let i = 0; i < videos.length; i++) formData.append('videos', videos[i]);
+
+            try {
+                const url = id ? `${API_URL}/api/admin/produits/${id}` : `${API_URL}/api/admin/produits`;
+                const method = id ? 'PUT' : 'POST';
+                const res = await fetch(url, {
+                    method: method,
+                    headers: { 'Authorization': `Bearer ${token}` },
+                    body: formData
+                });
+                const data = await res.json();
+                if (data.success) {
+                    alert(id ? '✅ Produit modifié !' : '✅ Produit ajouté !');
+                    closeProductModal();
+                    chargerProduits();
+                    chargerProduitsPourPromo();
+                } else {
+                    alert('❌ Erreur: ' + (data.error || ''));
+                }
+            } catch(e) {
+                console.error('Erreur sauvegarde produit:', e);
+                alert('❌ Erreur de connexion');
+            }
+        }
+
+        // ===== CRUD COSMETIQUES =====
+        function openAddCosmetiqueModal() {
+            document.getElementById('cosmetiqueModalTitle').innerText = 'Ajouter un cosmétique';
+            document.getElementById('cosmetiqueId').value = '';
+            document.getElementById('cosmetiqueNom').value = '';
+            document.getElementById('cosmetiqueDescription').value = '';
+            document.getElementById('cosmetiquePrix').value = '';
+            document.getElementById('cosmetiqueStock').value = '0';
+            document.getElementById('cosmetiqueCategorie').value = 'mixte';
+            document.getElementById('cosmetiqueType').value = 'Soin';
+            document.getElementById('cosmetiqueFamille').value = '';
+            document.getElementById('cosmetiqueFormat').value = '100ml';
+            document.getElementById('cosmetiquePrixPromo').value = '';
+            document.getElementById('cosmetiqueRemise').value = '0';
+            document.getElementById('cosmetiqueImages').value = '';
+            document.getElementById('cosmetiqueVideos').value = '';
+            document.getElementById('cosmetiqueImagePreview').innerHTML = '';
+            document.getElementById('cosmetiqueVideoPreview').innerHTML = '';
+            document.getElementById('cosmetiqueExistingMediaSection').style.display = 'none';
+            document.getElementById('cosmetiqueModal').style.display = 'flex';
+            document.getElementById('cosmetiqueImages').onchange = () => previewMediaCosmetique('image');
+            document.getElementById('cosmetiqueVideos').onchange = () => previewMediaCosmetique('video');
+        }
+
+        function previewMediaCosmetique(type) {
+            const input = type === 'image' ? document.getElementById('cosmetiqueImages') : document.getElementById('cosmetiqueVideos');
+            const preview = type === 'image' ? document.getElementById('cosmetiqueImagePreview') : document.getElementById('cosmetiqueVideoPreview');
+            preview.innerHTML = '';
+            for (let i = 0; i < input.files.length; i++) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const div = document.createElement('div');
+                    div.className = 'media-item';
+                    if (type === 'image') {
+                        div.innerHTML = `<img src="${e.target.result}"><button class="remove-media" onclick="this.parentElement.remove()">×</button><div class="media-label">Image</div>`;
+                    } else {
+                        div.innerHTML = `<video src="${e.target.result}" muted></video><button class="remove-media" onclick="this.parentElement.remove()">×</button><div class="media-label">Vidéo</div>`;
+                    }
+                    preview.appendChild(div);
+                };
+                reader.readAsDataURL(input.files[i]);
+            }
+        }
+
+        async function openEditCosmetiqueModal(id) {
+            const token = await getToken();
+            const res = await fetch(`${API_URL}/api/admin/cosmetiques/${id}`, {
+                headers: { 'Authorization': `Bearer ${token}` }
+            });
+            const p = await res.json();
+            if (!p) return;
+
+            document.getElementById('cosmetiqueModalTitle').innerText = 'Modifier le cosmétique';
+            document.getElementById('cosmetiqueId').value = p.id;
+            document.getElementById('cosmetiqueNom').value = p.nom;
+            document.getElementById('cosmetiqueDescription').value = p.description || '';
+            document.getElementById('cosmetiquePrix').value = p.prix;
+            document.getElementById('cosmetiqueStock').value = p.stock || 0;
+            document.getElementById('cosmetiqueCategorie').value = p.categorie || 'mixte';
+            document.getElementById('cosmetiqueType').value = p.type_produit || 'Soin';
+            document.getElementById('cosmetiqueFamille').value = p.famille || '';
+            document.getElementById('cosmetiqueFormat').value = p.format || '100ml';
+            document.getElementById('cosmetiquePrixPromo').value = p.prix_promo || '';
+            document.getElementById('cosmetiqueRemise').value = p.remise || 0;
+            document.getElementById('cosmetiqueImages').value = '';
+            document.getElementById('cosmetiqueVideos').value = '';
+            document.getElementById('cosmetiqueImagePreview').innerHTML = '';
+            document.getElementById('cosmetiqueVideoPreview').innerHTML = '';
+            document.getElementById('cosmetiqueImages').onchange = () => previewMediaCosmetique('image');
+            document.getElementById('cosmetiqueVideos').onchange = () => previewMediaCosmetique('video');
+
+            const existingDiv = document.getElementById('cosmetiqueExistingMedia');
+            existingDiv.innerHTML = '';
+            if (p.images) p.images.forEach(img => {
+                const div = document.createElement('div');
+                div.className = 'media-item';
+                div.innerHTML = `<img src="${formatImageUrl(img.image_url)}" onerror="this.src='https://placehold.co/80/cccccc/ffffff?text=?'"><button class="remove-media" onclick="supprimerMedia(${p.id}, 'image', ${img.id})">×</button><div class="media-label">Image</div>`;
+                existingDiv.appendChild(div);
+            });
+            if (p.videos) p.videos.forEach(vid => {
+                const div = document.createElement('div');
+                div.className = 'media-item';
+                div.innerHTML = `<video src="${vid.video_url}" muted></video><button class="remove-media" onclick="supprimerMedia(${p.id}, 'video', ${vid.id})">×</button><div class="media-label">Vidéo</div>`;
+                existingDiv.appendChild(div);
+            });
+            document.getElementById('cosmetiqueExistingMediaSection').style.display = (p.images && p.images.length > 0) || (p.videos && p.videos.length > 0) ? 'block' : 'none';
+            document.getElementById('cosmetiqueModal').style.display = 'flex';
+        }
+
+        async function saveCosmetique() {
+            const id = document.getElementById('cosmetiqueId').value;
+            const nom = document.getElementById('cosmetiqueNom').value;
+            const description = document.getElementById('cosmetiqueDescription').value;
+            const prix = parseInt(document.getElementById('cosmetiquePrix').value);
+            const stock = parseInt(document.getElementById('cosmetiqueStock').value);
+            const categorie = document.getElementById('cosmetiqueCategorie').value;
+            const type_produit = document.getElementById('cosmetiqueType').value;
+            const famille = document.getElementById('cosmetiqueFamille').value;
+            const format = document.getElementById('cosmetiqueFormat').value;
+            const prix_promo = document.getElementById('cosmetiquePrixPromo').value ? parseInt(document.getElementById('cosmetiquePrixPromo').value) : null;
+            const remise = parseInt(document.getElementById('cosmetiqueRemise').value) || 0;
+            const en_promo = prix_promo ? 1 : 0;
+
+            if (!nom || !prix) {
+                alert('Veuillez remplir le nom et le prix');
+                return;
+            }
+
+            const token = await getToken();
+            const formData = new FormData();
+            formData.append('nom', nom);
+            formData.append('description', description);
+            formData.append('prix', prix);
+            formData.append('stock', stock);
+            formData.append('categorie', categorie);
+            formData.append('type_produit', type_produit);
+            formData.append('famille', famille);
+            formData.append('format', format);
+            if (prix_promo) formData.append('prix_promo', prix_promo);
+            formData.append('remise', remise);
+            formData.append('en_promo', en_promo);
+
+            const images = document.getElementById('cosmetiqueImages').files;
+            const videos = document.getElementById('cosmetiqueVideos').files;
+            for (let i = 0; i < images.length; i++) formData.append('images', images[i]);
+            for (let i = 0; i < videos.length; i++) formData.append('videos', videos[i]);
+
+            try {
+                const url = id ? `${API_URL}/api/admin/cosmetiques/${id}` : `${API_URL}/api/admin/cosmetiques`;
+                const method = id ? 'PUT' : 'POST';
+                const res = await fetch(url, {
+                    method: method,
+                    headers: { 'Authorization': `Bearer ${token}` },
+                    body: formData
+                });
+                const data = await res.json();
+                if (data.success) {
+                    alert(id ? '✅ Cosmétique modifié !' : '✅ Cosmétique ajouté !');
+                    closeCosmetiqueModal();
+                    chargerCosmetiques();
+                    chargerProduitsPourPromo();
+                } else {
+                    alert('❌ Erreur: ' + (data.error || ''));
+                }
+            } catch(e) {
+                console.error('Erreur sauvegarde cosmétique:', e);
+                alert('❌ Erreur de connexion');
+            }
+        }
+
+        function closeCosmetiqueModal() {
+            document.getElementById('cosmetiqueModal').style.display = 'none';
+        }
+
+        // ===== GESTION STOCK & SUPPRESSION (Commun) =====
+        async function gererStock(id, stockActuel) {
+            const nouveauStock = prompt('Nouvelle quantité :', stockActuel);
+            if (nouveauStock !== null && !isNaN(parseInt(nouveauStock))) {
+                const token = await getToken();
+                try {
+                    await fetch(`${API_URL}/api/admin/produits/${id}`, {
+                        method: 'PUT',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Authorization': `Bearer ${token}`
+                        },
+                        body: JSON.stringify({ stock: parseInt(nouveauStock) })
+                    });
+                    chargerProduits();
+                    chargerCosmetiques();
+                } catch(e) {
+                    console.error('Erreur mise à jour stock:', e);
+                }
+            }
+        }
+
+        async function supprimerProduit(id) {
+            if (confirm('Supprimer ce produit ?')) {
+                const token = await getToken();
+                try {
+                    await fetch(`${API_URL}/api/admin/produits/${id}`, {
+                        method: 'DELETE',
+                        headers: { 'Authorization': `Bearer ${token}` }
+                    });
+                    chargerProduits();
+                    chargerCosmetiques();
+                    chargerProduitsPourPromo();
+                } catch(e) {
+                    console.error('Erreur suppression produit:', e);
+                }
+            }
+        }
+
+        function closeProductModal() {
+            document.getElementById('productModal').style.display = 'none';
+            currentEditProduit = null;
+        }
+
+        // ===== FERMETURE DES MODALES =====
+        document.getElementById('deliveryModal').addEventListener('click', function(e) {
+            if (e.target === this) closeDeliveryModal();
+        });
+        document.getElementById('zoneModal').addEventListener('click', function(e) {
+            if (e.target === this) closeZoneModal();
+        });
+        document.getElementById('productModal').addEventListener('click', function(e) {
+            if (e.target === this) closeProductModal();
+        });
+        document.getElementById('cosmetiqueModal').addEventListener('click', function(e) {
+            if (e.target === this) closeCosmetiqueModal();
+        });
+
+        // ===== INITIALISATION =====
+        document.addEventListener('DOMContentLoaded', async function() {
+            updateDate();
+            const sessionValide = await verifierSession();
+            if (sessionValide) {
+                await chargerProduits(); 
+                await chargerCosmetiques();
+                chargerStats();
+                chargerCommandes();
+                chargerGraphique();
+                
+                setInterval(() => {
+                    chargerStats();
+                    chargerCommandes();
+                }, 30000);
+            }
+        });
+    </script>
+</body>
+</html>
