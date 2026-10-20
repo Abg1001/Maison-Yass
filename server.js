@@ -36,7 +36,13 @@ folders.forEach(folder => {
     }
 });
 
-app.use(cors());
+app.use(cors({
+    origin: [
+        'https://maison-yass-client.netlify.app/', // Lien Netlify Client
+        'https://maison-yass-admin.netlify.app/admin-login.html'  // Lien Netlify Admin
+    ],
+    credentials: true
+}));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, '../frontend')));
