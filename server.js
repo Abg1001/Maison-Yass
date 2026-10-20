@@ -45,27 +45,27 @@ app.use(cors({
 }));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use(express.static(path.join(__dirname, '../frontend')));
-app.use('/uploads', express.static(path.join(DATA_DIR, 'uploads')));
+app.use(express.static(__dirname)); // Sert les fichiers HTML, CSS, JS, images depuis la racine
+app.use('/uploads', express.static(path.join(DATA_DIR, 'uploads'))); // Sert les uploads depuis le disque persistant
 
 // ===== ROUTES PAGES HTML =====
 app.get('/', (req, res) => {
-    res.sendFile(path.join(__dirname, '../frontend/index.html'));
+    res.sendFile(path.join(__dirname, 'index.html'));
 });
 app.get('/index.html', (req, res) => {
-    res.sendFile(path.join(__dirname, '../frontend/index.html'));
+    res.sendFile(path.join(__dirname, 'index.html'));
 });
 app.get('/panier.html', (req, res) => {
-    res.sendFile(path.join(__dirname, '../frontend/panier.html'));
+    res.sendFile(path.join(__dirname, 'panier.html'));
 });
 app.get('/commandes.html', (req, res) => {
-    res.sendFile(path.join(__dirname, '../frontend/commandes.html'));
+    res.sendFile(path.join(__dirname, 'commandes.html'));
 });
 app.get('/admin-login.html', (req, res) => {
-    res.sendFile(path.join(__dirname, '../frontend/admin-login.html'));
+    res.sendFile(path.join(__dirname, 'admin-login.html'));
 });
 app.get('/admin-dashboard.html', (req, res) => {
-    res.sendFile(path.join(__dirname, '../frontend/admin-dashboard.html'));
+    res.sendFile(path.join(__dirname, 'admin-dashboard.html'));
 });
 
 // ===== CONFIGURATION MULTER =====
