@@ -36,12 +36,25 @@ folders.forEach(folder => {
     }
 });
 
+const cors = require('cors');
+
+const allowedOrigins = [
+  'https://maison-yass-admin.netlify.app',
+  'https://maison-yass-client.netlify.app'
+];
+
 app.use(cors({
-    origin: [
-        'https://maison-yass-client.netlify.app/', // Lien Netlify Client
-        'https://maison-yass-admin.netlify.app/'  // Lien Netlify Admin
-    ],
-    credentials: true
+  origin: function (origin, callback) {
+    // Autorise les requêtes sans origine (comme Postman/curl) et les origines listées
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization']
 }));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
