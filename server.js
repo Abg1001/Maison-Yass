@@ -14,8 +14,8 @@ const PORT = process.env.PORT || 3000; // Render utilise process.env.PORT
 const JWT_SECRET = 'ma_super_cle_secrete_2025_maison_yass';
 
 // ===== GESTION DES DOSSIERS (LOCAL vs PRODUCTION) =====
-// En local, DATA_DIR sera le dossier parent. Sur Render, ce sera /data (le disque persistant)
-const DATA_DIR = process.env.DATA_DIR || path.join(__dirname, '..'); 
+// Utilisation d'un dossier temporaire pour le plan gratuit
+const DATA_DIR = process.env.DATA_DIR || '/tmp';
 
 const folders = [
     path.join(DATA_DIR, 'database'), 
