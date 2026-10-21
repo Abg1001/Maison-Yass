@@ -39,7 +39,7 @@ folders.forEach(folder => {
 app.use(cors({
     origin: [
         'https://maison-yass-client.netlify.app/', // Lien Netlify Client
-        'https://maison-yass-admin.netlify.app/admin-login.html'  // Lien Netlify Admin
+        'https://maison-yass-admin.netlify.app/'  // Lien Netlify Admin
     ],
     credentials: true
 }));
