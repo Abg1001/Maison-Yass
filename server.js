@@ -36,8 +36,6 @@ folders.forEach(folder => {
     }
 });
 
-const cors = require('cors');
-
 const allowedOrigins = [
   'https://maison-yass-admin.netlify.app',
   'https://maison-yass-client.netlify.app'
