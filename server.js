@@ -37,7 +37,7 @@ async function uploadToR2(fileBuffer, originalName, mimetype, folder = 'produits
     ContentType: mimetype,
   }));
 
-  return `https://pub-${process.env.R2_ACCOUNT_ID}.r2.dev/${key}`; 
+    return `${process.env.R2_PUBLIC_URL}/${key}`;  
 }
 
 // ===== MIDDLEWARES =====
