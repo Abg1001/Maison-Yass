@@ -40,6 +40,32 @@ async function uploadToR2(fileBuffer, originalName, mimetype, folder = 'produits
     return `${process.env.R2_PUBLIC_URL}/${key}`;  
 }
 
+// ===== NOUVELLE FONCTION : NOTIFICATION TELEGRAM =====
+async function notifierTelegram(message) {
+  const token = process.env.TELEGRAM_TOKEN;
+  const chatId = process.env.TELEGRAM_CHAT_ID;
+  
+  if (!token || !chatId) {
+    console.log('⚠️ Telegram non configuré (Token ou Chat ID manquant)');
+    return;
+  }
+
+  try {
+    await fetch(`https://api.telegram.org/bot${token}/sendMessage`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ 
+        chat_id: chatId, 
+        text: message, 
+        parse_mode: 'HTML' 
+      })
+    });
+    console.log('✅ Notification Telegram envoyée');
+  } catch (e) {
+    console.error('❌ Erreur Telegram :', e.message);
+  }
+}
+
 // ===== MIDDLEWARES =====
 const allowedOrigins = [
   'https://maison-yass-admin.netlify.app',
@@ -312,6 +338,7 @@ app.post('/api/messages', async (req, res) => {
     } catch (err) { res.status(500).json({ error: err.message }); }
 });
 
+// ===== ROUTE COMMANDES AVEC NOTIFICATION TELEGRAM =====
 app.post('/api/commandes', async (req, res) => {
     try {
         const { client_nom, client_telephone, client_adresse, client_email, moyen_paiement, produits, total, frais_livraison, zone_livraison, latitude, longitude } = req.body;
@@ -320,6 +347,20 @@ app.post('/api/commandes', async (req, res) => {
         for (const p of produits) {
             await pool.query(`INSERT INTO details_commandes (commande_id, produit_id, produit_nom, quantite, prix_unitaire) VALUES ($1,$2,$3,$4,$5)`, [commandeId, p.id || null, p.nom, p.quantite, p.prix]);
         }
+
+        // Envoi de la notification Telegram
+        const listeProduits = produits.map(p => `- ${p.nom} (x${p.quantite})`).join('\n');
+        const messageTelegram = 
+            `🛒 <b>NOUVELLE COMMANDE #${commandeId}</b>\n\n` +
+            `👤 <b>Client :</b> ${client_nom}\n` +
+            `📞 <b>Téléphone :</b> ${client_telephone}\n` +
+            `📍 <b>Adresse :</b> ${client_adresse}\n` +
+            `💳 <b>Paiement :</b> ${moyen_paiement}\n` +
+            `💰 <b>Total :</b> ${total.toLocaleString('fr-FR')} FCFA\n\n` +
+            `📦 <b>Produits :</b>\n${listeProduits}`;
+
+        await notifierTelegram(messageTelegram);
+
         res.json({ success: true, commandeId });
     } catch (err) { res.status(500).json({ error: err.message }); }
 });
