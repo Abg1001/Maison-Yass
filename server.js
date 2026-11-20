@@ -338,14 +338,20 @@ app.post('/api/messages', async (req, res) => {
     } catch (err) { res.status(500).json({ error: err.message }); }
 });
 
-// ===== ROUTE COMMANDES AVEC NOTIFICATION TELEGRAM =====
+// ===== ROUTE COMMANDES AVEC NOTIFICATION TELEGRAM & STOCK =====
 app.post('/api/commandes', async (req, res) => {
     try {
         const { client_nom, client_telephone, client_adresse, client_email, moyen_paiement, produits, total, frais_livraison, zone_livraison, latitude, longitude } = req.body;
         const r = await pool.query(`INSERT INTO commandes (client_nom, client_telephone, client_adresse, client_email, moyen_paiement, total, frais_livraison, zone_livraison, client_latitude, client_longitude) VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10) RETURNING id`, [client_nom, client_telephone, client_adresse, client_email || '', moyen_paiement, total, frais_livraison || 0, zone_livraison || '', latitude || null, longitude || null]);
         const commandeId = r.rows[0].id;
+
         for (const p of produits) {
             await pool.query(`INSERT INTO details_commandes (commande_id, produit_id, produit_nom, quantite, prix_unitaire) VALUES ($1,$2,$3,$4,$5)`, [commandeId, p.id || null, p.nom, p.quantite, p.prix]);
+
+            // MISE À JOUR AUTOMATIQUE DU STOCK
+            if (p.id) {
+                await pool.query(`UPDATE produits SET stock = stock - $1 WHERE id = $2 AND stock >= $1`, [p.quantite, p.id]);
+            }
         }
 
         // Envoi de la notification Telegram
@@ -365,9 +371,19 @@ app.post('/api/commandes', async (req, res) => {
     } catch (err) { res.status(500).json({ error: err.message }); }
 });
 
+// ===== ROUTE COMMANDES CLIENT SÉCURISÉE =====
 app.get('/api/commandes/client/:telephone', async (req, res) => {
     try {
-        const commandes = await q("SELECT * FROM commandes WHERE client_telephone = $1 ORDER BY date_creation DESC", [req.params.telephone]);
+        const { telephone } = req.params;
+        const { nom } = req.query; // Récupération du nom passé en paramètre
+
+        if (!nom) {
+            return res.status(400).json({ error: "Le nom est requis pour des raisons de sécurité." });
+        }
+
+        // Vérification stricte : le téléphone ET le nom doivent correspondre
+        const commandes = await q("SELECT * FROM commandes WHERE client_telephone = $1 AND client_nom ILIKE $2 ORDER BY date_creation DESC", [telephone, nom]);
+        
         for (const cmd of commandes) {
             cmd.details = await q("SELECT * FROM details_commandes WHERE commande_id = $1", [cmd.id]);
         }
